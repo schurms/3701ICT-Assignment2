@@ -1,8 +1,9 @@
 //
 //  DetailViewController.swift
 //  GettingThingsDone
-//
-//  Created by Sean Schurmann on 21/4/18.
+//  Title: 3701ICT Assignment 2
+//  Student: s5073958
+//  Created by Jordan Schurmann on 21/4/18.
 //  Copyright © 2018 Jordan Schurmann. All rights reserved.
 //
 

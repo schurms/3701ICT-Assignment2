@@ -19,9 +19,9 @@ class DetailViewController: UITableViewController {
     func configureView() {
         // Update the user interface for the detail item.
         if let detail = detailItem {
-            //            if let label = detailDescriptionLabel {
-            //                label.text = detail.description
-            //            }
+            if let label = detailDescriptionLabel {
+                label.text = detail.description
+            }
             if let todoTitle = todoText {
                 todoTitle.text = detail.description
             }
@@ -30,6 +30,9 @@ class DetailViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // Add right bar add button
+        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(editObject(_:)))
+        navigationItem.rightBarButtonItem = addButton
         // Do any additional setup after loading the view, typically from a nib.
         configureView()
     }
@@ -46,5 +49,8 @@ class DetailViewController: UITableViewController {
         }
     }
     
+    @objc func editObject(_ sender: Any) {
+
+    }
     
 }

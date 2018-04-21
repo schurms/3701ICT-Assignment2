@@ -13,7 +13,7 @@ class MasterViewController: UITableViewController {
     
     var detailViewController: DetailViewController? = nil
     var objects = [String]()
-    var todoRow = 0
+    var todoCounter = 1
     let todoText = "Todo Item "
     
     let sections: [String] = ["YET TO DO", "COMPLETED"]
@@ -41,18 +41,12 @@ class MasterViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    @objc
-    func insertNewObject(_ sender: Any) {
-        //        objects.insert(NSDate(), at: 0)
-        let todoCounter = todoRow + 1
-        print(todoCounter)
+    @objc func insertNewObject(_ sender: Any) {
         let textToInsert = "Todo Item " + String(todoCounter)
-        print(textToInsert)
         objects.insert(textToInsert, at: 0)
         let indexPath = IndexPath(row: 0, section: 0)
         tableView.insertRows(at: [indexPath], with: .automatic)
-        print(indexPath)
-        todoRow += 1
+        todoCounter += 1
     }
     
     // MARK: - Segues

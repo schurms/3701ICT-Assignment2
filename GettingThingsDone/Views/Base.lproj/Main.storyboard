@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -32,6 +33,7 @@
                     <toolbarItems/>
                     <connections>
                         <segue destination="RMx-3f-FxP" kind="relationship" relationship="masterViewController" id="BlO-5A-QYV"/>
+                        <segue destination="gb9-KD-oI4" kind="relationship" relationship="detailViewController" id="eeQ-MK-s3T"/>
                     </connections>
                 </splitViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cZU-Oi-B1e" sceneMemberID="firstResponder"/>
@@ -90,57 +92,37 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <sections>
-                            <tableViewSection headerTitle="Task" id="IgQ-dT-Qkz">
+                            <tableViewSection headerTitle="TASK" id="IgQ-dT-Qkz">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="NaY-UB-bfT">
-                                        <rect key="frame" x="0.0" y="55.5" width="375" height="44"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="60" id="NaY-UB-bfT">
+                                        <rect key="frame" x="0.0" y="55.5" width="375" height="60"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="NaY-UB-bfT" id="VUL-vt-dxF">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="59.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1Gl-rQ-fWG">
-                                                    <rect key="frame" x="16" y="7" width="343" height="30"/>
+                                                    <rect key="frame" x="16" y="11" width="343" height="38"/>
                                                     <nil key="textColor"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                 </textField>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="bottom" secondItem="1Gl-rQ-fWG" secondAttribute="bottom" constant="6.5" id="25G-6h-uAa"/>
-                                                <constraint firstItem="1Gl-rQ-fWG" firstAttribute="top" secondItem="VUL-vt-dxF" secondAttribute="top" constant="7" id="Hov-PZ-mwM"/>
-                                                <constraint firstItem="1Gl-rQ-fWG" firstAttribute="leading" secondItem="VUL-vt-dxF" secondAttribute="leading" constant="16" id="LHX-iM-UOh"/>
-                                                <constraint firstAttribute="trailing" secondItem="1Gl-rQ-fWG" secondAttribute="trailing" constant="16" id="RoL-uA-LtP"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="1Gl-rQ-fWG" secondAttribute="bottom" id="65D-ti-BWy"/>
+                                                <constraint firstItem="1Gl-rQ-fWG" firstAttribute="top" secondItem="VUL-vt-dxF" secondAttribute="topMargin" id="RQp-0K-K2k"/>
+                                                <constraint firstItem="1Gl-rQ-fWG" firstAttribute="trailing" secondItem="VUL-vt-dxF" secondAttribute="trailingMargin" id="Rj6-mc-KsV"/>
+                                                <constraint firstItem="1Gl-rQ-fWG" firstAttribute="leading" secondItem="VUL-vt-dxF" secondAttribute="leadingMargin" id="prc-9a-pLw"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
-                            <tableViewSection headerTitle="History" id="UyF-aN-UO2">
-                                <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="GWS-rc-hYc">
-                                        <rect key="frame" x="0.0" y="155.5" width="375" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="GWS-rc-hYc" id="6nN-WL-SI9">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j3y-wJ-fRU">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstAttribute="bottom" secondItem="j3y-wJ-fRU" secondAttribute="bottom" id="2fP-za-nNw"/>
-                                                <constraint firstAttribute="trailing" secondItem="j3y-wJ-fRU" secondAttribute="trailing" id="bYt-yi-ENJ"/>
-                                                <constraint firstItem="j3y-wJ-fRU" firstAttribute="leading" secondItem="6nN-WL-SI9" secondAttribute="leading" id="hnc-4P-usg"/>
-                                                <constraint firstItem="j3y-wJ-fRU" firstAttribute="top" secondItem="6nN-WL-SI9" secondAttribute="top" id="lUg-bv-IGm"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                </cells>
+                            <tableViewSection headerTitle="HISTORY" id="UyF-aN-UO2">
+                                <cells/>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="COLLABORATIONS" id="9Ui-BQ-R3E">
+                                <cells/>
                             </tableViewSection>
                         </sections>
                         <connections>
@@ -148,15 +130,17 @@
                             <outlet property="delegate" destination="FlX-Mm-TaP" id="xdX-Ev-MxA"/>
                         </connections>
                     </tableView>
+                    <toolbarItems>
+                        <barButtonItem id="Q42-d5-PaN"/>
+                    </toolbarItems>
                     <navigationItem key="navigationItem" id="eI7-Uc-Vxa"/>
                     <connections>
-                        <outlet property="detailDescriptionLabel" destination="j3y-wJ-fRU" id="GJX-1B-X6r"/>
                         <outlet property="todoText" destination="1Gl-rQ-fWG" id="Xmb-4b-28q"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="36U-BY-Mss" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2600.8000000000002" y="85.907046476761622"/>
+            <point key="canvasLocation" x="708" y="154.27286356821591"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="niM-n7-ZfA">
@@ -174,7 +158,10 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iJc-5Z-1Cg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1661.5999999999999" y="85.907046476761622"/>
+            <point key="canvasLocation" x="-39" y="155"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="eeQ-MK-s3T"/>
+    </inferredMetricsTieBreakers>
 </document>

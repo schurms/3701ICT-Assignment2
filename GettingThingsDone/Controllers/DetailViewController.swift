@@ -9,19 +9,49 @@
 
 import UIKit
 
-class DetailViewController: UITableViewController {
+//MARK: Protocols
+/**
+ Delegate protocol to send values back to ToDoListViewController for adding and updating to do items
+ */
+protocol DetailItemControllerDelegate: class {
+    /**
+     Edit an existing item
+     - Parameter controller: Name of initiating controller
+     - Parameter editItem: data to be provided to editItem function in ToDoListViewController
+     */
+    func editItem(_ controller: AnyObject, editItem: Todo)
+}
+
+class DetailViewController: UITableViewController, UITextFieldDelegate {
     
-    @IBOutlet weak var detailDescriptionLabel: UILabel!
+    //MARK: Properties
+    
+    // Delegate instance to return data back to ToDoListViewController
+    weak var delegate: DetailItemControllerDelegate?
+    
+    // Define and initialise a new array object
+    var todos = Todo(title: "" )
+    
+    //MARK: Outlets
+    
+    /**
+     Outlets to capture and display information
+     */
     
     @IBOutlet weak var todoText: UITextField!
+    
+    // Property observer if detailItem sent via showItem segue
+    var detailItem: String? { // using string temporarily
+        didSet {
+            // Update the view.
+            configureView()
+        }
+    }
     
     
     func configureView() {
         // Update the user interface for the detail item.
         if let detail = detailItem {
-            if let label = detailDescriptionLabel {
-                label.text = detail.description
-            }
             if let todoTitle = todoText {
                 todoTitle.text = detail.description
             }
@@ -42,13 +72,19 @@ class DetailViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    var detailItem: String? {
-        didSet {
-            // Update the view.
-            configureView()
-        }
+    //MARK: UITextFieldDelegate
+    
+    /**
+     This method manages action on pressing return
+     */
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        // Resign keyboard when return pressed
+        textField.resignFirstResponder()
+        return true
     }
     
+
     @objc func editObject(_ sender: Any) {
 
     }

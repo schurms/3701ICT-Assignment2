@@ -14,7 +14,7 @@ class MasterViewController: UITableViewController, DetailItemControllerDelegate 
     var detailViewController: DetailViewController? = nil
     var objects = [String]()
     var todos = [Todo]()  // not used yet
-    var todoCounter = 1
+    var todoCounter = 0
     
     let sections: [String] = ["YET TO DO", "COMPLETED"]
     
@@ -41,12 +41,12 @@ class MasterViewController: UITableViewController, DetailItemControllerDelegate 
         // Dispose of any resources that can be recreated.
     }
     
+    
     @objc func insertNewObject(_ sender: Any) {
-        let textToInsert = "Todo Item " + String(todoCounter)
-        objects.insert(textToInsert, at: 0)
-        let indexPath = IndexPath(row: 0, section: 0)
-        tableView.insertRows(at: [indexPath], with: .automatic)
         todoCounter += 1
+        objects.append(("Todo Item " + String(todoCounter)))
+        let indexPath = IndexPath(row: objects.count - 1, section: 0)
+        tableView.insertRows(at: [indexPath], with: .automatic)
     }
     
     // MARK: - Segues
@@ -70,7 +70,7 @@ class MasterViewController: UITableViewController, DetailItemControllerDelegate 
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 1
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

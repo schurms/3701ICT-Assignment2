@@ -14,7 +14,6 @@ class MasterViewController: UITableViewController {
     var detailViewController: DetailViewController? = nil
     var objects = [String]()
     var todoCounter = 1
-    let todoText = "Todo Item "
     
     let sections: [String] = ["YET TO DO", "COMPLETED"]
     

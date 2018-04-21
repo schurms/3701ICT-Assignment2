@@ -69,12 +69,8 @@ class MasterViewController: UITableViewController, DetailItemControllerDelegate 
         return sections[section]
     }
     
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 80
-    }
-    
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return 2
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -84,7 +80,6 @@ class MasterViewController: UITableViewController, DetailItemControllerDelegate 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellReuseIdentifier = "Cell"
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath)
-        
         
         let object = objects[indexPath.row]
         cell.textLabel!.text = object.description

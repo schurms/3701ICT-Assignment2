@@ -39,15 +39,13 @@ class MasterViewController: UITableViewController, DetailItemControllerDelegate 
         // Dispose of any resources that can be recreated.
     }
     
-    
     @objc func insertNewObject(_ sender: Any) {
         let indexPath = IndexPath(row: objects.count, section: 0)
-//        let indexPath2 = IndexPath(row: objects.count, section: 1)  // what is the error here
+//        let indexPath2 = IndexPath(row: objects.count, section: 1)  //Uncomment for 2 sections
         let objectCounter = objects.count + 1
         objects.append("Todo Item \(objectCounter)")
-//        tableView.insertRows(at: [indexPath,indexPath2], with: .automatic)
-        tableView.insertRows(at: [indexPath], with: .automatic)
-
+//        tableView.insertRows(at: [indexPath,indexPath2], with: .automatic)  //Uncomment for 2 Sections
+        tableView.insertRows(at: [indexPath], with: .automatic)  //Uncomment for 1 section
     }
     
     // MARK: - Segues
@@ -71,7 +69,7 @@ class MasterViewController: UITableViewController, DetailItemControllerDelegate 
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // change to 2 and it crashes
+//        return 2 //Uncomment for 2 Sections
         return 1
     }
     

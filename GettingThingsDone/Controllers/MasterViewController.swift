@@ -38,7 +38,7 @@ class MasterViewController: UITableViewController, DetailItemControllerDelegate 
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+//    sss
     @objc func insertNewObject(_ sender: Any) {
         let indexPath = IndexPath(row: objects.count, section: 0)
 //        let indexPath2 = IndexPath(row: objects.count, section: 1)  //Uncomment for 2 sections

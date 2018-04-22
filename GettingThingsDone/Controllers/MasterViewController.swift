@@ -13,7 +13,6 @@ class MasterViewController: UITableViewController, DetailItemControllerDelegate 
     
     var detailViewController: DetailViewController? = nil
     var objects = [String]()
-    var todos = [Todo]()  // not used yet
     var todoCounter = 0
     
     let sections: [String] = ["YET TO DO", "COMPLETED"]
@@ -70,6 +69,7 @@ class MasterViewController: UITableViewController, DetailItemControllerDelegate 
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
+        // change to 2 and it crashes
         return 1
     }
     

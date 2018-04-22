@@ -12,8 +12,7 @@ import UIKit
 class MasterViewController: UITableViewController, DetailItemControllerDelegate {
     
     var detailViewController: DetailViewController? = nil
-    var objects = [String]()
-    var todoCounter = 0
+    var objects = [Any]()
     
     let sections: [String] = ["YET TO DO", "COMPLETED"]
     
@@ -42,10 +41,12 @@ class MasterViewController: UITableViewController, DetailItemControllerDelegate 
     
     
     @objc func insertNewObject(_ sender: Any) {
-        todoCounter += 1
-        objects.append(("Todo Item " + String(todoCounter)))
-        let indexPath = IndexPath(row: objects.count - 1, section: 0)
-        tableView.insertRows(at: [indexPath], with: .automatic)
+        let indexPath = IndexPath(row: objects.count, section: 0)
+        let indexPath2 = IndexPath(row: objects.count, section: 1)  // what is the error here
+        let objectCounter = objects.count + 1
+        objects.append("Todo Item \(objectCounter)")
+        tableView.insertRows(at: [indexPath,indexPath2], with: .automatic)
+
     }
     
     // MARK: - Segues
@@ -55,7 +56,7 @@ class MasterViewController: UITableViewController, DetailItemControllerDelegate 
             if let indexPath = tableView.indexPathForSelectedRow {
                 let object = objects[indexPath.row]
                 let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
-                controller.detailItem = object
+                controller.detailItem = object as? String
                 controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
                 controller.navigationItem.leftItemsSupplementBackButton = true
             }
@@ -70,7 +71,7 @@ class MasterViewController: UITableViewController, DetailItemControllerDelegate 
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         // change to 2 and it crashes
-        return 1
+        return 2
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -82,7 +83,7 @@ class MasterViewController: UITableViewController, DetailItemControllerDelegate 
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath)
         
         let object = objects[indexPath.row]
-        cell.textLabel!.text = object.description
+        cell.textLabel!.text = (object as AnyObject).description
         return cell
     }
     

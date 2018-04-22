@@ -42,10 +42,11 @@ class MasterViewController: UITableViewController, DetailItemControllerDelegate 
     
     @objc func insertNewObject(_ sender: Any) {
         let indexPath = IndexPath(row: objects.count, section: 0)
-        let indexPath2 = IndexPath(row: objects.count, section: 1)  // what is the error here
+//        let indexPath2 = IndexPath(row: objects.count, section: 1)  // what is the error here
         let objectCounter = objects.count + 1
         objects.append("Todo Item \(objectCounter)")
-        tableView.insertRows(at: [indexPath,indexPath2], with: .automatic)
+//        tableView.insertRows(at: [indexPath,indexPath2], with: .automatic)
+        tableView.insertRows(at: [indexPath], with: .automatic)
 
     }
     
@@ -71,7 +72,7 @@ class MasterViewController: UITableViewController, DetailItemControllerDelegate 
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         // change to 2 and it crashes
-        return 2
+        return 1
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

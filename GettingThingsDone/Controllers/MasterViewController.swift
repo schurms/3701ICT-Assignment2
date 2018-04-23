@@ -101,7 +101,7 @@ class MasterViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        let itemToMove = objects[sourceIndexPath.section][sourceIndexPath.row]
+        let itemToMove = self.objects[sourceIndexPath.section][sourceIndexPath.row]
         
         // Delete the todo from source section
         objects[sourceIndexPath.section].remove(at: sourceIndexPath.row)

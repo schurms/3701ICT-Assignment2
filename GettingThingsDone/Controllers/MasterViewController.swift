@@ -9,15 +9,15 @@
 
 import UIKit
 
-
+let sectionHeaders = ["YET TO DO", "COMPLETED"]
 
 class MasterViewController: UITableViewController, DetailItemControllerDelegate {
     
     var detailViewController: DetailViewController? = nil
-    var objects = [[Any](), [Any]()]
+//    var objects = [[Any](), [Any]()]
+    var objects = sectionHeaders.map { _ in return [Any]() }
     var todoCounter = 0
-    let sectionHeaders = ["YET TO DO", "COMPLETED"]
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -91,10 +91,8 @@ class MasterViewController: UITableViewController, DetailItemControllerDelegate 
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            objects.remove(at: indexPath.row)
+            objects[indexPath.section].remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
         }
     }
     
@@ -104,10 +102,13 @@ class MasterViewController: UITableViewController, DetailItemControllerDelegate 
     }
     
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        let todoToMove = self.objects[sourceIndexPath.row]
-        
-        objects.remove(at: sourceIndexPath.row)
-        objects.insert(todoToMove, at: destinationIndexPath.row)
+        let itemToMove = self.objects[sourceIndexPath.section][sourceIndexPath.row]
+        print(itemToMove, sourceIndexPath.section, sourceIndexPath.row)
+        // Move the todo to the target section
+        objects[sourceIndexPath.section].insert(itemToMove, at: destinationIndexPath.row)
+        // Delete the todo from source section
+        objects[sourceIndexPath.section].remove(at: sourceIndexPath.row)
+
     }
     
     //MARK: Protocol Delegate Methods

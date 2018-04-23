@@ -102,10 +102,11 @@ class MasterViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         let itemToMove = objects[sourceIndexPath.section][sourceIndexPath.row]
-        // Move the todo to the target section
-        objects[destinationIndexPath.section].insert(itemToMove, at: destinationIndexPath.row)
+        
         // Delete the todo from source section
         objects[sourceIndexPath.section].remove(at: sourceIndexPath.row)
+        // Move the todo to the target section
+        objects[destinationIndexPath.section].insert(itemToMove, at: destinationIndexPath.row)
 
     }
     

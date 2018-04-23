@@ -9,12 +9,14 @@
 
 import UIKit
 
+
+
 class MasterViewController: UITableViewController, DetailItemControllerDelegate {
     
     var detailViewController: DetailViewController? = nil
-    var objects = [Any]()
-    
-    let sections: [String] = ["YET TO DO", "COMPLETED"]
+    var objects = [[Any](), [Any]()]
+    var todoCounter = 0
+    let sectionHeaders = ["YET TO DO", "COMPLETED"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,12 +42,9 @@ class MasterViewController: UITableViewController, DetailItemControllerDelegate 
     }
 
     @objc func insertNewObject(_ sender: Any) {
-        let indexPath = IndexPath(row: objects.count, section: 0)
-//        let indexPath2 = IndexPath(row: objects.count, section: 1)  //Uncomment for 2 sections
-        let objectCounter = objects.count + 1
-        objects.append("Todo Item \(objectCounter)")
-//        tableView.insertRows(at: [indexPath,indexPath2], with: .automatic)  //Uncomment for 2 Sections
-        tableView.insertRows(at: [indexPath], with: .automatic)  //Uncomment for 1 section
+        todoCounter += 1
+        objects[0].append("Todo Item \(todoCounter)")
+        tableView.reloadData()
     }
     
     // MARK: - Segues
@@ -53,9 +52,9 @@ class MasterViewController: UITableViewController, DetailItemControllerDelegate 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showDetail" {
             if let indexPath = tableView.indexPathForSelectedRow {
-                let object = objects[indexPath.row]
+                let object = objects[indexPath.section][indexPath.row] as! String
                 let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
-                controller.detailItem = object as? String
+                controller.detailItem = object
                 controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
                 controller.navigationItem.leftItemsSupplementBackButton = true
             }
@@ -65,23 +64,22 @@ class MasterViewController: UITableViewController, DetailItemControllerDelegate 
     // MARK: - Table View
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return sections[section]
+        return sectionHeaders[section]
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-//        return 2 //Uncomment for 2 Sections
-        return 1
+        return sectionHeaders.count
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return objects.count
+        return objects[section].count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellReuseIdentifier = "Cell"
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath)
         
-        let object = objects[indexPath.row]
+        let object = objects[indexPath.section][indexPath.row]
         cell.textLabel!.text = (object as AnyObject).description
         return cell
     }

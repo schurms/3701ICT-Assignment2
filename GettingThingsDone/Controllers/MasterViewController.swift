@@ -9,13 +9,12 @@
 
 import UIKit
 
-let sectionHeaders = ["YET TO DO", "COMPLETED"]
-
-class MasterViewController: UITableViewController, DetailItemControllerDelegate {
+class MasterViewController: UITableViewController {
     
     var detailViewController: DetailViewController? = nil
-//    var objects = [[Any](), [Any]()]
-    var objects = sectionHeaders.map { _ in return [Any]() }
+    var objects = [[Any](), [Any]()]
+    let sectionHeaders = ["YET TO DO", "COMPLETED"]
+    //var objects = sectionHeaders.map { _ in return [Any]() }
     var todoCounter = 0
 
     override func viewDidLoad() {
@@ -108,26 +107,6 @@ class MasterViewController: UITableViewController, DetailItemControllerDelegate 
         // Delete the todo from source section
         objects[sourceIndexPath.section].remove(at: sourceIndexPath.row)
 
-    }
-    
-    //MARK: Protocol Delegate Methods
-    
-    /**
-     This Delegate method is used to update an existing item in the Items array
-     - Parameter controller: Defines the sending view controller
-     - Parameter editItem: Contains the item values to be edited in the array
-     - returns: The ToDoListViewController is returned with the tableview reloaded
-     */
-    func editItem(_ controller: AnyObject, editItem: Todo) {
-        
-        // Replace the edited item in the array at the row that was selected
-       // todos[selectedRow] = editItem
-        
-        // Reload table view
-        tableView.reloadData()
-        
-        // Use dismiss to remove the intermediate UIController for this segue
-        dismiss(animated: true, completion: nil)
     }
     
 }

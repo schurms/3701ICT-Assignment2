@@ -9,28 +9,9 @@
 
 import UIKit
 
-//MARK: Protocols
-/**
- Delegate protocol to send values back to ToDoListViewController for adding and updating to do items
- */
-protocol DetailItemControllerDelegate: class {
-    /**
-     Edit an existing item
-     - Parameter controller: Name of initiating controller
-     - Parameter editItem: data to be provided to editItem function in ToDoListViewController
-     */
-    func editItem(_ controller: AnyObject, editItem: Todo)
-}
-
 class DetailViewController: UITableViewController, UITextFieldDelegate {
     
     //MARK: Properties
-    
-    // Delegate instance to return data back to ToDoListViewController
-    weak var delegate: DetailItemControllerDelegate?
-    
-    // Define and initialise a new array object
-    var todos = Todo(title: "" )
     
     //MARK: Outlets
     
@@ -41,14 +22,14 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     @IBOutlet weak var todoText: UITextField!
     
     // Property observer if detailItem sent via showItem segue
-    var detailItem: String? { // using string temporarily
+    var detailItem: String? {
         didSet {
             // Update the view.
             configureView()
         }
     }
     
-    
+    // Configure the User view
     func configureView() {
         // Update the user interface for the detail item.
         if let detail = detailItem {

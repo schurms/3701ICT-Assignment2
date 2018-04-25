@@ -84,16 +84,14 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
 
         if delegate != nil {
             if let editedToDo = todoText?.text {
-                print(editedToDo)
                 delegate?.didEditItem(todoItem: editedToDo)
             }
         }
-        
     }
+    
     
     @objc func editObject(_ sender: Any) {
         
-
     }
     
 }

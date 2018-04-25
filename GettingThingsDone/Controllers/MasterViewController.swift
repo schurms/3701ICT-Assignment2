@@ -56,12 +56,12 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
                 selectedSection = indexPath.section
                 selectedRow = indexPath.row
                 let object = objects[indexPath.section][indexPath.row] as! String
-//                let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
-                let destinationViewController = segue.destination as? DetailViewController
-                destinationViewController?.delegate = self
-                destinationViewController?.detailItem = object
-                destinationViewController?.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
-                destinationViewController?.navigationItem.leftItemsSupplementBackButton = true
+                let destinationViewController = (segue.destination as! UINavigationController).topViewController as! DetailViewController
+//                let destinationViewController = segue.destination as? DetailViewController
+                destinationViewController.delegate = self
+                destinationViewController.detailItem = object
+                destinationViewController.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+                destinationViewController.navigationItem.leftItemsSupplementBackButton = true
             }
         }
     }
@@ -107,10 +107,12 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
     }
     
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        
         let itemToMove = self.objects[sourceIndexPath.section][sourceIndexPath.row]
         
         // Delete the todo from source section
         objects[sourceIndexPath.section].remove(at: sourceIndexPath.row)
+        
         // Move the todo to the target section
         objects[destinationIndexPath.section].insert(itemToMove, at: destinationIndexPath.row)
 

@@ -9,13 +9,15 @@
 
 import UIKit
 
-class MasterViewController: UITableViewController {
+class MasterViewController: UITableViewController, ToDoItemDelegate {
     
     var detailViewController: DetailViewController? = nil
     var objects = [[Any](), [Any]()]
     let sectionHeaders = ["YET TO DO", "COMPLETED"]
     //var objects = sectionHeaders.map { _ in return [Any]() }
     var todoCounter = 0
+    var selectedRow: Int = 0
+    var selectedSection: Int = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,11 +53,15 @@ class MasterViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showDetail" {
             if let indexPath = tableView.indexPathForSelectedRow {
+                selectedSection = indexPath.section
+                selectedRow = indexPath.row
                 let object = objects[indexPath.section][indexPath.row] as! String
-                let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
-                controller.detailItem = object
-                controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
-                controller.navigationItem.leftItemsSupplementBackButton = true
+//                let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
+                let destinationViewController = segue.destination as? DetailViewController
+                destinationViewController?.delegate = self
+                destinationViewController?.detailItem = object
+                destinationViewController?.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+                destinationViewController?.navigationItem.leftItemsSupplementBackButton = true
             }
         }
     }
@@ -110,6 +116,15 @@ class MasterViewController: UITableViewController {
 
     }
     
+    func didEditItem(todoItem: String) {
+        
+        // Replace the edited item in the array at the row that was selected
+        objects[selectedSection][selectedRow] = todoItem
+        
+        // Reload table view
+        tableView.reloadData()
+    
+    }
 }
 
 

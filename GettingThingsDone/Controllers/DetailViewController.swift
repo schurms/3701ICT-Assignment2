@@ -9,11 +9,21 @@
 
 import UIKit
 
+//MARK: Protocols
+/**
+ Delegate protocol to send values back to ToDoListViewController for adding and updating to do items
+ */
+protocol ToDoItemDelegate {
+    func didEditItem(todoItem: String)
+}
+
 class DetailViewController: UITableViewController, UITextFieldDelegate {
     
     //MARK: Properties
     
-    //MARK: Outlets
+    // Delegate instance to return data back to ToDoListViewController
+    var delegate: ToDoItemDelegate?
+    
     
     /**
      Outlets to capture and display information
@@ -41,12 +51,17 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Let itemTitle field be delegate for ToDoItemViewController
+        todoText?.delegate = self
+        
         // Add right bar add button
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(editObject(_:)))
         navigationItem.rightBarButtonItem = addButton
         // Do any additional setup after loading the view, typically from a nib.
         configureView()
     }
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -65,8 +80,19 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         return true
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
 
+        if delegate != nil {
+            if let editedToDo = todoText?.text {
+                print(editedToDo)
+                delegate?.didEditItem(todoItem: editedToDo)
+            }
+        }
+        
+    }
+    
     @objc func editObject(_ sender: Any) {
+        
 
     }
     

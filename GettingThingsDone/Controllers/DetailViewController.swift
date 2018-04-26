@@ -18,7 +18,7 @@ protocol ToDoItemDelegate {
      Edit Todo Information
      - Parameter todoItem: data to be provided to the didEditItem function
      */
-    func didEditItem(todoItem: String)
+    func didEditItem(_ controller: AnyObject, editItem: Item)
 }
 
 class DetailViewController: UITableViewController, UITextFieldDelegate {
@@ -27,9 +27,10 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     
     // Delegate instance to return data back to MasterViewController
     var delegate: ToDoItemDelegate?
+    var items = Item(title: "")
     
     // Property observer if detailItem sent via showItem segue
-    var detailItem: String? {
+    var detailItem: Item? {
         didSet {
             // Update the view.
             configureView()
@@ -41,7 +42,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     /**
      Outlets to capture and display information
      */
-    @IBOutlet weak var todoText: UITextField!
+    @IBOutlet weak var itemTitle: UITextField!
     
     //MARK: Default View Load and Memory Handling Functions
     
@@ -52,7 +53,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         super.viewDidLoad()
         
         // Let itemTitle field be delegate for ViewController
-        todoText?.delegate = self
+        itemTitle?.delegate = self
         
         // Add right bar add button
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addObject(_:)))
@@ -77,9 +78,13 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         
         // Return edited data back via the protocol
         if delegate != nil {
-            if let editedToDo = todoText?.text {
-                delegate?.didEditItem(todoItem: editedToDo)
+            if let trimmedText = itemTitle?.text {
+                items.title = trimmedText
+            } else {
+                fatalError("Can not read input text")
             }
+                delegate?.didEditItem(self, editItem: items)
+    
         }
     }
     
@@ -100,10 +105,8 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     // Configure the User view
     func configureView() {
         // Update the user interface for the detail item.
-        if let detail = detailItem {
-            if let todoTitle = todoText {
-                todoTitle.text = detail.description
-            }
+        if let item = detailItem {
+            itemTitle?.text = item.title
         }
     }
     

@@ -21,10 +21,10 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
     // Delegate
     weak var detailViewController: DetailViewController?
     
-    //Variables
-    var objects = [[Any](), [Any]()]
+    //Declare items arrays
+    var items = [[Item](), [Item]()]
+    //Declare headers arrays
     let sectionHeaders = ["YET TO DO", "COMPLETED"]
-    //var objects = sectionHeaders.map { _ in return [Any]() }
     var todoCounter = 0
     var selectedRow: Int = 0
     var selectedSection: Int = 0
@@ -66,7 +66,8 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
      */
     @objc func insertNewObject(_ sender: Any) {
         todoCounter += 1
-        objects[0].append("Todo Item \(todoCounter)")
+        let todo = "Todo Item \(todoCounter)"
+        items[0].append(Item(title: todo))
         tableView.reloadData()
     }
     
@@ -80,10 +81,10 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
             if let indexPath = tableView.indexPathForSelectedRow {
                 selectedSection = indexPath.section
                 selectedRow = indexPath.row
-                let object = objects[indexPath.section][indexPath.row] as! String
+                let selectedItem = items[indexPath.section][indexPath.row]
                 let destinationViewController = (segue.destination as! UINavigationController).topViewController as! DetailViewController
                 destinationViewController.delegate = self
-                destinationViewController.detailItem = object
+                destinationViewController.detailItem = selectedItem
                 destinationViewController.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
                 destinationViewController.navigationItem.leftItemsSupplementBackButton = true
             }
@@ -110,18 +111,18 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
      This method returns the number of rows for a section
      */
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return objects[section].count
+        return items[section].count
     }
     
     /**
      This method displays the rows of data
      */
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cellReuseIdentifier = "Cell"
+        let cellReuseIdentifier = "ToDoItemCell"
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath)
         
-        let object = objects[indexPath.section][indexPath.row]
-        cell.textLabel!.text = (object as AnyObject).description
+        let item = items[indexPath.section][indexPath.row]
+        cell.textLabel!.text = item.title
         return cell
     }
     
@@ -138,7 +139,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
      */
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            objects[indexPath.section].remove(at: indexPath.row)
+            items[indexPath.section].remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
@@ -157,26 +158,25 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
      */
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         
-        let itemToMove = self.objects[sourceIndexPath.section][sourceIndexPath.row]
+        let itemToMove = self.items[sourceIndexPath.section][sourceIndexPath.row]
         
         // Delete the todo from source section
-        objects[sourceIndexPath.section].remove(at: sourceIndexPath.row)
+        items[sourceIndexPath.section].remove(at: sourceIndexPath.row)
         
         // Move the todo to the target section
-        objects[destinationIndexPath.section].insert(itemToMove, at: destinationIndexPath.row)
-
+        items[destinationIndexPath.section].insert(itemToMove, at: destinationIndexPath.row)
     }
+    
     /**
      Delegate method to update the array with information from the DetailViewController
      */
-    func didEditItem(todoItem: String) {
+    func didEditItem(_ controller: AnyObject, editItem: Item) {
         
         // Replace the edited item in the array at the row that was selected
-        objects[selectedSection][selectedRow] = todoItem
+        items[selectedSection][selectedRow] = editItem
         
         // Reload table view
         tableView.reloadData()
-
     }
 }
 

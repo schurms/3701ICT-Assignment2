@@ -1,4 +1,4 @@
-//
+///
 //  MasterViewController.swift
 //  GettingThingsDone
 //  Title: 3701ICT Assignment 2
@@ -23,7 +23,8 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
     
     // Declare arrays
     var items = [[Item](), [Item]()]
-    var todo = Item(title: "", done: false)
+    var history = History(historyDate: Date(), historyDescription: "")
+    var todo = Item(title: "", done: false, itemHistory: [], itemCollaborator: [], itemPeer: [])
     
     // Declare headers arrays
     let sectionHeaders = ["YET TO DO", "COMPLETED"]
@@ -72,7 +73,10 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
         todoCounter += 1
         todo.title = "Todo Item \(todoCounter)"
         todo.done = false
-        items[0].append(Item(title: todo.title, done: todo.done))
+        history = History(historyDate: Date(), historyDescription: "Item Created")
+        let collaborator = Collaborator(collaboratorName: "")
+        let peer = Peer(peerName: "", peerDevice: "")
+        items[0].append(Item(title: todo.title, done: todo.done, itemHistory: [history], itemCollaborator: [collaborator], itemPeer: [peer]))
         tableView.reloadData()
     }
     
@@ -125,9 +129,13 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellReuseIdentifier = "ToDoItemCell"
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath)
+        //        let itemHistoryDate = items[indexPath.section][indexPath.row].itemHistory[0].historyDate
+        //        let itemHistoryDesc = items[indexPath.section][indexPath.row].itemHistory[0].historyDescription
         
         let item = items[indexPath.section][indexPath.row]
+        
         cell.textLabel!.text = item.title
+        //  print(item.title, itemHistoryDate, itemHistoryDesc)
         return cell
     }
     
@@ -172,9 +180,21 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
         
         // Update the done flag depending on item moved
         if (sourceIndexPath.section == 0 && destinationIndexPath.section == 1) {
+            
+            // Item moved to completed - set done
             items[destinationIndexPath.section][destinationIndexPath.row].done = true
+            // Add history record for move to completed
+            history = History(historyDate: Date(), historyDescription: "Item Completed")
+            items[destinationIndexPath.section][destinationIndexPath.row].itemHistory.append(history)
+            
         } else if ( sourceIndexPath.section == 1 && destinationIndexPath.section == 0) {
+            
+            // Add history record for move
             items[destinationIndexPath.section][destinationIndexPath.row].done = false
+            
+            // Add history record for move to not completed
+            history = History(historyDate: Date(), historyDescription: "Item Not Completed")
+            items[destinationIndexPath.section][destinationIndexPath.row].itemHistory.append(history)
         }
     }
     

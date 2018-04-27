@@ -27,7 +27,8 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     
     // Delegate instance to return data back to MasterViewController
     var delegate: ToDoItemDelegate?
-    var items = Item(title: "", done: false)
+    var eventHistory = History(historyDate: Date(), historyDescription: "")
+    var items = Item(title: "", done: false, itemHistory: [], itemCollaborator: [], itemPeer: [])
     
     // Property observer if detailItem sent via showItem segue
     var detailItem: Item? {

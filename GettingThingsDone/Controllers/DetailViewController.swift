@@ -27,7 +27,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     
     // Delegate instance to return data back to MasterViewController
     var delegate: ToDoItemDelegate?
-    var items = Item(title: "")
+    var items = Item(title: "", done: false)
     
     // Property observer if detailItem sent via showItem segue
     var detailItem: Item? {
@@ -83,8 +83,8 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             } else {
                 fatalError("Can not read input text")
             }
-                delegate?.didEditItem(self, editItem: items)
-    
+            delegate?.didEditItem(self, editItem: items)
+            
         }
     }
     

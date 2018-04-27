@@ -19,20 +19,22 @@ class Item {
      To Do item variables.
      */
     var title: String
+    var done: Bool
     
     //MARK: Initialisation
     
     /**
      Initialises a new "To Do" item
      - Parameter title: The title of the item
+     - Parameter complete: Indicates if item is complete
      - Returns: A "To Do" item.
      */
-    init(title: String) {
+    init(title: String, done: Bool) {
         
         // Initialise stored properties
         self.title = title
-
+        self.done = done
+        
     }
     
 }
-

@@ -21,14 +21,18 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
     // Delegate
     weak var detailViewController: DetailViewController?
     
-    //Declare items arrays
+    // Declare arrays
     var items = [[Item](), [Item]()]
-    //Declare headers arrays
+    var todo = Item(title: "", done: false)
+    
+    // Declare headers arrays
     let sectionHeaders = ["YET TO DO", "COMPLETED"]
+    
+    // Declare variables
     var todoCounter = 0
     var selectedRow: Int = 0
     var selectedSection: Int = 0
-
+    
     /**
      This method performs actions on view loading
      */
@@ -66,8 +70,9 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
      */
     @objc func insertNewObject(_ sender: Any) {
         todoCounter += 1
-        let todo = "Todo Item \(todoCounter)"
-        items[0].append(Item(title: todo))
+        todo.title = "Todo Item \(todoCounter)"
+        todo.done = false
+        items[0].append(Item(title: todo.title, done: todo.done))
         tableView.reloadData()
     }
     
@@ -145,7 +150,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
     }
     
     // MARK: Moving Cells
-
+    
     /**
      Set Action to be able to move row
      */
@@ -154,7 +159,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
     }
     
     /**
-     Method to move rows between sections
+     Method to move rows between sections - Yet To Do / Completed
      */
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         
@@ -162,9 +167,15 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
         
         // Delete the todo from source section
         items[sourceIndexPath.section].remove(at: sourceIndexPath.row)
-        
         // Move the todo to the target section
         items[destinationIndexPath.section].insert(itemToMove, at: destinationIndexPath.row)
+        
+        // Update the done flag depending on item moved
+        if (sourceIndexPath.section == 0 && destinationIndexPath.section == 1) {
+            items[destinationIndexPath.section][destinationIndexPath.row].done = true
+        } else if ( sourceIndexPath.section == 1 && destinationIndexPath.section == 0) {
+            items[destinationIndexPath.section][destinationIndexPath.row].done = false
+        }
     }
     
     /**
@@ -179,5 +190,3 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
         tableView.reloadData()
     }
 }
-
-

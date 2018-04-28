@@ -36,17 +36,24 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     
     // Delegate instance to return data back to MasterViewController
     var delegate: ToDoItemDelegate?
-    var eventHistory = History(historyDate: Date(), historyDescription: "")
-    var itemCollaborator = Collaborator(collaboratorName: "")
-    var itemPeer = Peer(peerName: "", peerDevice: "")
-    var items = Item(title: "", done: false, itemHistory: [], itemCollaborator: [], itemPeer: [])
+    
+    // Item Variables
     var itemTitle: String = ""
+    var itemHistory = [History]()
+    var itemCollaborator = [Collaborator]()
+    var itemPeer = [Peer]()
+    var items = Item(title: "", done: false, itemHistory: [], itemCollaborator: [], itemPeer: [])
+
+    // Counters and indexes
     var selectedRow: Int = 0
     var selectedSection: Int = 0
+    var itemRows: Int = 1
     
     // Property observer if detailItem sent via showItem segue
     var detailItem: Item? {
-        didSet {}
+        didSet {
+            configureView()
+        }
     }
     
     //MARK: Default View Load and Memory Handling Functions
@@ -122,12 +129,16 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
      This method enables the number of sections
      */
     override func numberOfSections(in tableView: UITableView) -> Int {
+        
         return 1
     }
     
     //MARK: Properties
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        
+        
         return 1
     }
     
@@ -146,21 +157,43 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             identifier = "CollaboratorCell"
         case .sectionD:
             identifier = "PeerCell"
-
         }
 
         selectedRow = indexPath.row
         selectedSection = indexPath.section
-    
-            let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! TextInputTableViewCell
-            if let detail = detailItem {
-                cell.taskTextField.text = detail.title
-                itemTitle = detail.title
-            }
-            return cell
-    
-        // Return populated cell to TableView
         
+        // Task Section
+        if (indexPath.section == 0) {
+            let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! TextInputTableViewCell
+            cell.taskTextField.text = itemTitle
+    
+            // Return populated cell to TableView
+            return cell
+            
+        // History Section
+        } else if (indexPath.section == 1) {
+            let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! TextInputTableViewCell
+            cell.taskTextField.text = itemTitle
+            
+            // Return populated cell to TableView
+            return cell
+        
+        // Collaborator Section
+        } else if (indexPath.section == 2) {
+            let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! TextInputTableViewCell
+            cell.taskTextField.text = itemTitle
+            
+            // Return populated cell to TableView
+            return cell
+            
+        // Peer Section
+        } else {
+            let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! TextInputTableViewCell
+            cell.taskTextField.text = itemTitle
+            
+            // Return populated cell to TableView
+            return cell
+        }
     }
     
     /**
@@ -170,14 +203,31 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
 
         // Return edited data back via the protocol
         if delegate != nil {
-           
+            
+            // Set up variables to return
             items.title = itemTitle
-
+            
+            // Add changes to array
             delegate?.didEditItem(self, editItem: items)
         }
     }
     
     //MARK: Helper Methods
+    
+    /**
+     Configures the view variables
+     - returns: Sets view Variables
+     */
+    func configureView() {
+        
+        // Set variables passed from Master Table
+        if let detail = detailItem {
+            itemTitle = detail.title
+            itemHistory = detail.itemHistory
+            itemCollaborator = detail.itemCollaborator
+            itemPeer = detail.itemPeer
+        }
+    }
     
     // Called on pressing the add Button - To Implement
     @objc func addObject(_ sender: Any) {

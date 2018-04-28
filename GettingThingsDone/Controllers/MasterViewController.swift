@@ -78,6 +78,9 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
         let collaborator = Collaborator(collaboratorName: "")
         let peer = Peer(peerName: "", peerDevice: "")
         items[0].append(Item(title: todo.title, done: todo.done, itemHistory: [history], itemCollaborator: [collaborator], itemPeer: [peer]))
+        print(items[0][0].itemHistory[i].historyDate, items[0][0].itemHistory[i].historyDescription)
+        print(items[0][0].itemHistory.count)
+        i += 1
         tableView.reloadData()
     }
     
@@ -176,6 +179,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
         
         // Delete the todo from source section
         items[sourceIndexPath.section].remove(at: sourceIndexPath.row)
+        
         // Move the todo to the target section
         items[destinationIndexPath.section].insert(itemToMove, at: destinationIndexPath.row)
         
@@ -184,12 +188,10 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
             
             // Item moved to completed - set done
             items[destinationIndexPath.section][destinationIndexPath.row].done = true
-            // Add history record for move to completed
-            history = History(historyDate: Date(), historyDescription: "Item Not Completed")
-            items[destinationIndexPath.section][destinationIndexPath.row].itemHistory.append(history)
             
-            //            print(items[destinationIndexPath.section][destinationIndexPath.row].itemHistory[i].historyDate)
-            //            print(items[destinationIndexPath.section][destinationIndexPath.row].itemHistory[i].historyDescription)
+            // Add history record for move to completed
+            history = History(historyDate: Date(), historyDescription: "Item Completed")
+            items[destinationIndexPath.section][destinationIndexPath.row].itemHistory.append(history)
             
         } else if ( sourceIndexPath.section == 1 && destinationIndexPath.section == 0) {
             
@@ -197,13 +199,10 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
             items[destinationIndexPath.section][destinationIndexPath.row].done = false
             
             // Add history record for move to not completed
-            history = History(historyDate: Date(), historyDescription: "Item Completed")
+            history = History(historyDate: Date(), historyDescription: "Item Not Completed")
             items[destinationIndexPath.section][destinationIndexPath.row].itemHistory.append(history)
-            //            print(items[destinationIndexPath.section][destinationIndexPath.row].itemHistory[i].historyDate)
-            //            print(items[destinationIndexPath.section][destinationIndexPath.row].itemHistory[i].historyDescription)
         }
         
-        //        i += 1
     }
     
     /**

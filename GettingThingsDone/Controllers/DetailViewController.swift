@@ -27,6 +27,12 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     
     // Declare headers
     let sectionHeaders = ["TASKS", "HISTORY", "COLLABORATORS", "PEERS"]
+    enum Sections: Int {
+        case sectionA = 0
+        case sectionB = 1
+        case sectionC = 2
+        case sectionD = 3
+    }
     
     // Delegate instance to return data back to MasterViewController
     var delegate: ToDoItemDelegate?
@@ -127,17 +133,34 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // Define prototype cell reuse identifier as set in the View
-        let cellIdentifier = "TaskCell"
+        let identifier: String
+        guard let section = Sections(rawValue: indexPath.section) else {
+            fatalError("Unexpectedly got section \(indexPath.section)")
+        }
+        switch section {
+        case .sectionA:
+            identifier = "TaskCell"
+        case .sectionB:
+            identifier = "HistoryCell"
+        case .sectionC:
+            identifier = "CollaboratorCell"
+        case .sectionD:
+            identifier = "PeerCell"
+
+        }
+
         selectedRow = indexPath.row
         selectedSection = indexPath.section
-        let cell = self.tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! TextInputTableViewCell
-        if let detail = detailItem {
-            cell.taskTextField.text = detail.title
-            itemTitle = detail.title
-        }
-        
+    
+            let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! TextInputTableViewCell
+            if let detail = detailItem {
+                cell.taskTextField.text = detail.title
+                itemTitle = detail.title
+            }
+            return cell
+    
         // Return populated cell to TableView
-        return cell
+        
     }
     
     /**

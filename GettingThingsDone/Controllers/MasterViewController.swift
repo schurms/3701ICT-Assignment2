@@ -33,6 +33,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
     var todoCounter = 0
     var selectedRow: Int = 0
     var selectedSection: Int = 0
+    var i: Int = 0
     
     /**
      This method performs actions on view loading
@@ -129,8 +130,13 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellReuseIdentifier = "ToDoItemCell"
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath)
+//        let itemHistoryDate = items[indexPath.section][indexPath.row].itemHistory[0].historyDate
+//        let itemHistoryDesc = items[indexPath.section][indexPath.row].itemHistory[0].historyDescription
+        
         let item = items[indexPath.section][indexPath.row]
+        
         cell.textLabel!.text = item.title
+//        print(item.title, itemHistoryDate, itemHistoryDesc)
         return cell
     }
     
@@ -178,10 +184,12 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
             
             // Item moved to completed - set done
             items[destinationIndexPath.section][destinationIndexPath.row].done = true
-            
             // Add history record for move to completed
             history = History(historyDate: Date(), historyDescription: "Item Not Completed")
             items[destinationIndexPath.section][destinationIndexPath.row].itemHistory.append(history)
+            
+            //            print(items[destinationIndexPath.section][destinationIndexPath.row].itemHistory[i].historyDate)
+            //            print(items[destinationIndexPath.section][destinationIndexPath.row].itemHistory[i].historyDescription)
             
         } else if ( sourceIndexPath.section == 1 && destinationIndexPath.section == 0) {
             
@@ -191,8 +199,11 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
             // Add history record for move to not completed
             history = History(historyDate: Date(), historyDescription: "Item Completed")
             items[destinationIndexPath.section][destinationIndexPath.row].itemHistory.append(history)
+            //            print(items[destinationIndexPath.section][destinationIndexPath.row].itemHistory[i].historyDate)
+            //            print(items[destinationIndexPath.section][destinationIndexPath.row].itemHistory[i].historyDescription)
         }
         
+        //        i += 1
     }
     
     /**

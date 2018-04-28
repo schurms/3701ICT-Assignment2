@@ -109,7 +109,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             let cell = tableView.cellForRow(at: indexPath) as! ItemTableViewCell
             
             // Test for empty field by trimming whitespace and new lines from input text
-            if let trimmedText = (cell.taskTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)) {
+            if let trimmedText = (cell.titleTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)) {
                 if trimmedText.isEmpty == false {
                     navigationItem.hidesBackButton = false
                     itemTitle = trimmedText
@@ -129,17 +129,28 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
      This method enables the number of sections
      */
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return 2
     }
     
     //MARK: Properties
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        // Number of Rows for Task Section
         if section == 0 {
             return 1
-        } else {
         
-        return 10
+        // Number of Rows for History Section
+        } else if section == 1 {
+            return itemHistory.count
+            
+        // Number of Rows for Collaborator Section
+        } else if section == 2 {
+            return itemCollaborator.count
+            
+        // Number of Rows for Peer Section
+        } else {
+            return itemPeer.count
         }
     }
     
@@ -166,23 +177,24 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         // Task Section
         if (indexPath.section == 0) {
             let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! ItemTableViewCell
-            cell.taskTextField.text = itemTitle
+            cell.titleTextField.text = itemTitle
     
             // Return populated cell to TableView
             return cell
             
         // History Section
         } else if (indexPath.section == 1) {
-            let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! ItemTableViewCell
-            cell.taskTextField.text = itemTitle
+            let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
+            let itemHistoryDesc = itemHistory[indexPath.row].historyDescription
+            cell.textLabel!.text = itemHistoryDesc
             
             // Return populated cell to TableView
             return cell
-        
+
         // Collaborator Section
         } else if (indexPath.section == 2) {
             let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! ItemTableViewCell
-            cell.taskTextField.text = itemTitle
+            cell.titleTextField.text = itemTitle
             
             // Return populated cell to TableView
             return cell
@@ -190,7 +202,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         // Peer Section
         } else {
             let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! ItemTableViewCell
-            cell.taskTextField.text = itemTitle
+            cell.titleTextField.text = itemTitle
             
             // Return populated cell to TableView
             return cell

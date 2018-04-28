@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TextInputTableViewCell: UITableViewCell {
+class ItemTableViewCell: UITableViewCell {
 
     @IBOutlet weak var taskTextField: UITextField!
     

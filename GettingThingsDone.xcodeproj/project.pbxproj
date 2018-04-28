@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		28A1CF212093D3170098CFC7 /* TextInputTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A1CF202093D3170098CFC7 /* TextInputTableViewCell.swift */; };
+		28A1CF212093D3170098CFC7 /* ItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A1CF202093D3170098CFC7 /* ItemTableViewCell.swift */; };
 		28A359F720933CE30013A5F0 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A359F620933CE30013A5F0 /* History.swift */; };
 		28A359F920933CFD0013A5F0 /* Collaborator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A359F820933CFD0013A5F0 /* Collaborator.swift */; };
 		28A359FB20933D2E0013A5F0 /* Peer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A359FA20933D2E0013A5F0 /* Peer.swift */; };
@@ -40,7 +40,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		28A1CF202093D3170098CFC7 /* TextInputTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInputTableViewCell.swift; sourceTree = "<group>"; };
+		28A1CF202093D3170098CFC7 /* ItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemTableViewCell.swift; sourceTree = "<group>"; };
 		28A359F620933CE30013A5F0 /* History.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = History.swift; sourceTree = "<group>"; };
 		28A359F820933CFD0013A5F0 /* Collaborator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collaborator.swift; sourceTree = "<group>"; };
 		28A359FA20933D2E0013A5F0 /* Peer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Peer.swift; sourceTree = "<group>"; };
@@ -151,7 +151,7 @@
 			children = (
 				28ACE75E208A8FC500F96F20 /* MasterViewController.swift */,
 				28ACE760208A8FC500F96F20 /* DetailViewController.swift */,
-				28A1CF202093D3170098CFC7 /* TextInputTableViewCell.swift */,
+				28A1CF202093D3170098CFC7 /* ItemTableViewCell.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -308,7 +308,7 @@
 				28ACE75D208A8FC500F96F20 /* AppDelegate.swift in Sources */,
 				28A359F720933CE30013A5F0 /* History.swift in Sources */,
 				28A359FB20933D2E0013A5F0 /* Peer.swift in Sources */,
-				28A1CF212093D3170098CFC7 /* TextInputTableViewCell.swift in Sources */,
+				28A1CF212093D3170098CFC7 /* ItemTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

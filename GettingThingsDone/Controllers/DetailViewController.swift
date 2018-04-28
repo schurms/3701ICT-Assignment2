@@ -106,7 +106,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         // Text field editing for Tasks
         if selectedSection == 0 {
             let indexPath = IndexPath(row: selectedRow, section: selectedSection)
-            let cell = tableView.cellForRow(at: indexPath) as! TextInputTableViewCell
+            let cell = tableView.cellForRow(at: indexPath) as! ItemTableViewCell
             
             // Test for empty field by trimming whitespace and new lines from input text
             if let trimmedText = (cell.taskTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)) {
@@ -129,17 +129,18 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
      This method enables the number of sections
      */
     override func numberOfSections(in tableView: UITableView) -> Int {
-        
         return 1
     }
     
     //MARK: Properties
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if section == 0 {
+            return 1
+        } else {
         
-        
-        
-        return 1
+        return 10
+        }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -164,7 +165,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         
         // Task Section
         if (indexPath.section == 0) {
-            let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! TextInputTableViewCell
+            let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! ItemTableViewCell
             cell.taskTextField.text = itemTitle
     
             // Return populated cell to TableView
@@ -172,7 +173,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             
         // History Section
         } else if (indexPath.section == 1) {
-            let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! TextInputTableViewCell
+            let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! ItemTableViewCell
             cell.taskTextField.text = itemTitle
             
             // Return populated cell to TableView
@@ -180,7 +181,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         
         // Collaborator Section
         } else if (indexPath.section == 2) {
-            let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! TextInputTableViewCell
+            let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! ItemTableViewCell
             cell.taskTextField.text = itemTitle
             
             // Return populated cell to TableView
@@ -188,7 +189,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             
         // Peer Section
         } else {
-            let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! TextInputTableViewCell
+            let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! ItemTableViewCell
             cell.taskTextField.text = itemTitle
             
             // Return populated cell to TableView

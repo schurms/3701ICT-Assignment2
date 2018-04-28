@@ -23,8 +23,10 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
     
     // Declare arrays
     var items = [[Item](), [Item]()]
-    var history = History(historyDate: Date(), historyDescription: "")
-    var todo = Item(title: "", done: false, itemHistory: [], itemCollaborator: [], itemPeer: [])
+    var itemHistory = History(historyDate: Date(), historyDescription: "")
+    var itemCollaborator = Collaborator(collaboratorName: "")
+    var itemPeer = Peer(peerName: "", peerDevice: "")
+    var item = Item(title: "", done: false, itemHistory: [], itemCollaborator: [], itemPeer: [])
     
     // Declare headers arrays
     let sectionHeaders = ["YET TO DO", "COMPLETED"]
@@ -71,16 +73,23 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
      This methos triggers from the add button.  It inserts a new object into the array
      */
     @objc func insertNewObject(_ sender: Any) {
+        
+        // Set up initial Title Record
         todoCounter += 1
-        todo.title = "Todo Item \(todoCounter)"
-        todo.done = false
-        history = History(historyDate: Date(), historyDescription: "Item Created")
-        let collaborator = Collaborator(collaboratorName: "")
-        let peer = Peer(peerName: "", peerDevice: "")
-        items[0].append(Item(title: todo.title, done: todo.done, itemHistory: [history], itemCollaborator: [collaborator], itemPeer: [peer]))
-        print(items[0][0].itemHistory[i].historyDate, items[0][0].itemHistory[i].historyDescription)
-        print(items[0][0].itemHistory.count)
-        i += 1
+        item.title = "Todo Item \(todoCounter)"
+        
+        // Set up initial Done Record
+        item.done = false
+        
+        // Set up initial History Record
+        itemHistory = History(historyDate: Date(), historyDescription: "Item Created")
+        
+        // Set up initial Collaborator Record
+        itemCollaborator = Collaborator(collaboratorName: "")
+        
+        // Set up initial Peer Record
+        itemPeer = Peer(peerName: "", peerDevice: "")
+        items[0].append(Item(title: item.title, done: item.done, itemHistory: [itemHistory], itemCollaborator: [itemCollaborator], itemPeer: [itemPeer]))
         tableView.reloadData()
     }
     
@@ -190,8 +199,8 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
             items[destinationIndexPath.section][destinationIndexPath.row].done = true
             
             // Add history record for move to completed
-            history = History(historyDate: Date(), historyDescription: "Item Completed")
-            items[destinationIndexPath.section][destinationIndexPath.row].itemHistory.append(history)
+            itemHistory = History(historyDate: Date(), historyDescription: "Item Completed")
+            items[destinationIndexPath.section][destinationIndexPath.row].itemHistory.append(itemHistory)
             
         } else if ( sourceIndexPath.section == 1 && destinationIndexPath.section == 0) {
             
@@ -199,8 +208,8 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
             items[destinationIndexPath.section][destinationIndexPath.row].done = false
             
             // Add history record for move to not completed
-            history = History(historyDate: Date(), historyDescription: "Item Not Completed")
-            items[destinationIndexPath.section][destinationIndexPath.row].itemHistory.append(history)
+            itemHistory = History(historyDate: Date(), historyDescription: "Item Not Completed")
+            items[destinationIndexPath.section][destinationIndexPath.row].itemHistory.append(itemHistory)
         }
         
     }

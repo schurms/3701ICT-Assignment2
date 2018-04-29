@@ -104,10 +104,8 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
      This method is called when editing of the textField completes.
      */
     func textFieldDidEndEditing(_ textField: UITextField, reason: UITextFieldDidEndEditingReason) {
-        print("here")
         // Text field editing for Tasks
         if (textField.tag == 0) {
-            print("now here")
             let indexPath = IndexPath(row: 0, section: 0)
             let cell = tableView.cellForRow(at: indexPath) as! ItemTableViewCell
             // Test for empty field by trimming whitespace and new lines from input text
@@ -120,15 +118,17 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         }
     }
     
+    //MARK: Table View
     
-    // MARK: Table View
-    
+    /**
+     This method returns the section header for the required section.
+     */
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return sectionHeaders[section]
     }
     
     /**
-     This method enables the number of sections
+     This method activates the required number of sections based on the number of headers
      */
     override func numberOfSections(in tableView: UITableView) -> Int {
         return sectionHeaders.count

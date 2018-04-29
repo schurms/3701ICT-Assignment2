@@ -104,10 +104,12 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
      This method is called when editing of the textField completes.
      */
     func textFieldDidEndEditing(_ textField: UITextField, reason: UITextFieldDidEndEditingReason) {
+        
         // Text field editing for Tasks
         if (textField.tag == 0) {
             let indexPath = IndexPath(row: 0, section: 0)
             let cell = tableView.cellForRow(at: indexPath) as! ItemTableViewCell
+            
             // Test for empty field by trimming whitespace and new lines from input text
             if let trimmedText = (cell.titleTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)) {
                 if trimmedText.isEmpty == false {

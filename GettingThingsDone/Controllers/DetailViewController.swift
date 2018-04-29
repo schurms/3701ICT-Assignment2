@@ -39,6 +39,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     
     // Item Variables
     var itemTitle: String = ""
+    var itemTitleChanged: String = ""
     var itemDone: Bool = false
     var itemHistory = [History]()
     var itemHistoryDescription: String = ""
@@ -121,6 +122,23 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
                 }
             }
             
+            // Test if Title changed
+            if itemTitleChanged != itemTitle {
+                
+                // Set up new history record when title changed
+                let histDesc = "Changed to \(itemTitle)"
+                let newHistory = History(historyDate: Date(), historyDescription: histDesc, historyEditable: false)
+                
+                // Append item to history array
+                itemHistory.append(newHistory)
+                
+                // Set new title variable to be changed title
+                itemTitleChanged = itemTitle
+            }
+            
+            // Reload table data
+            tableView.reloadData()
+            
         // Text field editing for History
         } else if (textField.tag == 2) {
             
@@ -134,7 +152,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
                     itemHistory[selectedRow].historyDescription = trimmedText
                 }
             }
-
+            
             // Reload table data
             tableView.reloadData()
         }
@@ -205,6 +223,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             
             // Get cell data
             cell.titleField.text = itemTitle
+            itemTitleChanged = itemTitle
     
             // Return populated cell to TableView
             return cell

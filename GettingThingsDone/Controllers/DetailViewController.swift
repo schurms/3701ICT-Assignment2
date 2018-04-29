@@ -98,6 +98,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         
         // Hide navigation button if beginning to edit
         navigationItem.hidesBackButton = true
+       
     }
     
     /**
@@ -106,7 +107,9 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField, reason: UITextFieldDidEndEditingReason) {
         
         // Text field editing for Tasks
-        if (textField.tag == 0) {
+        if (textField.tag == 1) {
+
+            // Set cell being edited
             let indexPath = IndexPath(row: 0, section: 0)
             let cell = tableView.cellForRow(at: indexPath) as! ItemTableViewCell
             
@@ -117,6 +120,23 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
                     itemTitle = trimmedText
                 }
             }
+            
+        // Text field editing for History
+        } else if (textField.tag == 2) {
+            
+            let indexPath = IndexPath(row: selectedRow, section: 1)
+            let cell = tableView.cellForRow(at: indexPath) as! HistoryTableViewCell
+            
+            // Test for empty field by trimming whitespace and new lines from input text
+            if let trimmedText = (cell.historyDescriptionField.text?.trimmingCharacters(in: .whitespacesAndNewlines)) {
+                if trimmedText.isEmpty == false {
+                    navigationItem.hidesBackButton = false
+                    itemHistory[selectedRow].historyDescription = trimmedText
+                }
+            }
+
+            // Reload table data
+            tableView.reloadData()
         }
     }
     

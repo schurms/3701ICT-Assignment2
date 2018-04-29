@@ -205,6 +205,11 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
         
     }
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.reloadData()
+    }
+    
+    
     /**
      Delegate method to update the array with information from the DetailViewController
      */

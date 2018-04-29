@@ -19,7 +19,7 @@ class ItemTableViewCell: UITableViewCell {
     /**
      UITableViewCell Outlets
      */
-    @IBOutlet weak var titleTextField: UITextField!
+    @IBOutlet weak var titleField: UITextField!
     
     /**
      Prepares the receiver

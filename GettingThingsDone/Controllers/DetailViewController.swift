@@ -114,7 +114,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             let cell = tableView.cellForRow(at: indexPath) as! ItemTableViewCell
             
             // Test for empty field by trimming whitespace and new lines from input text
-            if let trimmedText = (cell.titleTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)) {
+            if let trimmedText = (cell.titleField.text?.trimmingCharacters(in: .whitespacesAndNewlines)) {
                 if trimmedText.isEmpty == false {
                     navigationItem.hidesBackButton = false
                     itemTitle = trimmedText
@@ -205,7 +205,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! ItemTableViewCell
             
             // Get cell data
-            cell.titleTextField.text = itemTitle
+            cell.titleField.text = itemTitle
     
             // Return populated cell to TableView
             return cell

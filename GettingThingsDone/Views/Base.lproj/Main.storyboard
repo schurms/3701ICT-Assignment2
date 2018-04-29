@@ -118,7 +118,7 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="titleTextField" destination="yVe-Z0-Ggq" id="BSY-Fj-bWB"/>
+                                    <outlet property="titleField" destination="yVe-Z0-Ggq" id="BSY-Fj-bWB"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" tag="2" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="HistoryCell" id="YKD-5T-5RU" customClass="HistoryTableViewCell" customModule="GettingThingsDone" customModuleProvider="target">

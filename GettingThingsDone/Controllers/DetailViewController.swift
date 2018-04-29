@@ -99,7 +99,6 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         
         // Hide navigation button if beginning to edit
         navigationItem.hidesBackButton = true
-       
     }
     
     /**
@@ -158,7 +157,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         }
     }
     
-    //MARK: Table View
+    //MARK: Table View Datasoure methods
     
     /**
      This method returns the section header for the required section.
@@ -174,7 +173,9 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         return sectionHeaders.count
     }
     
-    
+    /**
+     This method returns the number of rows for a section
+     */
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         // Number of Rows for Task Section
@@ -195,6 +196,9 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         }
     }
     
+    /**
+     This method displays the rows of data
+     */
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // Define prototype cell reuse identifier as set in the View
         let identifier: String

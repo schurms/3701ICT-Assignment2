@@ -20,6 +20,7 @@ class History {
      */
     var historyDate: Date
     var historyDescription: String
+    var historyEditable: Bool
     
     //MARK: Initialisation
     
@@ -29,11 +30,12 @@ class History {
      - Parameter historyDescription: A description of the history event
      - Returns: A "History" for an item.
      */
-    init(historyDate: Date, historyDescription: String) {
+    init(historyDate: Date, historyDescription: String, historyEditable: Bool) {
         
         // Initialise stored properties
         self.historyDate = historyDate
         self.historyDescription = historyDescription
+        self.historyEditable = historyEditable
         
     }
     

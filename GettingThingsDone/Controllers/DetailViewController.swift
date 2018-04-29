@@ -293,7 +293,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     @objc func addObject(_ sender: Any) {
         
         // Set up new history record when add history pressed
-        let newHistory = History(historyDate: Date(), historyDescription: "New History Record")
+        let newHistory = History(historyDate: Date(), historyDescription: "New History Record", historyEditable: true)
         
         // Append item to history array
         itemHistory.append(newHistory)

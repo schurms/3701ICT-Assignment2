@@ -39,6 +39,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     
     // Item Variables
     var itemTitle: String = ""
+    var itemDone: Bool = false
     var itemHistory = [History]()
     var itemCollaborator = [Collaborator]()
     var itemPeer = [Peer]()
@@ -236,6 +237,10 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             
             // Set up variables to return
             items.title = itemTitle
+            items.done = itemDone
+            items.itemHistory = itemHistory
+            items.itemCollaborator = itemCollaborator
+            items.itemPeer = items.itemPeer
             
             // Add changes to array
             delegate?.didEditItem(self, editItem: items)
@@ -253,6 +258,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         // Set variables passed from Master Table
         if let detail = detailItem {
             itemTitle = detail.title
+            itemDone = detail.done
             itemHistory = detail.itemHistory
             itemCollaborator = detail.itemCollaborator
             itemPeer = detail.itemPeer

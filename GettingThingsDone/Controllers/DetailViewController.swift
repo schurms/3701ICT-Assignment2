@@ -49,7 +49,6 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
 
     // Counters and indexes
     var selectedRow: Int = 0
-    var selectedSection: Int = 0
     var itemRows: Int = 1
     
     // Property observer if detailItem sent via showItem segue
@@ -97,6 +96,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
      */
     func textFieldDidBeginEditing(_ textField: UITextField) {
         
+        
         // Hide navigation button if beginning to edit
         navigationItem.hidesBackButton = true
     }
@@ -140,9 +140,10 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             
         // Text field editing for History
         } else if (textField.tag == 2) {
-            
+
+            // Set cell being edited
             let indexPath = IndexPath(row: selectedRow, section: 1)
-            let cell = tableView.cellForRow(at: indexPath) as! HistoryTableViewCell
+            let cell: HistoryTableViewCell = self.tableView.cellForRow(at: indexPath) as! HistoryTableViewCell
             
             // Test for empty field by trimming whitespace and new lines from input text
             if let trimmedText = (cell.historyDescriptionField.text?.trimmingCharacters(in: .whitespacesAndNewlines)) {
@@ -216,9 +217,6 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             identifier = "PeerCell"
         }
 
-        selectedRow = indexPath.row
-        selectedSection = indexPath.section
-        
         // Task Section
         if (indexPath.section == 0) {
             
@@ -275,6 +273,13 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             // Return populated cell to TableView
             return cell
         }
+    }
+    
+    /**
+     This method gets the index for the selected row.
+     */
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        selectedRow = (tableView.indexPathForSelectedRow?.row)!
     }
     
     /**

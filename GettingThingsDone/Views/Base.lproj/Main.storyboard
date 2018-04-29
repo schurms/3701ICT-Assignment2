@@ -92,7 +92,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TaskCell" rowHeight="60" id="NaY-UB-bfT" customClass="ItemTableViewCell" customModule="GettingThingsDone" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" tag="1" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TaskCell" rowHeight="60" id="NaY-UB-bfT" customClass="ItemTableViewCell" customModule="GettingThingsDone" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="55.5" width="375" height="60"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="NaY-UB-bfT" id="VUL-vt-dxF">
@@ -121,7 +121,7 @@
                                     <outlet property="titleTextField" destination="yVe-Z0-Ggq" id="BSY-Fj-bWB"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="HistoryCell" id="YKD-5T-5RU" customClass="HistoryTableViewCell" customModule="GettingThingsDone" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" tag="2" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="HistoryCell" id="YKD-5T-5RU" customClass="HistoryTableViewCell" customModule="GettingThingsDone" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="115.5" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="YKD-5T-5RU" id="gYw-t5-bDu">
@@ -129,7 +129,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00/00/00, 00:00 PM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mYf-Ir-RWj">
-                                            <rect key="frame" x="16" y="11" width="140" height="18"/>
+                                            <rect key="frame" x="16" y="14" width="140" height="18"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -139,6 +139,9 @@
                                             <nil key="textColor"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                             <textInputTraits key="textInputTraits"/>
+                                            <connections>
+                                                <outlet property="delegate" destination="FlX-Mm-TaP" id="bqY-2L-80b"/>
+                                            </connections>
                                         </textField>
                                     </subviews>
                                     <constraints>
@@ -147,8 +150,8 @@
                                         <constraint firstItem="jwS-1E-EyJ" firstAttribute="leading" secondItem="mYf-Ir-RWj" secondAttribute="trailing" constant="8" id="Jgz-yu-1JR"/>
                                         <constraint firstItem="jwS-1E-EyJ" firstAttribute="trailing" secondItem="gYw-t5-bDu" secondAttribute="trailingMargin" id="YNb-eZ-33n"/>
                                         <constraint firstItem="jwS-1E-EyJ" firstAttribute="top" secondItem="gYw-t5-bDu" secondAttribute="topMargin" constant="-4" id="hoe-yy-CSl"/>
-                                        <constraint firstItem="mYf-Ir-RWj" firstAttribute="top" secondItem="gYw-t5-bDu" secondAttribute="topMargin" id="rNv-53-Bzi"/>
-                                        <constraint firstAttribute="bottomMargin" secondItem="mYf-Ir-RWj" secondAttribute="bottom" constant="4" id="yYx-0m-si4"/>
+                                        <constraint firstItem="mYf-Ir-RWj" firstAttribute="top" secondItem="gYw-t5-bDu" secondAttribute="topMargin" constant="3" id="rNv-53-Bzi"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="mYf-Ir-RWj" secondAttribute="bottom" constant="1" id="yYx-0m-si4"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
@@ -156,7 +159,7 @@
                                     <outlet property="historyDescriptionField" destination="jwS-1E-EyJ" id="rRz-FA-PFB"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="CollaboratorCell" textLabel="Rka-Uy-Vp9" style="IBUITableViewCellStyleDefault" id="Vao-rX-Xv4">
+                            <tableViewCell clipsSubviews="YES" tag="3" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="CollaboratorCell" textLabel="Rka-Uy-Vp9" style="IBUITableViewCellStyleDefault" id="Vao-rX-Xv4">
                                 <rect key="frame" x="0.0" y="159.5" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Vao-rX-Xv4" id="3A4-Lh-Cba">
@@ -173,7 +176,7 @@
                                     </subviews>
                                 </tableViewCellContentView>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="PeerCell" textLabel="4o5-mM-ti3" detailTextLabel="dMd-Nz-sqn" style="IBUITableViewCellStyleSubtitle" id="pbg-SC-98B">
+                            <tableViewCell clipsSubviews="YES" tag="4" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="PeerCell" textLabel="4o5-mM-ti3" detailTextLabel="dMd-Nz-sqn" style="IBUITableViewCellStyleSubtitle" id="pbg-SC-98B">
                                 <rect key="frame" x="0.0" y="203.5" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="pbg-SC-98B" id="P0D-pF-3BV">

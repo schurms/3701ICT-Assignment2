@@ -23,7 +23,8 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
     
     // Declare arrays
     var items = [[Item](), [Item]()]
-    var itemHistory = History(historyDate: Date(), historyDescription: "")
+    var itemDone: Bool = false
+    var itemHistory = History(historyDate: Date(), historyDescription: "Item Created")
     var itemCollaborator = Collaborator(collaboratorName: "")
     var itemPeer = Peer(peerName: "", peerDevice: "")
     var item = Item(title: "", done: false, itemHistory: [], itemCollaborator: [], itemPeer: [])
@@ -32,7 +33,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
     let sectionHeaders = ["YET TO DO", "COMPLETED"]
     
     // Declare variables
-    var todoCounter = 0
+    var todoCounter: Int = 0
     var selectedRow: Int = 0
     var selectedSection: Int = 0
     var i: Int = 0
@@ -78,18 +79,8 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
         todoCounter += 1
         item.title = "Todo Item \(todoCounter)"
         
-        // Set up initial Done Record
-        item.done = false
-        
-        // Set up initial History Record
-        itemHistory = History(historyDate: Date(), historyDescription: "Item Created")
-        
-        // Set up initial Collaborator Record
-        itemCollaborator = Collaborator(collaboratorName: "")
-        
-        // Set up initial Peer Record
-        itemPeer = Peer(peerName: "", peerDevice: "")
-        items[0].append(Item(title: item.title, done: item.done, itemHistory: [itemHistory], itemCollaborator: [itemCollaborator], itemPeer: [itemPeer]))
+        // Append record to Array
+        items[0].append(Item(title: item.title, done: item.done, itemHistory: [itemHistory], itemCollaborator: [], itemPeer: []))
         tableView.reloadData()
     }
     

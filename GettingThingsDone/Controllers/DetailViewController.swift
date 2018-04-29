@@ -41,6 +41,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     var itemTitle: String = ""
     var itemDone: Bool = false
     var itemHistory = [History]()
+    var itemHistoryDescription: String = ""
     var itemCollaborator = [Collaborator]()
     var itemPeer = [Peer]()
     var items = Item(title: "", done: false, itemHistory: [], itemCollaborator: [], itemPeer: [])
@@ -103,12 +104,12 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
      This method is called when editing of the textField completes.
      */
     func textFieldDidEndEditing(_ textField: UITextField, reason: UITextFieldDidEndEditingReason) {
-        
+        print("here")
         // Text field editing for Tasks
-        if selectedSection == 0 {
-            let indexPath = IndexPath(row: selectedRow, section: selectedSection)
+        if (textField.tag == 0) {
+            print("now here")
+            let indexPath = IndexPath(row: 0, section: 0)
             let cell = tableView.cellForRow(at: indexPath) as! ItemTableViewCell
-            
             // Test for empty field by trimming whitespace and new lines from input text
             if let trimmedText = (cell.titleTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)) {
                 if trimmedText.isEmpty == false {
@@ -130,7 +131,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
      This method enables the number of sections
      */
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return sectionHeaders.count
     }
     
     //MARK: Properties
@@ -207,7 +208,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
             
             // Get cell data
-            cell.textLabel?.text = itemTitle
+            cell.textLabel?.text = itemCollaborator[indexPath.row].collaboratorName
             
             // Return populated cell to TableView
             return cell
@@ -219,8 +220,8 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
             
             // Get cell data
-            cell.textLabel?.text = itemTitle
-            cell.detailTextLabel?.text = itemTitle
+            cell.textLabel?.text = itemPeer[indexPath.row].peerName
+            cell.detailTextLabel?.text = itemPeer[indexPath.row].peerDevice
             
             // Return populated cell to TableView
             return cell
@@ -229,6 +230,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     
     /**
      This method is called on view Disappearing - Returning to Master
+     The function returns updated data back for updating
      */
     override func viewWillDisappear(_ animated: Bool) {
 
@@ -268,6 +270,15 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     // Called on pressing the add Button - To Implement
     @objc func addObject(_ sender: Any) {
         
+        // Set up new history record when add history pressed
+        let newHistory = History(historyDate: Date(), historyDescription: "New History Record")
+        
+        // Append item to history array
+        itemHistory.append(newHistory)
+        
+        // Reload table data
+        tableView.reloadData()
+
     }
     
 }

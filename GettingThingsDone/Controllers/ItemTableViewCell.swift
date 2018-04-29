@@ -14,6 +14,11 @@ import UIKit
  */
 class ItemTableViewCell: UITableViewCell {
 
+    //MARK: Outlets
+    
+    /**
+     UITableViewCell Outlets
+     */
     @IBOutlet weak var titleTextField: UITextField!
     
     /**

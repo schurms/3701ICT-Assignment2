@@ -327,7 +327,6 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         
         // Reload table data
         tableView.reloadData()
-
     }
     
 }

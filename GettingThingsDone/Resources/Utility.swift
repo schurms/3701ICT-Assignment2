@@ -1,5 +1,5 @@
 //
-//  Utils.swift
+//  Utility.swift
 //  Title: GettingThingsDone App - 3701ICT Assignment 2
 //  Student: s5073958
 //  Created by Jordan Schurmann on 29/4/18.
@@ -11,7 +11,7 @@ import Foundation
 /**
  * This class provides Utility methods for the application
  */
-class Utils {
+class Utility {
     
     /**
      This Utility method is used to return a string version of a Date

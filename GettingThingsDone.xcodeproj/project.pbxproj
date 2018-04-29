@@ -94,7 +94,6 @@
 			isa = PBXGroup;
 			children = (
 				28ACE75B208A8FC500F96F20 /* GettingThingsDone */,
-				28C612EB2095377800DEBF54 /* Resources */,
 				28ACE772208A8FC500F96F20 /* GettingThingsDoneTests */,
 				28ACE77D208A8FC500F96F20 /* GettingThingsDoneUITests */,
 				28ACE75A208A8FC500F96F20 /* Products */,
@@ -114,13 +113,12 @@
 		28ACE75B208A8FC500F96F20 /* GettingThingsDone */ = {
 			isa = PBXGroup;
 			children = (
-				28ACE78E208A93E500F96F20 /* Models */,
 				28ACE75C208A8FC500F96F20 /* AppDelegate.swift */,
+				28ACE76A208A8FC500F96F20 /* Info.plist */,
+				28ACE78E208A93E500F96F20 /* Models */,
 				28ACE78D208A939500F96F20 /* Controllers */,
 				28ACE78C208A938800F96F20 /* Views */,
-				28ACE765208A8FC500F96F20 /* Assets.xcassets */,
-				28ACE767208A8FC500F96F20 /* LaunchScreen.storyboard */,
-				28ACE76A208A8FC500F96F20 /* Info.plist */,
+				28C612EE20953DAB00DEBF54 /* Resources */,
 			);
 			path = GettingThingsDone;
 			sourceTree = "<group>";
@@ -173,10 +171,12 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		28C612EB2095377800DEBF54 /* Resources */ = {
+		28C612EE20953DAB00DEBF54 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
 				28C612EC209537B200DEBF54 /* Utility.swift */,
+				28ACE765208A8FC500F96F20 /* Assets.xcassets */,
+				28ACE767208A8FC500F96F20 /* LaunchScreen.storyboard */,
 			);
 			path = Resources;
 			sourceTree = "<group>";

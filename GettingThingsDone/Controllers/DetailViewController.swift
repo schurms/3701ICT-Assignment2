@@ -176,7 +176,11 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         
         // Task Section
         if (indexPath.section == 0) {
+            
+            // Set cell to Task Custom Cell
             let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! ItemTableViewCell
+            
+            // Get cell data
             cell.titleTextField.text = itemTitle
     
             // Return populated cell to TableView
@@ -184,25 +188,38 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             
         // History Section
         } else if (indexPath.section == 1) {
-            let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
-            let itemHistoryDesc = itemHistory[indexPath.row].historyDescription
-            cell.textLabel!.text = itemHistoryDesc
+            
+            // Set cell to History Custom Cell
+            let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! HistoryTableViewCell
+    
+            // Get cell data
+            cell.historyDateField.text = Utility.dateToString(itemHistory[indexPath.row].historyDate)
+            cell.historyDescriptionField.text = itemHistory[indexPath.row].historyDescription
             
             // Return populated cell to TableView
             return cell
 
         // Collaborator Section
         } else if (indexPath.section == 2) {
-            let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! ItemTableViewCell
-            cell.titleTextField.text = itemTitle
+            
+            // Set cell to Collaborator Cell
+            let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
+            
+            // Get cell data
+            cell.textLabel?.text = itemTitle
             
             // Return populated cell to TableView
             return cell
             
         // Peer Section
         } else {
-            let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! ItemTableViewCell
-            cell.titleTextField.text = itemTitle
+            
+            // Set cell to Peer Cell
+            let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
+            
+            // Get cell data
+            cell.textLabel?.text = itemTitle
+            cell.detailTextLabel?.text = itemTitle
             
             // Return populated cell to TableView
             return cell

@@ -156,7 +156,6 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         return sectionHeaders.count
     }
     
-    //MARK: Properties
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
@@ -219,6 +218,11 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             // Get cell data
             cell.historyDateField.text = Utility.dateToString(itemHistory[indexPath.row].historyDate)
             cell.historyDescriptionField.text = itemHistory[indexPath.row].historyDescription
+            
+            // Disable field editing if it is a system generated history record
+            if (itemHistory[indexPath.row].historyEditable == false) {
+                cell.historyDescriptionField.isUserInteractionEnabled = false
+            }
             
             // Return populated cell to TableView
             return cell

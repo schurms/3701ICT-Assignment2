@@ -84,27 +84,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
         tableView.reloadData()
     }
     
-    // MARK: - Segues
-    
-    /**
-     This method actions the segue
-     */
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "showDetail" {
-            if let indexPath = tableView.indexPathForSelectedRow {
-                selectedSection = indexPath.section
-                selectedRow = indexPath.row
-                let selectedItem = items[indexPath.section][indexPath.row]
-                let destinationViewController = (segue.destination as! UINavigationController).topViewController as! DetailViewController
-                destinationViewController.delegate = self
-                destinationViewController.detailItem = selectedItem
-                destinationViewController.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
-                destinationViewController.navigationItem.leftItemsSupplementBackButton = true
-            }
-        }
-    }
-    
-    // MARK: - Table View
+    //MARK: Table View Datasource Method
     
     /**
      This method returns the headers for each section
@@ -161,7 +141,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
         }
     }
     
-    // MARK: Moving Cells
+    //MARK: TableView Delegate Methods
     
     /**
      Set Action to be able to move row
@@ -202,16 +182,35 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
             itemHistory = History(historyDate: Date(), historyDescription: "Item Not Completed", historyEditable: false)
             items[destinationIndexPath.section][destinationIndexPath.row].itemHistory.append(itemHistory)
         }
-        
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.reloadData()
-    }
-    
+    //MARK: Segues
     
     /**
-     Delegate method to update the array with information from the DetailViewController
+     This method actions the segue
+     */
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showDetail" {
+            if let indexPath = tableView.indexPathForSelectedRow {
+                selectedSection = indexPath.section
+                selectedRow = indexPath.row
+                let selectedItem = items[indexPath.section][indexPath.row]
+                let destinationViewController = (segue.destination as! UINavigationController).topViewController as! DetailViewController
+                destinationViewController.delegate = self
+                destinationViewController.detailItem = selectedItem
+                destinationViewController.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+                destinationViewController.navigationItem.leftItemsSupplementBackButton = true
+            }
+        }
+    }
+    
+    //MARK: Protocol Delegate Methods
+    
+    /**
+     This Delegate method is used to update an existing item in the Items array
+     - Parameter controller: Defines the sending view controller
+     - Parameter editItem: Contains the item values to be edited in the array
+     - returns: Updated items
      */
     func didEditItem(_ controller: AnyObject, editItem: Item) {
         

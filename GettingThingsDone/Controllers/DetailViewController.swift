@@ -141,15 +141,20 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         // Text field editing for History
         } else if (textField.tag == 2) {
 
+            // Get the cell row and section by converting a clicked point into an row
+            let origin: CGPoint = textField.frame.origin
+            let point: CGPoint? = textField.superview?.convert(origin, to: tableView)
+            let indexCell: IndexPath? = tableView.indexPathForRow(at: point ?? CGPoint.zero)
+
             // Set cell being edited
-            let indexPath = IndexPath(row: selectedRow, section: 1)
+            let indexPath = IndexPath(row: (indexCell?.row)!, section: (indexCell?.section)!)
             let cell: HistoryTableViewCell = self.tableView.cellForRow(at: indexPath) as! HistoryTableViewCell
             
             // Test for empty field by trimming whitespace and new lines from input text
             if let trimmedText = (cell.historyDescriptionField.text?.trimmingCharacters(in: .whitespacesAndNewlines)) {
                 if trimmedText.isEmpty == false {
                     navigationItem.hidesBackButton = false
-                    itemHistory[selectedRow].historyDescription = trimmedText
+                    itemHistory[(indexCell?.row)!].historyDescription = trimmedText
                 }
             }
             
@@ -276,13 +281,6 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     }
     
     /**
-     This method gets the index for the selected row.
-     */
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedRow = (tableView.indexPathForSelectedRow?.row)!
-    }
-    
-    /**
      This method is called on view Disappearing - Returning to Master
      The function returns updated data back for updating
      */
@@ -296,7 +294,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             items.done = itemDone
             items.itemHistory = itemHistory
             items.itemCollaborator = itemCollaborator
-            items.itemPeer = items.itemPeer
+            items.itemPeer = itemPeer
             
             // Add changes to array
             delegate?.didEditItem(self, editItem: items)

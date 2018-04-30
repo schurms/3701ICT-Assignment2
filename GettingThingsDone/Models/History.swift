@@ -28,6 +28,7 @@ class History {
      Initialises a new "To Do" History item
      - Parameter historyDate: The date the history event occurred
      - Parameter historyDescription: A description of the history event
+     - Parameter historyEditable: Indicates whether the history record is editable
      - Returns: A "History" for an item.
      */
     init(historyDate: Date, historyDescription: String, historyEditable: Bool) {

@@ -24,7 +24,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
     // Declare arrays
     var items = [[Item](), [Item]()]
     var itemDone: Bool = false
-    var itemHistory = History(historyDate: Date(), historyDescription: "Item Created", historyEditable: false)
+    var itemHistory = History(historyDate: Date(), historyDescription: "*Item Created", historyEditable: false)
     var itemCollaborator = Collaborator(collaboratorName: "")
     var itemPeer = Peer(peerName: "", peerDevice: "")
     var item = Item(title: "", done: false, itemHistory: [], itemCollaborator: [], itemPeer: [])
@@ -170,7 +170,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
             items[destinationIndexPath.section][destinationIndexPath.row].done = true
             
             // Add history record for move to "Completed"
-            itemHistory = History(historyDate: Date(), historyDescription: "Item Completed", historyEditable: false)
+            itemHistory = History(historyDate: Date(), historyDescription: "*Item Completed", historyEditable: false)
             items[destinationIndexPath.section][destinationIndexPath.row].itemHistory.append(itemHistory)
             
         } else if ( sourceIndexPath.section == 1 && destinationIndexPath.section == 0) {
@@ -179,7 +179,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
             items[destinationIndexPath.section][destinationIndexPath.row].done = false
             
             // Add history record for move to "Yet To Do"
-            itemHistory = History(historyDate: Date(), historyDescription: "Item Not Completed", historyEditable: false)
+            itemHistory = History(historyDate: Date(), historyDescription: "*Item Not Completed", historyEditable: false)
             items[destinationIndexPath.section][destinationIndexPath.row].itemHistory.append(itemHistory)
         }
     }

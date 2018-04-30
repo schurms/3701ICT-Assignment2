@@ -121,7 +121,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             if itemTitleChanged != itemTitle {
                 
                 // Set up new history record when title changed
-                let histDesc = "Changed to \(itemTitle)"
+                let histDesc = "*Changed to \(itemTitle)"
                 let newHistory = History(historyDate: Date(), historyDescription: histDesc, historyEditable: false)
                 
                 // Append item to history array

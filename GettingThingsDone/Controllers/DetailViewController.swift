@@ -46,10 +46,6 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     var itemCollaborator = [Collaborator]()
     var itemPeer = [Peer]()
     var items = Item(title: "", done: false, itemHistory: [], itemCollaborator: [], itemPeer: [])
-
-    // Counters and indexes
-    var selectedRow: Int = 0
-    var itemRows: Int = 1
     
     // Property observer if detailItem sent via showItem segue
     var detailItem: Item? {

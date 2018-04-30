@@ -36,7 +36,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
     var todoCounter: Int = 0
     var selectedRow: Int = 0
     var selectedSection: Int = 0
-    var i: Int = 0
+    
     
     /**
      This method performs actions on view loading
@@ -119,7 +119,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
         let item = items[indexPath.section][indexPath.row]
         
         cell.textLabel!.text = item.title
-//        print(item.title, itemHistoryDate, itemHistoryDesc)
+
         return cell
     }
     
@@ -166,19 +166,19 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
         // Update the done flag depending on item moved
         if (sourceIndexPath.section == 0 && destinationIndexPath.section == 1) {
             
-            // Item moved to completed - set done
+            // Item moved to "Completed" - set done = True
             items[destinationIndexPath.section][destinationIndexPath.row].done = true
             
-            // Add history record for move to completed
+            // Add history record for move to "Completed"
             itemHistory = History(historyDate: Date(), historyDescription: "Item Completed", historyEditable: false)
             items[destinationIndexPath.section][destinationIndexPath.row].itemHistory.append(itemHistory)
             
         } else if ( sourceIndexPath.section == 1 && destinationIndexPath.section == 0) {
             
-            // Add history record for move
+            // Item moved to "Yet To Do" - set done = False
             items[destinationIndexPath.section][destinationIndexPath.row].done = false
             
-            // Add history record for move to not completed
+            // Add history record for move to "Yet To Do"
             itemHistory = History(historyDate: Date(), historyDescription: "Item Not Completed", historyEditable: false)
             items[destinationIndexPath.section][destinationIndexPath.row].itemHistory.append(itemHistory)
         }
@@ -194,7 +194,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
             if let indexPath = tableView.indexPathForSelectedRow {
                 selectedSection = indexPath.section
                 selectedRow = indexPath.row
-                let selectedItem = items[indexPath.section][indexPath.row]
+                let selectedItem = items[selectedSection][selectedRow]
                 let destinationViewController = (segue.destination as! UINavigationController).topViewController as! DetailViewController
                 destinationViewController.delegate = self
                 destinationViewController.detailItem = selectedItem

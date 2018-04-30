@@ -20,7 +20,6 @@ class HistoryTableViewCell: UITableViewCell {
      UITableViewCell Outlets
      */
     @IBOutlet weak var historyDateField: UILabel!
-//    @IBOutlet weak var historyDescriptionField: UILabel!
     @IBOutlet weak var historyDescriptionField: UITextField!
     
     /**

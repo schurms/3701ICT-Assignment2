@@ -18,7 +18,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
     
     //MARK: Properties
     
-    // Delegate
+    // Declare delegate
     weak var detailViewController: DetailViewController?
     
     // Declare arrays
@@ -32,14 +32,14 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
     // Declare headers arrays
     let sectionHeaders = ["YET TO DO", "COMPLETED"]
     
-    // Declare variables
+    // Declare variables used
     var todoCounter: Int = 0
     var selectedRow: Int = 0
     var selectedSection: Int = 0
     
     
     /**
-     This method performs actions on view loading
+     This method performs actions on view loading - Standard method
      */
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -75,12 +75,14 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
      */
     @objc func insertNewObject(_ sender: Any) {
         
-        // Set up initial Title Record
+        // Set up item Title record - increment counter
         todoCounter += 1
         item.title = "Todo Item \(todoCounter)"
         
-        // Append record to Array
+        // Append record to Array - null arrays for other information
         items[0].append(Item(title: item.title, done: item.done, itemHistory: [itemHistory], itemCollaborator: [], itemPeer: []))
+        
+        // Reload tableview
         tableView.reloadData()
     }
     
@@ -90,6 +92,8 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
      This method returns the headers for each section
      */
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        
+        // Return required section header
         return sectionHeaders[section]
     }
     
@@ -97,6 +101,8 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
      This method enables the number of sections
      */
     override func numberOfSections(in tableView: UITableView) -> Int {
+        
+        // Return the number of sections
         return sectionHeaders.count
     }
     
@@ -104,6 +110,8 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
      This method returns the number of rows for a section
      */
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        // Return the number of rows for each section
         return items[section].count
     }
     
@@ -111,15 +119,21 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
      This method displays the rows of data
      */
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cellReuseIdentifier = "ToDoItemCell"
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath)
-//        let itemHistoryDate = items[indexPath.section][indexPath.row].itemHistory[0].historyDate
-//        let itemHistoryDesc = items[indexPath.section][indexPath.row].itemHistory[0].historyDescription
         
+        
+        // Define prototype cell reuse identifier as set in the View
+        let cellReuseIdentifier = "ToDoItemCell"
+        
+        // Get the cell
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath)
+        
+        // Fetches the appropriate item for the data source layout from the items array
         let item = items[indexPath.section][indexPath.row]
         
+        // Configure the itemTitle Cell
         cell.textLabel!.text = item.title
 
+        // Return populated cell to TableView
         return cell
     }
     
@@ -127,6 +141,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
      This method sets a row as editable
      */
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        
         // Return false if you do not want the specified item to be editable.
         return true
     }
@@ -135,7 +150,11 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
      This method enables row delete
      */
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        
+        // Allow deletion of items if canEditRowAt = true
         if editingStyle == .delete {
+            
+            // Delete selected row from data source.
             items[indexPath.section].remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
@@ -147,6 +166,8 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
      Set Action to be able to move row
      */
     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        
+        // Return true if can move row - this is the default
         return true
     }
     
@@ -155,12 +176,13 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
      */
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         
+        // Select item to move
         let itemToMove = self.items[sourceIndexPath.section][sourceIndexPath.row]
         
-        // Delete the todo from source section
+        // Delete the item from source section
         items[sourceIndexPath.section].remove(at: sourceIndexPath.row)
         
-        // Move the todo to the target section
+        // Move the item to the target section
         items[destinationIndexPath.section].insert(itemToMove, at: destinationIndexPath.row)
         
         // Update the done flag depending on item moved
@@ -190,6 +212,8 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
      This method actions the segue
      */
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        // If showDetail segue
         if segue.identifier == "showDetail" {
             if let indexPath = tableView.indexPathForSelectedRow {
                 selectedSection = indexPath.section

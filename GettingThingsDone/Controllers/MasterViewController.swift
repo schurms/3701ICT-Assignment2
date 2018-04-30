@@ -219,5 +219,6 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
         
         // Reload table view
         tableView.reloadData()
+        dismiss(animated: true, completion: nil)
     }
 }

@@ -159,7 +159,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         }
     }
     
-    //MARK: Table View Datasoure methods
+    //MARK: Table View Datasource methods
     
     /**
      This method returns the section header for the required section.
@@ -295,6 +295,9 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             // Add changes to array
             delegate?.didEditItem(self, editItem: items)
         }
+        
+        // Use dismiss to remove the intermediate UIController for this segue
+        dismiss(animated: true, completion: nil)
     }
     
     //MARK: Helper Methods

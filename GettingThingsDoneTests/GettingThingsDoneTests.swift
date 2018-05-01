@@ -22,16 +22,71 @@ class GettingThingsDoneTests: XCTestCase {
         super.tearDown()
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    /**
+     Tests Class History - Valid Items
+     */
+    func testHistoryClass1() {
+        
+        // Test Data model all Valid data
+        let historyDate: Date = Date()
+        let historyDescription: String = "New History Record"
+        let historyEditable: Bool = true
+        
+        let itemHistory = History(historyDate: historyDate, historyDescription: historyDescription, historyEditable: historyEditable)
+        XCTAssertEqual(itemHistory.historyDate, historyDate)
+        XCTAssertEqual(itemHistory.historyDescription, historyDescription)
+        XCTAssertEqual(itemHistory.historyEditable, historyEditable)
     }
     
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
+    /**
+     Tests Class Peer - Valid Items
+     */
+    func testCollaboratorClass1() {
+        
+        // Test Data model all Valid data
+        let collaboratorName: String = "John"
+
+        let itemCollaborator = Collaborator(collaboratorName: collaboratorName)
+        XCTAssertEqual(itemCollaborator.collaboratorName, collaboratorName)
+    }
+    
+    /**
+     Tests Class Peer - Valid Items
+     */
+    func testPeerClass1() {
+        
+        // Test Data model all Valid data
+        let peerName: String = "John"
+        let peerDevice: String = "iPhone"
+        
+        let itemPeer = Peer(peerName: peerName, peerDevice: peerDevice)
+        XCTAssertEqual(itemPeer.peerName, peerName)
+        XCTAssertEqual(itemPeer.peerDevice, peerDevice)
+    }
+    
+    /**
+     Test Date converted to String are equal
+     Note given dates change must use date to string for comparison
+     */
+    func testDateToStringEqual() {
+        
+        // Test utility method date conversion
+        let outCompareDate = Utility.dateToString(Date())
+        let inCompareDate = Date()
+        XCTAssertEqual(Utility.dateToString(inCompareDate),outCompareDate)
+    }
+    
+    /**
+     Test Date converted to String are not equal
+     Note given dates change must use date to string for comparison
+     */
+    func testDateToStringNotEqual() {
+        
+        // Test utility method date conversion
+        let outCompareDate = Utility.dateToString(Date())
+        let inTodayDate = Date()
+        let inCompareDate = Calendar.current.date(byAdding: .day, value: 1, to: inTodayDate)
+        XCTAssertNotEqual(Utility.dateToString(inCompareDate!),outCompareDate)
     }
     
 }

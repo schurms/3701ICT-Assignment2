@@ -92,7 +92,6 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
      */
     func textFieldDidBeginEditing(_ textField: UITextField) {
         
-        
         // Hide navigation button if beginning to edit
         navigationItem.hidesBackButton = true
     }
@@ -111,8 +110,12 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             
             // Test for empty field by trimming whitespace and new lines from input text
             if let trimmedText = (cell.titleField.text?.trimmingCharacters(in: .whitespacesAndNewlines)) {
+                
+                // If text is empty do not enable the back button
                 if trimmedText.isEmpty == false {
                     navigationItem.hidesBackButton = false
+                    
+                    // Update the item Title
                     itemTitle = trimmedText
                 }
             }
@@ -120,7 +123,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             // Test if Title changed
             if itemTitleChanged != itemTitle {
                 
-                // Set up new history record when title changed
+                // Set up new history record when title changed - Not editable
                 let histDesc = "*Changed to \(itemTitle)"
                 let newHistory = History(historyDate: Date(), historyDescription: histDesc, historyEditable: false)
                 
@@ -136,24 +139,31 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             
         // Text field editing for History
         } else if (textField.tag == 2) {
-
-            // Get the cell row and section by converting a clicked point into an row
+            
+            // Get the Row and Section for the textfield cell
             let origin: CGPoint = textField.frame.origin
             let point: CGPoint? = textField.superview?.convert(origin, to: tableView)
             let indexCell: IndexPath? = tableView.indexPathForRow(at: point ?? CGPoint.zero)
-
-            // Set cell being edited
-            let indexPath = IndexPath(row: (indexCell?.row)!, section: (indexCell?.section)!)
-            let cell: HistoryTableViewCell = self.tableView.cellForRow(at: indexPath) as! HistoryTableViewCell
             
-            // Test for empty field by trimming whitespace and new lines from input text
-            if let trimmedText = (cell.historyDescriptionField.text?.trimmingCharacters(in: .whitespacesAndNewlines)) {
-                if trimmedText.isEmpty == false {
-                    navigationItem.hidesBackButton = false
-                    itemHistory[(indexCell?.row)!].historyDescription = trimmedText
+            // unwrap optional
+            if let itemCell = indexCell {
+            
+                // Set cell being edited
+                let indexPath = IndexPath(row: itemCell.row, section: itemCell.section)
+                let cell: HistoryTableViewCell = self.tableView.cellForRow(at: indexPath) as! HistoryTableViewCell
+                
+                // Test for empty field by trimming whitespace and new lines from input text
+                if let trimmedText = (cell.historyDescriptionField.text?.trimmingCharacters(in: .whitespacesAndNewlines)) {
+                    
+                    // If text is empty do not enable the back button
+                    if trimmedText.isEmpty == false {
+                        navigationItem.hidesBackButton = false
+                        
+                        // Update the history description
+                        itemHistory[itemCell.row].historyDescription = trimmedText
+                    }
                 }
             }
-            
             // Reload table data
             tableView.reloadData()
         }
@@ -162,9 +172,11 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     //MARK: Table View Datasource methods
     
     /**
-     This method returns the section header for the required section.
+     This method returns the headers for each section
      */
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        
+        // Return required section header
         return sectionHeaders[section]
     }
     
@@ -172,6 +184,8 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
      This method activates the required number of sections based on the number of headers
      */
     override func numberOfSections(in tableView: UITableView) -> Int {
+        
+        // Return the number of sections
         return sectionHeaders.count
     }
     
@@ -202,6 +216,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
      This method displays the rows of data
      */
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         // Define prototype cell reuse identifier as set in the View
         let identifier: String
         guard let section = Sections(rawValue: indexPath.section) else {
@@ -226,6 +241,8 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             
             // Get cell data
             cell.titleField.text = itemTitle
+            
+            // Set variable to test if itemTitle is updated
             itemTitleChanged = itemTitle
     
             // Return populated cell to TableView
@@ -268,6 +285,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
             
             // Get cell data
+            
             cell.textLabel?.text = itemPeer[indexPath.row].peerName
             cell.detailTextLabel?.text = itemPeer[indexPath.row].peerDevice
             
@@ -308,7 +326,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
      */
     func configureView() {
         
-        // Set variables passed from Master Table
+        // Set variables passed from MasterViewController and assign to DetailViewController variables
         if let detail = detailItem {
             itemTitle = detail.title
             itemDone = detail.done
@@ -318,7 +336,10 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         }
     }
     
-    // Called on pressing the add Button - To Implement
+    /**
+     This methods triggers from the add button. It inserts a new history object into the array
+     - Parameter sender: triggers from self
+     */
     @objc func addObject(_ sender: Any) {
         
         // Set up new history record when add history pressed

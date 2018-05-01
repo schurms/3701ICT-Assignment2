@@ -18,15 +18,11 @@ class Utility {
      - Parameter theDate: A Date value
      - returns: A string representation of the Date in dd/MM/yyyy HH:mm format
      */
-    static func dateToString(_ inDate: Date?) -> String {
+    static func dateToString(_ inDate: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd/MM/yyyy, h:mm a"
-        if let returnDate = inDate {
-            return dateFormatter.string(from: returnDate as Date)
-        } else {
-            // If error return empty string
-            return ""
-        }
+        let returnDate = inDate
+        return dateFormatter.string(from: returnDate as Date)
     }
     
 }

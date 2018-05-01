@@ -37,7 +37,6 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
     var selectedRow: Int = 0
     var selectedSection: Int = 0
     
-    
     /**
      This method performs actions on view loading - Standard method
      */
@@ -46,8 +45,11 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
         // Do any additional setup after loading the view, typically from a nib.
         navigationItem.leftBarButtonItem = editButtonItem
         
+        // Set up add button
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(insertNewObject(_:)))
         navigationItem.rightBarButtonItem = addButton
+        
+        // Set up split view controller
         if let split = splitViewController {
             let controllers = split.viewControllers
             detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
@@ -71,7 +73,8 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
     }
     
     /**
-     This methos triggers from the add button.  It inserts a new object into the array
+     This methods triggers from the add button. It inserts a new object into the array
+     - Parameter sender: triggers from self
      */
     @objc func insertNewObject(_ sender: Any) {
         
@@ -79,7 +82,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
         todoCounter += 1
         item.title = "Todo Item \(todoCounter)"
         
-        // Append record to Array - null arrays for other information
+        // Append new record to Array - null arrays for other information
         items[0].append(Item(title: item.title, done: item.done, itemHistory: [itemHistory], itemCollaborator: [], itemPeer: []))
         
         // Reload tableview
@@ -119,7 +122,6 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
      This method displays the rows of data
      */
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         
         // Define prototype cell reuse identifier as set in the View
         let cellReuseIdentifier = "ToDoItemCell"
@@ -216,12 +218,24 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
         // If showDetail segue
         if segue.identifier == "showDetail" {
             if let indexPath = tableView.indexPathForSelectedRow {
+                
+                // Set the selected row and section variables for later reuse
                 selectedSection = indexPath.section
                 selectedRow = indexPath.row
+                
+                // Get the selected item to pass
                 let selectedItem = items[selectedSection][selectedRow]
+                
+                // Set the destination ViewController
                 let destinationViewController = (segue.destination as! UINavigationController).topViewController as! DetailViewController
+                
+                // Set destination view controller as delegate for self
                 destinationViewController.delegate = self
+                
+                // Set the data to be transferred
                 destinationViewController.detailItem = selectedItem
+                
+                // Set the destination view controller bar button item for return
                 destinationViewController.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
                 destinationViewController.navigationItem.leftItemsSupplementBackButton = true
             }
@@ -243,6 +257,5 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
         
         // Reload table view
         tableView.reloadData()
-        dismiss(animated: true, completion: nil)
     }
 }

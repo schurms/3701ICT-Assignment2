@@ -89,4 +89,25 @@ class GettingThingsDoneTests: XCTestCase {
         XCTAssertNotEqual(Utility.dateToString(inCompareDate!),outCompareDate)
     }
     
+    /**
+     Test ToDoListViewController instance successfully created
+     */
+    func testMasterViewController() {
+        
+        // Test MasterViewController instance created
+        let todoVC = MasterViewController()
+        let todoView = todoVC.view
+        XCTAssertNotNil(todoView, "Cannot find MasterViewController view instance");
+    }
+    
+    /**
+     Test DetailViewController instance successfully created
+     */
+    func testDetailViewController() {
+        
+        // Test DetailViewController instance created
+        let todoVC = DetailViewController()
+        let todoView = todoVC.view
+        XCTAssertNotNil(todoView, "Cannot find DetailViewController view instance");
+    }
 }

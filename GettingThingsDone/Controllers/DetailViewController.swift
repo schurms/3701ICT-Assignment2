@@ -13,7 +13,7 @@ import UIKit
 /**
  Delegate protocol to send values back to ToDoListViewController for adding and updating to do items
  */
-protocol ToDoItemDelegate {
+protocol ToDoItemDelegate: class {
     /**
      Edit Todo Information
      - Parameter todoItem: data to be provided to the didEditItem function
@@ -35,7 +35,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     }
     
     // Delegate instance to return data back to MasterViewController
-    var delegate: ToDoItemDelegate?
+    weak var delegate: ToDoItemDelegate?
     
     // Item Variables
     var itemTitle: String = ""

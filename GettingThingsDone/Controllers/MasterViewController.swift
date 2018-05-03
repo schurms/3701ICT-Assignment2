@@ -54,6 +54,11 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
             let controllers = split.viewControllers
             detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
         }
+        let centre = NotificationCenter.default
+        centre.addObserver(forName: resignNotification, object: nil, queue: nil) { _ in
+            print("Saving my data (or pretendfing to)")
+            
+        }
     }
     
     /**

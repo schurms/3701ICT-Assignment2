@@ -25,7 +25,7 @@ class GettingThingsDoneTests: XCTestCase {
     /**
      Tests Class History - Valid Items
      */
-    func testHistoryClass1() {
+    func testHistoryClass() {
         
         // Test Data model all Valid data
         let historyDate: Date = Date()
@@ -39,9 +39,9 @@ class GettingThingsDoneTests: XCTestCase {
     }
     
     /**
-     Tests Class Peer - Valid Items
+     Tests Class Collaborator - Valid Items
      */
-    func testCollaboratorClass1() {
+    func testCollaboratorClass() {
         
         // Test Data model all Valid data
         let collaboratorName: String = "John"
@@ -53,7 +53,7 @@ class GettingThingsDoneTests: XCTestCase {
     /**
      Tests Class Peer - Valid Items
      */
-    func testPeerClass1() {
+    func testPeerClass() {
         
         // Test Data model all Valid data
         let peerName: String = "John"
@@ -62,6 +62,41 @@ class GettingThingsDoneTests: XCTestCase {
         let itemPeer = Peer(peerName: peerName, peerDevice: peerDevice)
         XCTAssertEqual(itemPeer.peerName, peerName)
         XCTAssertEqual(itemPeer.peerDevice, peerDevice)
+    }
+    
+    /**
+     Tests Class Item - Valid Items
+     */
+    func testItemClass() {
+        
+        // Set up History Record
+        let historyDate: Date = Date()
+        let historyDescription: String = "New History Record"
+        let historyEditable: Bool = true
+        let itemHistory = History(historyDate: historyDate, historyDescription: historyDescription, historyEditable: historyEditable)
+        
+        // Set up Collaborator Record
+        let collaboratorName: String = "John"
+        let itemCollaborator = Collaborator(collaboratorName: collaboratorName)
+        
+        // Set up Peer Record
+        let peerName: String = "John"
+        let peerDevice: String = "iPhone"
+        let itemPeer = Peer(peerName: peerName, peerDevice: peerDevice)
+        
+        // Set up Item Record
+        let title: String = "Todo Item 1"
+        let done: Bool = false
+        let item = Item(title: title, done: done, itemHistory: [itemHistory], itemCollaborator: [itemCollaborator], itemPeer: [itemPeer])
+        
+        XCTAssertEqual(item.title, title)
+        XCTAssertEqual(item.done, done)
+        XCTAssertEqual(item.itemHistory[0].historyDate, historyDate)
+        XCTAssertEqual(item.itemHistory[0].historyDescription, historyDescription)
+        XCTAssertEqual(item.itemHistory[0].historyEditable, historyEditable)
+        XCTAssertEqual(item.itemCollaborator[0].collaboratorName, collaboratorName)
+        XCTAssertEqual(item.itemPeer[0].peerName, peerName)
+        XCTAssertEqual(item.itemPeer[0].peerDevice, peerDevice)
     }
     
     /**

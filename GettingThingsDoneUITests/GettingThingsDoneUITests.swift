@@ -11,18 +11,16 @@ import XCTest
 
 class GettingThingsDoneUITests: XCTestCase {
     
+    // Set the app variables
     let app = XCUIApplication()
     
     override func setUp() {
         super.setUp()
         
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-        
         // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
-        // UI tests must launch the application that they test. Doing this in setup will make sure it happens for each test method.
+        // UI tests must launch the application that they test.
         app.launch()
-        print(app.debugDescription)
 
         // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
     }
@@ -32,14 +30,13 @@ class GettingThingsDoneUITests: XCTestCase {
         super.tearDown()
     }
     
-    func testTodoItemAddedOneTap() {
-        
+    /**
+     * Test that one tap the Todo Item is incremented
+     */
+    func testMasterViewTodoItemAddedOneTap() {
         let app = XCUIApplication()
         let addButton = app.navigationBars["Things To Do"].buttons["Add"]
         addButton.tap()
-        
-        let table = app.tables.element
-        XCTAssert(table.exists)
         
         let tableCellContainer = app.tables.cells.element(boundBy: 0)
         let cell = tableCellContainer.staticTexts["Todo Item 1"]
@@ -50,7 +47,7 @@ class GettingThingsDoneUITests: XCTestCase {
     /**
      * Test that two taps the Todo Item is incremented
      */
-    func testTodoItemAddedTwoTap() {
+    func testMasterViewTodoItemAddedTwoTap() {
         
         let addButton = app.navigationBars["Things To Do"].buttons["Add"]
         addButton.tap()
@@ -62,5 +59,53 @@ class GettingThingsDoneUITests: XCTestCase {
         XCTAssertTrue(cell.exists)
     }
     
+    /**
+     * Test that Table Exists
+     */
+    func testMasterViewTodoItemTableExists() {
+        
+        let addButton = app.navigationBars["Things To Do"].buttons["Add"]
+        addButton.tap()
+        
+        let table = app.tables.element
+        XCTAssert(table.exists)
+    }
     
+    func testMasterViewTodoMove() {
+        
+        let addButton = app.navigationBars["Things To Do"].buttons["Add"]
+        let editButton = app.navigationBars["Things To Do"].buttons["Edit"]
+        let doneButton = app.navigationBars["Things To Do"].buttons["Done"]
+        addButton.tap()
+        addButton.tap()
+
+        editButton.tap()
+        let tablesQuery = app.tables
+//        app.tables/*@START_MENU_TOKEN@*/.buttons["Reorder Todo Item 1"]/*[[".cells.buttons[\"Reorder Todo Item 1\"]",".buttons[\"Reorder Todo Item 1\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.swipeDown()
+        let reorderTodoItem2Button = tablesQuery/*@START_MENU_TOKEN@*/.buttons["Reorder Todo Item 2"]/*[[".cells.buttons[\"Reorder Todo Item 2\"]",".buttons[\"Reorder Todo Item 2\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
+        reorderTodoItem2Button/*@START_MENU_TOKEN@*/.press(forDuration: 1.0);/*[[".tap()",".press(forDuration: 1.0);"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
+        reorderTodoItem2Button.swipeDown()
+        doneButton.tap()
+        
+    }
+    
+    func testMastertoDetail() {
+        
+        app.navigationBars["Things To Do"].buttons["Add"].tap()
+        
+        let app2 = app
+        app2.tables/*@START_MENU_TOKEN@*/.staticTexts["Todo Item 1"]/*[[".cells.staticTexts[\"Todo Item 1\"]",".staticTexts[\"Todo Item 1\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+        app.tables.children(matching: .cell).element(boundBy: 0).children(matching: .textField).element.tap()
+        
+        let yKey = app2/*@START_MENU_TOKEN@*/.keys["y"]/*[[".keyboards.keys[\"y\"]",".keys[\"y\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
+        yKey.tap()
+        yKey.tap()
+        app2/*@START_MENU_TOKEN@*/.buttons["Return"]/*[[".keyboards",".buttons[\"return\"]",".buttons[\"Return\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.tap()
+        app.navigationBars["Master"].buttons["Things To Do"].tap()
+        let tableCellContainer = app.tables.cells.element(boundBy: 0)
+        let cell = tableCellContainer.staticTexts["Todo Item 1yy"]
+        
+        XCTAssertTrue(cell.exists)
+        
+    }
 }

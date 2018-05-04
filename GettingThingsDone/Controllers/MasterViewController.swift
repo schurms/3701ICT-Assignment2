@@ -56,7 +56,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
         }
         let centre = NotificationCenter.default
         centre.addObserver(forName: resignNotification, object: nil, queue: nil) { _ in
-            print("Saving my data (or pretendfing to)")
+            print("Saving my data (or pretending to)")
             
         }
     }

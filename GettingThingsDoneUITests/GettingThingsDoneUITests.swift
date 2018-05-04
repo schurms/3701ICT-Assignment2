@@ -34,7 +34,7 @@ class GettingThingsDoneUITests: XCTestCase {
      * Test that one tap the Todo Item is incremented
      */
     func testMasterViewTodoItemAddedOneTap() {
-        let app = XCUIApplication()
+
         let addButton = app.navigationBars["Things To Do"].buttons["Add"]
         addButton.tap()
         
@@ -68,9 +68,13 @@ class GettingThingsDoneUITests: XCTestCase {
         addButton.tap()
         
         let table = app.tables.element
+        
         XCTAssert(table.exists)
     }
     
+    /**
+     * Test that edited cells in detail are correctly returned to master
+     */
     func testMasterToDetail() {
         
         app.navigationBars["Things To Do"].buttons["Add"].tap()
@@ -93,6 +97,9 @@ class GettingThingsDoneUITests: XCTestCase {
         XCTAssertTrue(cell.exists)
     }
     
+    /**
+     * Test that Table cells are correctly deleted
+     */
     func testMasterCellDelete() {
 
         let thingsToDoNavigationBar = app.navigationBars["Things To Do"]
@@ -104,9 +111,7 @@ class GettingThingsDoneUITests: XCTestCase {
         tablesQuery/*@START_MENU_TOKEN@*/.buttons["Delete Todo Item 1"]/*[[".cells.buttons[\"Delete Todo Item 1\"]",".buttons[\"Delete Todo Item 1\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
         tablesQuery.buttons["Delete"].tap()
         thingsToDoNavigationBar.buttons["Done"].tap()
+        
         XCTAssert(app.tables.cells.count == 0)
-        
-
-        
     }
 }

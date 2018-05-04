@@ -71,29 +71,12 @@ class GettingThingsDoneUITests: XCTestCase {
         XCTAssert(table.exists)
     }
     
-    func testMasterViewTodoMove() {
-        
-        let addButton = app.navigationBars["Things To Do"].buttons["Add"]
-        let editButton = app.navigationBars["Things To Do"].buttons["Edit"]
-        let doneButton = app.navigationBars["Things To Do"].buttons["Done"]
-        addButton.tap()
-        addButton.tap()
-
-        editButton.tap()
-        let tablesQuery = app.tables
-//        app.tables/*@START_MENU_TOKEN@*/.buttons["Reorder Todo Item 1"]/*[[".cells.buttons[\"Reorder Todo Item 1\"]",".buttons[\"Reorder Todo Item 1\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.swipeDown()
-        let reorderTodoItem2Button = tablesQuery/*@START_MENU_TOKEN@*/.buttons["Reorder Todo Item 2"]/*[[".cells.buttons[\"Reorder Todo Item 2\"]",".buttons[\"Reorder Todo Item 2\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
-        reorderTodoItem2Button/*@START_MENU_TOKEN@*/.press(forDuration: 1.0);/*[[".tap()",".press(forDuration: 1.0);"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
-        reorderTodoItem2Button.swipeDown()
-        doneButton.tap()
-        
-    }
-    
     func testMastertoDetail() {
         
         app.navigationBars["Things To Do"].buttons["Add"].tap()
         
         let app2 = app
+        sleep(3)
         app2.tables/*@START_MENU_TOKEN@*/.staticTexts["Todo Item 1"]/*[[".cells.staticTexts[\"Todo Item 1\"]",".staticTexts[\"Todo Item 1\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
         app.tables.children(matching: .cell).element(boundBy: 0).children(matching: .textField).element.tap()
         

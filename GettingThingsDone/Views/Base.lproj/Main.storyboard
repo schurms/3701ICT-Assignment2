@@ -128,15 +128,15 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00/00/00, 00:00 PM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mYf-Ir-RWj">
-                                            <rect key="frame" x="16" y="14" width="140" height="18"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                            <rect key="frame" x="16" y="14" width="123.5" height="18"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <textField opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="History" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="jwS-1E-EyJ">
-                                            <rect key="frame" x="164" y="7" width="195" height="30"/>
+                                            <rect key="frame" x="147.5" y="7" width="211.5" height="30"/>
                                             <nil key="textColor"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                             <textInputTraits key="textInputTraits"/>
                                             <connections>
                                                 <outlet property="delegate" destination="FlX-Mm-TaP" id="bqY-2L-80b"/>

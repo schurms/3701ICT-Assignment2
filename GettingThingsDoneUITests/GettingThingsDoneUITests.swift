@@ -71,24 +71,42 @@ class GettingThingsDoneUITests: XCTestCase {
         XCTAssert(table.exists)
     }
     
-    func testMastertoDetail() {
+    func testMasterToDetail() {
         
         app.navigationBars["Things To Do"].buttons["Add"].tap()
         
         let app2 = app
         sleep(3)
         app2.tables/*@START_MENU_TOKEN@*/.staticTexts["Todo Item 1"]/*[[".cells.staticTexts[\"Todo Item 1\"]",".staticTexts[\"Todo Item 1\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+        
         app.tables.children(matching: .cell).element(boundBy: 0).children(matching: .textField).element.tap()
         
         let yKey = app2/*@START_MENU_TOKEN@*/.keys["y"]/*[[".keyboards.keys[\"y\"]",".keys[\"y\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
         yKey.tap()
         yKey.tap()
+        sleep(1)
         app2/*@START_MENU_TOKEN@*/.buttons["Return"]/*[[".keyboards",".buttons[\"return\"]",".buttons[\"Return\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.tap()
         app.navigationBars["Master"].buttons["Things To Do"].tap()
         let tableCellContainer = app.tables.cells.element(boundBy: 0)
         let cell = tableCellContainer.staticTexts["Todo Item 1yy"]
         
         XCTAssertTrue(cell.exists)
+    }
+    
+    func testMasterCellDelete() {
+
+        let thingsToDoNavigationBar = app.navigationBars["Things To Do"]
+        thingsToDoNavigationBar.buttons["Add"].tap()
+        sleep(1)
+        thingsToDoNavigationBar.buttons["Edit"].tap()
+        sleep(1)
+        let tablesQuery = app.tables
+        tablesQuery/*@START_MENU_TOKEN@*/.buttons["Delete Todo Item 1"]/*[[".cells.buttons[\"Delete Todo Item 1\"]",".buttons[\"Delete Todo Item 1\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+        tablesQuery.buttons["Delete"].tap()
+        thingsToDoNavigationBar.buttons["Done"].tap()
+        XCTAssert(app.tables.cells.count == 0)
+        
+
         
     }
 }

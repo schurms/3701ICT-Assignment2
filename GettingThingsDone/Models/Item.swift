@@ -53,11 +53,11 @@ class Item: Codable {
      This property saves an item in JSON format
      - Parameter item: item data
      */
-    func saveToJSON(_ object: Item) {
+    func saveItemToJSON(_ object: Item) {
         
         let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let fileURL = url.appendingPathComponent("gettingthingsdone.txt")
-//        print(fileURL)
+        let fileURL = url.appendingPathComponent("gettingthingsdone.json")
+        print(fileURL)
         let encoder = JSONEncoder()
         do {
             let data = try encoder.encode(object)
@@ -65,7 +65,6 @@ class Item: Codable {
         } catch {
             fatalError(error.localizedDescription)
         }
-        
     }
-    
+
 }

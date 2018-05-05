@@ -57,7 +57,6 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
         let centre = NotificationCenter.default
         centre.addObserver(forName: resignNotification, object: nil, queue: nil) { _ in
             print("Saving my data (or pretending to)")
-            
         }
     }
     
@@ -220,7 +219,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
      */
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let item = items[indexPath.section][indexPath.row]
-        item.saveToJSON(item)
+        item.saveItemToJSON(item)
     }
     
     //MARK: Segues

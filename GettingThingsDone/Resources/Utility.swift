@@ -24,5 +24,4 @@ class Utility {
         let returnDate = inDate
         return dateFormatter.string(from: returnDate as Date)
     }
-    
 }

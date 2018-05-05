@@ -38,6 +38,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     weak var delegate: ToDoItemDelegate?
     
     // Item Variables
+    var itemUUID: UUID = UUID()
     var itemTitle: String = ""
     var itemTitleChanged: String = ""
     var itemDone: Bool = false
@@ -45,7 +46,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     var itemHistoryDescription: String = ""
     var itemCollaborator = [Collaborator]()
     var itemPeer = [Peer]()
-    var items = Item(title: "", done: false, itemHistory: [], itemCollaborator: [], itemPeer: [])
+    var items = Item(itemIdentifier: UUID(), title: "", done: false, itemHistory: [], itemCollaborator: [], itemPeer: [])
     
     // Property observer if detailItem sent via showItem segue
     var detailItem: Item? {
@@ -304,6 +305,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         if delegate != nil {
             
             // Set up variables to return
+            items.itemIdentifier = itemUUID
             items.title = itemTitle
             items.done = itemDone
             items.itemHistory = itemHistory
@@ -328,6 +330,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         
         // Set variables passed from MasterViewController and assign to DetailViewController variables
         if let detail = detailItem {
+            itemUUID = detail.itemIdentifier
             itemTitle = detail.title
             itemDone = detail.done
             itemHistory = detail.itemHistory

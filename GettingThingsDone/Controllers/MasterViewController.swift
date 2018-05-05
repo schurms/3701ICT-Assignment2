@@ -27,7 +27,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
     var itemHistory = History(historyDate: Date(), historyDescription: "*Item Created", historyEditable: false)
     var itemCollaborator = Collaborator(collaboratorName: "")
     var itemPeer = Peer(peerName: "", peerDevice: "")
-    var item = Item(title: "", done: false, itemHistory: [], itemCollaborator: [], itemPeer: [])
+    var item = Item(itemIdentifier: UUID(), title: "", done: false, itemHistory: [], itemCollaborator: [], itemPeer: [])
     
     // Declare headers arrays
     let sectionHeaders = ["YET TO DO", "COMPLETED"]
@@ -85,13 +85,15 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
         
         // Set up item Title record - increment counter
         todoCounter += 1
-        item.title = "Todo Item \(todoCounter)"
-        
+        let title = "Todo Item \(todoCounter)"
+        let item = Item(itemIdentifier: UUID(), title: title, done: self.item.done, itemHistory: [itemHistory], itemCollaborator: [], itemPeer: [])
         // Append new record to Array - null arrays for other information
-        items[0].append(Item(title: item.title, done: item.done, itemHistory: [itemHistory], itemCollaborator: [], itemPeer: []))
+        items[0].append(item)
         
-        // Reload tableview
+        // Reload tableviewlet
         tableView.reloadData()
+        
+        
     }
     
     //MARK: Table View Datasource Method

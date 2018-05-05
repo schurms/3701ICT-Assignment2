@@ -18,6 +18,7 @@ class Item: Codable {
     /**
      To Do item variables.
      */
+    var itemIdentifier: UUID
     var title: String
     var done: Bool
     var itemHistory: [History]
@@ -28,6 +29,7 @@ class Item: Codable {
     
     /**
      Initialises a new "To Do" item
+     - Parameter UUID: Unique item identifier regardless if they have the same title
      - Parameter title: The title of the item
      - Parameter complete: Indicates if item is complete
      - Parameter itemHistory: Array of history for an item
@@ -35,14 +37,34 @@ class Item: Codable {
      - Parameter itemPeer: Array of Peers for an item
      - Returns: A "To Do" item.
      */
-    init(title: String, done: Bool, itemHistory: [History], itemCollaborator: [Collaborator], itemPeer: [Peer]) {
+    init(itemIdentifier: UUID, title: String, done: Bool, itemHistory: [History], itemCollaborator: [Collaborator], itemPeer: [Peer]) {
         
         // Initialise stored properties
+        self.itemIdentifier = itemIdentifier
         self.title = title
         self.done = done
         self.itemHistory = itemHistory
         self.itemCollaborator = itemCollaborator
         self.itemPeer = itemPeer
+        
+    }
+    
+    /**
+     This property saves an item in JSON format
+     - Parameter item: item data
+     */
+    func saveToJSON(_ object: Item) {
+        
+        let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let fileURL = url.appendingPathComponent("gettingthingsdone.txt")
+//        print(fileURL)
+        let encoder = JSONEncoder()
+        do {
+            let data = try encoder.encode(object)
+            try data.write(to: fileURL)
+        } catch {
+            fatalError(error.localizedDescription)
+        }
         
     }
     

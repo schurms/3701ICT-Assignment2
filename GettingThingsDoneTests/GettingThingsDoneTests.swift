@@ -85,10 +85,12 @@ class GettingThingsDoneTests: XCTestCase {
         let itemPeer = Peer(peerName: peerName, peerDevice: peerDevice)
         
         // Set up Item Record
+        let itemIdentifier: UUID = UUID()
         let title: String = "Todo Item 1"
         let done: Bool = false
-        let item = Item(title: title, done: done, itemHistory: [itemHistory], itemCollaborator: [itemCollaborator], itemPeer: [itemPeer])
+        let item = Item(itemIdentifier: itemIdentifier, title: title, done: done, itemHistory: [itemHistory], itemCollaborator: [itemCollaborator], itemPeer: [itemPeer])
         
+        XCTAssertEqual(item.itemIdentifier, itemIdentifier)
         XCTAssertEqual(item.title, title)
         XCTAssertEqual(item.done, done)
         XCTAssertEqual(item.itemHistory[0].historyDate, historyDate)

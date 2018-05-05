@@ -215,6 +215,14 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
         }
     }
     
+    /**
+     This method saves item to JSON on selection
+     */
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let item = items[indexPath.section][indexPath.row]
+        item.saveToJSON(item)
+    }
+    
     //MARK: Segues
     
     /**

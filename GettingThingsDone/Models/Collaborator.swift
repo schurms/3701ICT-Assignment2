@@ -11,7 +11,7 @@ import Foundation
 /**
  * This Class defines the Collabortors data model
  */
-class Collaborator {
+class Collaborator: Codable {
     
     //MARK: Properties
     

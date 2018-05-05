@@ -11,7 +11,7 @@ import Foundation
 /**
  * This Class defines the History used to store a "To Do" History
  */
-class History {
+class History: Codable {
     
     //MARK: Properties
     

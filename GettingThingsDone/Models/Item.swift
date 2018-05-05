@@ -11,7 +11,7 @@ import Foundation
 /**
  * This Class defines an Item used to store a "To Do"
  */
-class Item {
+class Item: Codable {
     
     //MARK: Properties
     

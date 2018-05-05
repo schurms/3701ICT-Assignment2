@@ -11,7 +11,7 @@ import Foundation
 /**
  * This Class defines the Collabortors data model
  */
-class Peer {
+class Peer: Codable {
     
     //MARK: Properties
     

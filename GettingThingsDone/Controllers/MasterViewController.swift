@@ -215,11 +215,14 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
     }
     
     /**
-     This method saves item to JSON on selection
+     This method is a test method to test saving and retrieving from JSON on selection
      */
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let item = items[indexPath.section][indexPath.row]
         item.saveItemToJSON(item)
+        
+        let itemIn = item.getItemFromJSON()
+        print(itemIn.title)
     }
     
     //MARK: Segues

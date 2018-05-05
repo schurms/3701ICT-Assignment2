@@ -238,7 +238,9 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         if (indexPath.section == 0) {
             
             // Set cell to Task Custom Cell
-            let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! ItemTableViewCell
+            guard let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as? ItemTableViewCell else {
+                fatalError("Unexpectedly got section\row \(indexPath.section) \(indexPath.row)")
+            }
             
             // Get cell data
             cell.titleField.text = itemTitle
@@ -253,7 +255,9 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         } else if (indexPath.section == 1) {
             
             // Set cell to History Custom Cell
-            let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! HistoryTableViewCell
+            guard let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as? HistoryTableViewCell else {
+                fatalError("Unexpectedly got section\row \(indexPath.section) \(indexPath.row)")
+            }
     
             // Get cell data
             cell.historyDateField.text = Utility.dateToString(itemHistory[indexPath.row].historyDate)

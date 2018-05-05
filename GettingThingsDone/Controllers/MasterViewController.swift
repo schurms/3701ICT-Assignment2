@@ -221,8 +221,8 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
         let item = items[indexPath.section][indexPath.row]
         item.saveItemToJSON(item)
         
-        let itemIn = item.getItemFromJSON()
-        print(itemIn.title)
+ //       let itemIn = item.getItemFromJSON()
+//        print(itemIn.title)
     }
     
     //MARK: Segues

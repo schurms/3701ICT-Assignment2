@@ -40,7 +40,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
     var browserID: MCNearbyServiceBrowser!
     var advertiserID: MCNearbyServiceAdvertiser!
     
-    var peerFound = [MCPeerID]()
+    var peersFound = [MCPeerID]()
     var invitationHandler: ((Bool, MCSession?)->Void)!
     
     // Declare headers arrays
@@ -86,6 +86,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         advertiserID.delegate = self
         
         browserID.startBrowsingForPeers()
+        advertiserID.startAdvertisingPeer()
     }
     
     /**
@@ -125,6 +126,9 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         let itemCollaborator = Collaborator(collaboratorName: nameCollaborator)
         collaboratorArray.append(itemCollaborator)
         
+        let peer = Peer(peerName: itemServiceType, peerDevice: "Test")
+        peerArray.append(peer)
+        
     }
     
     //MARK: Multi-peer Delegate Methods
@@ -133,7 +137,8 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
      * Called when a nearby Peer is found
      */
     func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
-        peerFound.append(peerID)
+        peersFound.append(peerID)
+        print(peerID)
         let peerDevice = peerID.displayName
         let peer = Peer(peerName: itemServiceType, peerDevice: peerDevice)
         peerArray.append(peer)
@@ -143,9 +148,9 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
      * Called when a nearby Peer is lost
      */
     func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
-        for (index, aPeer) in peerFound.enumerated() {
+        for (index, aPeer) in peersFound.enumerated() {
             if aPeer == peerID {
-                peerFound.remove(at: index)
+                peersFound.remove(at: index)
                 break
             }
         }
@@ -331,10 +336,10 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let item = itemArray[indexPath.section][indexPath.row]
         Utility.saveItemToJSON(item)
-        print("Writing \(item.title)")
+//        print("Writing \(item.title)")
         
-        let itemIn = Utility.getItemFromJSON()
-        print("Reading \(itemIn.title)")
+//        let itemIn = Utility.getItemFromJSON()
+//        print("Reading \(itemIn.title)")
         
     }
     

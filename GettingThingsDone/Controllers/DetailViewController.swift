@@ -149,8 +149,11 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
                 itemTitleChanged = itemTitle
             }
             
-            // Reload table data
-            tableView.reloadData()
+//            // Reload table data
+//            tableView.reloadData()
+//
+//            // Return edited data back via the protocol
+//            updateMasterView()
             
             // Text field editing for History
         } else if (textField.tag == 2) {
@@ -179,9 +182,12 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
                     }
                 }
             }
-            // Reload table data
-            tableView.reloadData()
         }
+        // Reload table data
+        tableView.reloadData()
+        
+        // Update variables and update master view on finishing editing
+        updateMasterView()
     }
     
     //MARK: Table View Datasource methods
@@ -328,26 +334,32 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
      */
     override func viewWillDisappear(_ animated: Bool) {
         
-        // Return edited data back via the protocol
-        if delegate != nil {
-            
-            // Set up variables to return
-            items.itemIdentifier = itemUUID
-            items.title = itemTitle
-            items.done = itemDone
-            items.itemHistory = itemHistory
-            //            items.itemCollaborator = itemCollaborator
-            //            items.itemPeer = itemPeer
-            
-            // Add changes to array
-            delegate?.didEditItem(self, editItem: items)
-        }
-        
-        // Use dismiss to remove the intermediate UIController for this segue
-        dismiss(animated: true, completion: nil)
+        // Update variables and update master view on pressing return to master
+        updateMasterView()
     }
     
     //MARK: Helper Methods
+    
+    /**
+     Configures data to return to MasterView
+     - Return data for editing
+     */
+    func updateMasterView() {
+        // Return edited data back via the protocol
+        if delegate != nil {
+
+        // Set up variables to return
+        items.itemIdentifier = itemUUID
+        items.title = itemTitle
+        items.done = itemDone
+        items.itemHistory = itemHistory
+        //            items.itemCollaborator = itemCollaborator
+        //            items.itemPeer = itemPeer
+
+        // Add changes to array
+        delegate?.didEditItem(self, editItem: items)
+        }
+    }
     
     /**
      Configures the Item view variables
@@ -402,6 +414,9 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         
         // Reload table data
         tableView.reloadData()
+        
+        // Update variables and update master view on finishing editing
+        updateMasterView()
     }
     
 }

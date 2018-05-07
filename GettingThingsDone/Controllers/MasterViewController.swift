@@ -138,7 +138,6 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
      */
     func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
         peersFound.append(peerID)
-        print(peerID)
         let peerDevice = peerID.displayName
         let peer = Peer(peerName: itemServiceType, peerDevice: peerDevice)
         peerArray.append(peer)
@@ -151,6 +150,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         for (index, aPeer) in peersFound.enumerated() {
             if aPeer == peerID {
                 peersFound.remove(at: index)
+                peerArray.remove(at: index)
                 break
             }
         }
@@ -341,6 +341,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
 //        let itemIn = Utility.getItemFromJSON()
 //        print("Reading \(itemIn.title)")
         
+        tableView.reloadData()
     }
     
     //MARK: Segues

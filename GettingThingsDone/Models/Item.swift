@@ -29,7 +29,7 @@ class Item: Codable {
      Initialises a new "To Do" item
      - Parameter UUID: Unique item identifier regardless if they have the same title
      - Parameter title: The title of the item
-     - Parameter complete: Indicates if item is complete
+     - Parameter done: Indicates if item is complete
      - Parameter itemHistory: Array of history for an item
      - Returns: A "To Do" item.
      */
@@ -42,43 +42,5 @@ class Item: Codable {
         self.itemHistory = itemHistory
         
     }
-    
-    /**
-     This property saves an item in JSON format
-     - Parameter item: item data
-     */
-    func saveItemToJSON(_ object: Item) {
-        
-        let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let fileURL = url.appendingPathComponent("gettingthingsdone.json")
-//        print(fileURL)
-        let encoder = JSONEncoder()
-        do {
-            let data = try encoder.encode(object)
-            try data.write(to: fileURL)
-        } catch {
-            fatalError("Error Writing JSON File")
-        }
-    }
 
-    /**
-     This property retrieves an item in JSON format
-     - Parameter item: item data
-     - Returns: The item from the file
-     */
-    func getItemFromJSON() -> Item {
-        
-        let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let fileURL = url.appendingPathComponent("gettingthingsdone.json")
-//        print(fileURL)
-        let decoder = JSONDecoder()
-        do {
-            let dataIn = try Data(contentsOf: fileURL)
-            let dataOut = try decoder.decode(Item.self, from: dataIn)
-            return dataOut
-        } catch {
-            fatalError("Error Reading JSON File")
-        }
-    }
-    
 }

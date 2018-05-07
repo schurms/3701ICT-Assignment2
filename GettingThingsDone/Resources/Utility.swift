@@ -24,4 +24,42 @@ class Utility {
         let returnDate = inDate
         return dateFormatter.string(from: returnDate as Date)
     }
+    
+    /**
+     This property saves an item in JSON format
+     - Parameter item: item data
+     */
+    static func saveItemToJSON(_ object: Item) {
+        
+        let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let fileURL = url.appendingPathComponent("gettingthingsdone.json")
+        //        print(fileURL)
+        let encoder = JSONEncoder()
+        do {
+            let data = try encoder.encode(object)
+            try data.write(to: fileURL)
+        } catch {
+            fatalError("Error Writing JSON File")
+        }
+    }
+    
+    /**
+     This property retrieves an item in JSON format
+     - Parameter item: item data
+     - Returns: The item from the file
+     */
+    static func getItemFromJSON() -> Item {
+        
+        let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let fileURL = url.appendingPathComponent("gettingthingsdone.json")
+        //        print(fileURL)
+        let decoder = JSONDecoder()
+        do {
+            let dataIn = try Data(contentsOf: fileURL)
+            let dataOut = try decoder.decode(Item.self, from: dataIn)
+            return dataOut
+        } catch {
+            fatalError("Error Reading JSON File")
+        }
+    }
 }

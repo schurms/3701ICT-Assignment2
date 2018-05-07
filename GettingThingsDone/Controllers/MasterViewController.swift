@@ -113,6 +113,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         // Set up item Title record - increment counter
         todoCounter += 1
         let title = "Todo Item \(todoCounter)"
+        let itemHistory = History(historyDate: Date(), historyDescription: "*Item Created", historyEditable: false)
         let item = Item(itemIdentifier: UUID(), title: title, done: self.item.done, itemHistory: [itemHistory])
         // Append new record to Array - null arrays for other information
         itemArray[0].append(item)

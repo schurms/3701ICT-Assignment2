@@ -8,13 +8,14 @@
 //
 
 import UIKit
+import MultipeerConnectivity
 
 /**
  * This class defines the Master View Controller for the GettingThingsDone application.
  * Class conforms to the ToDoItemDelegate protocol used in the DetailViewController.
  */
 
-class MasterViewController: UITableViewController, ToDoItemDelegate {
+class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDelegate, MCNearbyServiceBrowserDelegate, MCNearbyServiceAdvertiserDelegate {
     
     //MARK: Properties
     
@@ -30,6 +31,17 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
     var itemCollaborator = Collaborator(collaboratorName: "")
     var itemPeer = Peer(peerName: "", peerDevice: "")
     var item = Item(itemIdentifier: UUID(), title: "", done: false, itemHistory: [])
+    
+    // Multipeer variables
+    let itemServiceType = "s5073958"
+    
+    var sessionID: MCSession!
+    var peerID: MCPeerID!
+    var browserID: MCNearbyServiceBrowser!
+    var advertiserID: MCNearbyServiceAdvertiser!
+    
+    var foundPeers = [MCPeerID]()
+    var invitationHandler: ((Bool, MCSession?)->Void)!
     
     // Declare headers arrays
     let sectionHeaders = ["YET TO DO", "COMPLETED"]
@@ -60,6 +72,20 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
         centre.addObserver(forName: resignNotification, object: nil, queue: nil) { _ in
             print("Saving my data (or pretending to)")
         }
+        
+        // Initalise Multipeer Variables
+        peerID = MCPeerID(displayName: UIDevice.current.name)
+        
+        sessionID = MCSession(peer: peerID)
+        sessionID.delegate = self
+        
+        browserID = MCNearbyServiceBrowser(peer: peerID, serviceType: itemServiceType)
+        browserID.delegate = self
+        
+        advertiserID = MCNearbyServiceAdvertiser(peer: peerID, discoveryInfo: nil, serviceType: itemServiceType)
+        advertiserID.delegate = self
+        
+        browserID.startBrowsingForPeers()
     }
     
     /**
@@ -99,12 +125,86 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
         let itemCollaborator = Collaborator(collaboratorName: nameCollaborator)
         collaboratorArray.append(itemCollaborator)
         
-        // Test Peer Array
-        let name = "Test Peer \(todoCounter)"
-        let device = "Test Device \(todoCounter)"
-        let itemPeer = Peer(peerName: name, peerDevice: device)
-        peerArray.append(itemPeer)
-        
+    }
+    
+    //MARK: Multi-peer Delegate Methods
+    
+    /**
+     * Called when a nearby Peer is found
+     */
+    func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
+        foundPeers.append(peerID)
+        let peerDevice = peerID.displayName
+        print(peerID.displayName, peerID.description)
+        let peer = Peer(peerName: itemServiceType, peerDevice: peerDevice)
+        peerArray.append(peer)
+    }
+    
+    /**
+     * Called when a nearby Peer is lost
+     */
+    func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
+        for (index, aPeer) in foundPeers.enumerated() {
+            if aPeer == peerID {
+                foundPeers.remove(at: index)
+                break
+            }
+        }
+    }
+    
+    /**
+     * Called when a browser failed to start browsing for peers
+     */
+    func browser(_ browser: MCNearbyServiceBrowser, didNotStartBrowsingForPeers error: Error) {
+        print(error.localizedDescription)
+    }
+    
+    /**
+     * Called when an advertisement fails
+     */
+    func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didNotStartAdvertisingPeer error: Error) {
+    }
+    
+    /**
+     * Called when an invitation to join a session is received from a nearby Peer
+     */
+    func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
+        print("didReceiveInvitationFromPeer \(peerID)")
+    }
+    
+    func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
+        switch state {
+        case MCSessionState.connected:
+            print("Connected to session: \(session)")
+        case MCSessionState.connecting:
+            print("Connecting to session: \(session)")
+        case MCSessionState.notConnected:
+            print("Did not connect to session: \(session)")
+        }
+    }
+    
+    /**
+     * Indicates that the data task has received some of the expected data
+     */
+    func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
+    }
+    
+    /**
+     * Indicates that the input streams are available
+     */
+    func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {
+    }
+    
+    /**
+     * Indicates that the local Peer finished receiving a resource from a nearby Peer
+     */
+    func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress) {
+    }
+    
+    /**
+     * Indicates that the local Peer finished receiving a resource from a nearby Peer
+     */
+    func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL?, withError error: Error?) {
     }
     
     //MARK: Table View Datasource Method
@@ -152,7 +252,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
         
         // Configure the itemTitle Cell
         cell.textLabel!.text = item.title
-
+        
         // Return populated cell to TableView
         return cell
     }
@@ -233,8 +333,9 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
         let item = itemArray[indexPath.section][indexPath.row]
         item.saveItemToJSON(item)
         
- //       let itemIn = item.getItemFromJSON()
-//        print(itemIn.title)
+        //        let itemIn = item.getItemFromJSON()
+        //        print("Reading in data for this item \(itemIn.title)")
+        
     }
     
     //MARK: Segues
@@ -254,6 +355,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
                 
                 // Get the selected item to pass
                 let selectedItem = itemArray[selectedSection][selectedRow]
+                // Get the selected item to pass
                 let selectedCollaborator = collaboratorArray
                 let selectedPeer = peerArray
                 
@@ -291,4 +393,5 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
         // Reload table view
         tableView.reloadData()
     }
+    
 }

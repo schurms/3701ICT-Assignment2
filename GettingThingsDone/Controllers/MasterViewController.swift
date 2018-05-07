@@ -40,7 +40,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
     var browserID: MCNearbyServiceBrowser!
     var advertiserID: MCNearbyServiceAdvertiser!
     
-    var foundPeers = [MCPeerID]()
+    var peerFound = [MCPeerID]()
     var invitationHandler: ((Bool, MCSession?)->Void)!
     
     // Declare headers arrays
@@ -133,7 +133,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
      * Called when a nearby Peer is found
      */
     func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
-        foundPeers.append(peerID)
+        peerFound.append(peerID)
         let peerDevice = peerID.displayName
         let peer = Peer(peerName: itemServiceType, peerDevice: peerDevice)
         peerArray.append(peer)
@@ -143,9 +143,9 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
      * Called when a nearby Peer is lost
      */
     func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
-        for (index, aPeer) in foundPeers.enumerated() {
+        for (index, aPeer) in peerFound.enumerated() {
             if aPeer == peerID {
-                foundPeers.remove(at: index)
+                peerFound.remove(at: index)
                 break
             }
         }

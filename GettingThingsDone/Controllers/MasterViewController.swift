@@ -22,12 +22,14 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
     weak var detailViewController: DetailViewController?
     
     // Declare arrays
-    var items = [[Item](), [Item]()]
+    var itemArray = [[Item](), [Item]()]
+    var peerArray = [Peer]()
+    var collaboratorArray = [Collaborator]()
     var itemDone: Bool = false
     var itemHistory = History(historyDate: Date(), historyDescription: "*Item Created", historyEditable: false)
     var itemCollaborator = Collaborator(collaboratorName: "")
     var itemPeer = Peer(peerName: "", peerDevice: "")
-    var item = Item(itemIdentifier: UUID(), title: "", done: false, itemHistory: [], itemCollaborator: [], itemPeer: [])
+    var item = Item(itemIdentifier: UUID(), title: "", done: false, itemHistory: [])
     
     // Declare headers arrays
     let sectionHeaders = ["YET TO DO", "COMPLETED"]
@@ -85,13 +87,23 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
         // Set up item Title record - increment counter
         todoCounter += 1
         let title = "Todo Item \(todoCounter)"
-        let item = Item(itemIdentifier: UUID(), title: title, done: self.item.done, itemHistory: [itemHistory], itemCollaborator: [], itemPeer: [])
+        let item = Item(itemIdentifier: UUID(), title: title, done: self.item.done, itemHistory: [itemHistory])
         // Append new record to Array - null arrays for other information
-        items[0].append(item)
+        itemArray[0].append(item)
         
         // Reload tableviewlet
         tableView.reloadData()
         
+        // Test Collaborator Array
+        let nameCollaborator = "Test Collaborator \(todoCounter)"
+        let itemCollaborator = Collaborator(collaboratorName: nameCollaborator)
+        collaboratorArray.append(itemCollaborator)
+        
+        // Test Peer Array
+        let name = "Test Peer \(todoCounter)"
+        let device = "Test Device \(todoCounter)"
+        let itemPeer = Peer(peerName: name, peerDevice: device)
+        peerArray.append(itemPeer)
         
     }
     
@@ -121,7 +133,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         // Return the number of rows for each section
-        return items[section].count
+        return itemArray[section].count
     }
     
     /**
@@ -136,7 +148,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath)
         
         // Fetches the appropriate item for the data source layout from the items array
-        let item = items[indexPath.section][indexPath.row]
+        let item = itemArray[indexPath.section][indexPath.row]
         
         // Configure the itemTitle Cell
         cell.textLabel!.text = item.title
@@ -163,7 +175,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
         if editingStyle == .delete {
             
             // Delete selected row from data source.
-            items[indexPath.section].remove(at: indexPath.row)
+            itemArray[indexPath.section].remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
@@ -185,32 +197,32 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         
         // Select item to move
-        let itemToMove = self.items[sourceIndexPath.section][sourceIndexPath.row]
+        let itemToMove = self.itemArray[sourceIndexPath.section][sourceIndexPath.row]
         
         // Delete the item from source section
-        items[sourceIndexPath.section].remove(at: sourceIndexPath.row)
+        itemArray[sourceIndexPath.section].remove(at: sourceIndexPath.row)
         
         // Move the item to the target section
-        items[destinationIndexPath.section].insert(itemToMove, at: destinationIndexPath.row)
+        itemArray[destinationIndexPath.section].insert(itemToMove, at: destinationIndexPath.row)
         
         // Update the done flag depending on item moved
         if (sourceIndexPath.section == 0 && destinationIndexPath.section == 1) {
             
             // Item moved to "Completed" - set done = True
-            items[destinationIndexPath.section][destinationIndexPath.row].done = true
+            itemArray[destinationIndexPath.section][destinationIndexPath.row].done = true
             
             // Add history record for move to "Completed"
             itemHistory = History(historyDate: Date(), historyDescription: "*Item Completed", historyEditable: false)
-            items[destinationIndexPath.section][destinationIndexPath.row].itemHistory.append(itemHistory)
+            itemArray[destinationIndexPath.section][destinationIndexPath.row].itemHistory.append(itemHistory)
             
         } else if ( sourceIndexPath.section == 1 && destinationIndexPath.section == 0) {
             
             // Item moved to "Yet To Do" - set done = False
-            items[destinationIndexPath.section][destinationIndexPath.row].done = false
+            itemArray[destinationIndexPath.section][destinationIndexPath.row].done = false
             
             // Add history record for move to "Yet To Do"
             itemHistory = History(historyDate: Date(), historyDescription: "*Item Not Completed", historyEditable: false)
-            items[destinationIndexPath.section][destinationIndexPath.row].itemHistory.append(itemHistory)
+            itemArray[destinationIndexPath.section][destinationIndexPath.row].itemHistory.append(itemHistory)
         }
     }
     
@@ -218,7 +230,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
      This method is a test method to test saving and retrieving from JSON on selection
      */
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let item = items[indexPath.section][indexPath.row]
+        let item = itemArray[indexPath.section][indexPath.row]
         item.saveItemToJSON(item)
         
  //       let itemIn = item.getItemFromJSON()
@@ -241,7 +253,9 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
                 selectedRow = indexPath.row
                 
                 // Get the selected item to pass
-                let selectedItem = items[selectedSection][selectedRow]
+                let selectedItem = itemArray[selectedSection][selectedRow]
+                let selectedCollaborator = collaboratorArray
+                let selectedPeer = peerArray
                 
                 // Set the destination ViewController
                 let destinationViewController = (segue.destination as! UINavigationController).topViewController as! DetailViewController
@@ -251,6 +265,8 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
                 
                 // Set the data to be transferred
                 destinationViewController.detailItem = selectedItem
+                destinationViewController.detailCollaborator = selectedCollaborator
+                destinationViewController.detailPeer = selectedPeer
                 
                 // Set the destination view controller bar button item for return
                 destinationViewController.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
@@ -270,7 +286,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate {
     func didEditItem(_ controller: AnyObject, editItem: Item) {
         
         // Replace the edited item in the array at the row that was selected
-        items[selectedSection][selectedRow] = editItem
+        itemArray[selectedSection][selectedRow] = editItem
         
         // Reload table view
         tableView.reloadData()

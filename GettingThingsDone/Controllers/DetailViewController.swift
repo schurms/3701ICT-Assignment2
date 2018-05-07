@@ -46,12 +46,26 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     var itemHistoryDescription: String = ""
     var itemCollaborator = [Collaborator]()
     var itemPeer = [Peer]()
-    var items = Item(itemIdentifier: UUID(), title: "", done: false, itemHistory: [], itemCollaborator: [], itemPeer: [])
+    var items = Item(itemIdentifier: UUID(), title: "", done: false, itemHistory: [])
     
-    // Property observer if detailItem sent via showItem segue
+    // Property observer for Item Details sent via showItem segue
     var detailItem: Item? {
         didSet {
-            configureView()
+            configureItemView()
+        }
+    }
+    
+    // Property observer for Collaborator Details sent via showItem segue
+    var detailCollaborator = [Collaborator]() {
+        didSet {
+            configureCollaboratorView()
+        }
+    }
+    
+    // Property observer for Peer Details sent via showItem segue
+    var detailPeer = [Peer]() {
+        didSet {
+            configurePeerView()
         }
     }
     
@@ -210,6 +224,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         // Number of Rows for Peer Section
         } else {
             return itemPeer.count
+
         }
     }
     
@@ -299,6 +314,14 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         }
     }
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // Deselect row after row clicked
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        // Reload table view
+        tableView.reloadData()
+    }
+    
     /**
      This method is called on view Disappearing - Returning to Master
      The function returns updated data back for updating
@@ -313,8 +336,8 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             items.title = itemTitle
             items.done = itemDone
             items.itemHistory = itemHistory
-            items.itemCollaborator = itemCollaborator
-            items.itemPeer = itemPeer
+//            items.itemCollaborator = itemCollaborator
+//            items.itemPeer = itemPeer
             
             // Add changes to array
             delegate?.didEditItem(self, editItem: items)
@@ -327,10 +350,10 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     //MARK: Helper Methods
     
     /**
-     Configures the view variables
+     Configures the Item view variables
      - returns: Sets view Variables
      */
-    func configureView() {
+    func configureItemView() {
         
         // Set variables passed from MasterViewController and assign to DetailViewController variables
         if let detail = detailItem {
@@ -338,9 +361,31 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             itemTitle = detail.title
             itemDone = detail.done
             itemHistory = detail.itemHistory
-            itemCollaborator = detail.itemCollaborator
-            itemPeer = detail.itemPeer
+//            itemCollaborator = detail.itemCollaborator
+//            itemPeer = detail.itemPeer
         }
+    }
+    
+    /**
+     Configures the Collaborator view variables
+     - returns: Sets view Variables
+     */
+    func configureCollaboratorView() {
+        
+        // Set variables passed from MasterViewController and assign to DetailViewController variables
+        let detail = detailCollaborator
+        itemCollaborator = detail
+    }
+    
+    /**
+     Configures the Peer view variables
+     - returns: Sets view Variables
+     */
+    func configurePeerView() {
+        
+        // Set variables passed from MasterViewController and assign to DetailViewController variables
+        let detail = detailPeer
+            itemPeer = detail
     }
     
     /**

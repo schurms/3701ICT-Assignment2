@@ -148,11 +148,11 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
                 itemTitleChanged = itemTitle
             }
             
-//            // Reload table data
-//            tableView.reloadData()
-//
-//            // Return edited data back via the protocol
-//            updateMasterView()
+            // Reload table data
+            tableView.reloadData()
+
+            // Return edited data back via the protocol
+            updateMasterView()
             
             // Text field editing for History
         } else if (textField.tag == 2) {

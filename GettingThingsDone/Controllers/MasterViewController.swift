@@ -135,7 +135,6 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
     func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
         foundPeers.append(peerID)
         let peerDevice = peerID.displayName
-        print(peerID.displayName, peerID.description)
         let peer = Peer(peerName: itemServiceType, peerDevice: peerDevice)
         peerArray.append(peer)
     }

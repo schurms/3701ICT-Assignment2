@@ -101,7 +101,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         textField.resignFirstResponder()
         return true
     }
-
+    
     /**
      This method is called when editing of the textField commences
      */
@@ -116,9 +116,9 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
      */
     func textFieldDidEndEditing(_ textField: UITextField, reason: UITextFieldDidEndEditingReason) {
         
-        // Text field editing for Tasks    
+        // Text field editing for Tasks
         if (textField.tag == 1) {
-
+            
             // Set cell being edited
             let indexPath = IndexPath(row: 0, section: 0)
             let cell = tableView.cellForRow(at: indexPath) as! ItemTableViewCell
@@ -152,7 +152,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             // Reload table data
             tableView.reloadData()
             
-        // Text field editing for History
+            // Text field editing for History
         } else if (textField.tag == 2) {
             
             // Get the Row and Section for the textfield cell
@@ -162,7 +162,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             
             // unwrap optional
             if let itemCell = indexCell {
-            
+                
                 // Set cell being edited
                 let indexPath = IndexPath(row: itemCell.row, section: itemCell.section)
                 let cell: HistoryTableViewCell = self.tableView.cellForRow(at: indexPath) as! HistoryTableViewCell
@@ -212,19 +212,19 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         // Number of Rows for Task Section
         if section == 0 {
             return 1
-        
-        // Number of Rows for History Section
+            
+            // Number of Rows for History Section
         } else if section == 1 {
             return itemHistory.count
             
-        // Number of Rows for Collaborator Section
+            // Number of Rows for Collaborator Section
         } else if section == 2 {
             return itemCollaborator.count
             
-        // Number of Rows for Peer Section
+            // Number of Rows for Peer Section
         } else {
             return itemPeer.count
-
+            
         }
     }
     
@@ -248,7 +248,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         case .sectionD:
             identifier = "PeerCell"
         }
-
+        
         // Task Section
         if (indexPath.section == 0) {
             
@@ -262,18 +262,18 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             
             // Set variable to test if itemTitle is updated
             itemTitleChanged = itemTitle
-    
+            
             // Return populated cell to TableView
             return cell
             
-        // History Section
+            // History Section
         } else if (indexPath.section == 1) {
             
             // Set cell to History Custom Cell
             guard let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as? HistoryTableViewCell else {
                 fatalError("Unexpectedly got section\row \(indexPath.section) \(indexPath.row)")
             }
-    
+            
             // Get cell data
             cell.historyDateField.text = Utility.dateToString(itemHistory[indexPath.row].historyDate)
             cell.historyDescriptionField.text = itemHistory[indexPath.row].historyDescription
@@ -285,8 +285,8 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             
             // Return populated cell to TableView
             return cell
-
-        // Collaborator Section
+            
+            // Collaborator Section
         } else if (indexPath.section == 2) {
             
             // Set cell to Collaborator Cell
@@ -298,7 +298,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             // Return populated cell to TableView
             return cell
             
-        // Peer Section
+            // Peer Section
         } else {
             
             // Set cell to Peer Cell
@@ -327,7 +327,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
      The function returns updated data back for updating
      */
     override func viewWillDisappear(_ animated: Bool) {
-
+        
         // Return edited data back via the protocol
         if delegate != nil {
             
@@ -336,8 +336,8 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             items.title = itemTitle
             items.done = itemDone
             items.itemHistory = itemHistory
-//            items.itemCollaborator = itemCollaborator
-//            items.itemPeer = itemPeer
+            //            items.itemCollaborator = itemCollaborator
+            //            items.itemPeer = itemPeer
             
             // Add changes to array
             delegate?.didEditItem(self, editItem: items)
@@ -361,8 +361,8 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             itemTitle = detail.title
             itemDone = detail.done
             itemHistory = detail.itemHistory
-//            itemCollaborator = detail.itemCollaborator
-//            itemPeer = detail.itemPeer
+            //            itemCollaborator = detail.itemCollaborator
+            //            itemPeer = detail.itemPeer
         }
     }
     
@@ -385,7 +385,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         
         // Set variables passed from MasterViewController and assign to DetailViewController variables
         let detail = detailPeer
-            itemPeer = detail
+        itemPeer = detail
     }
     
     /**

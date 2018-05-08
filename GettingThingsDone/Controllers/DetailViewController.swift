@@ -409,11 +409,11 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         let detail = detailPeer
         itemPeer = detail
         
-        // If the peer is already a collaborator then remove it from the peers list
+        // If the peer is already a collaborator then remove it from the peers list before displaying view
         for item in itemCollaborator {
-            for (i,peer) in itemPeer.enumerated() {
+            for (index,peer) in itemPeer.enumerated() {
                 if (item.collaboratorName == peer.peerDevice) {
-                    itemPeer.remove(at: i)
+                    itemPeer.remove(at: index)
                 }
             }
         }

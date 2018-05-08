@@ -45,7 +45,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     var itemHistoryDescription: String = ""
     var itemCollaborator = [Collaborator]()
     var itemPeer = [Peer]()
-    var items = Item(itemIdentifier: UUID(), title: "", done: false, itemHistory: [])
+    var items = Item(itemIdentifier: UUID(), title: "", done: false, itemHistory: [], itemCollaborator: [])
     
     // Property observer for Item Details sent via showItem segue
     var detailItem: Item? {
@@ -55,11 +55,11 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     }
     
     // Property observer for Collaborator Details sent via showItem segue
-    var detailCollaborator = [Collaborator]() {
-        didSet {
-            configureCollaboratorView()
-        }
-    }
+//    var detailCollaborator = [Collaborator]() {
+//        didSet {
+//            configureCollaboratorView()
+//        }
+//    }
     
     // Property observer for Peer Details sent via showItem segue
     var detailPeer = [Peer]() {
@@ -79,6 +79,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         // Add right bar add button
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addObject(_:)))
         navigationItem.rightBarButtonItem = addButton
+        
     }
     
     /**
@@ -299,7 +300,6 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             
             // Get cell data
             cell.textLabel?.text = itemCollaborator[indexPath.row].collaboratorName
-            
             // Return populated cell to TableView
             return cell
             
@@ -310,7 +310,6 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
             
             // Get cell data
-            
             cell.textLabel?.text = itemPeer[indexPath.row].peerName
             cell.detailTextLabel?.text = itemPeer[indexPath.row].peerDevice
             
@@ -320,6 +319,30 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        if indexPath.section == 3 {
+            
+            // Set up new collaborator record when peer pressed
+            let collaboratorName = itemPeer[indexPath.row].peerDevice
+            let newCollaborator = Collaborator(collaboratorName: collaboratorName)
+
+            // Append collaborator to collaborator array
+            itemCollaborator.append(newCollaborator)
+            
+            // Remove the Peer from the list
+            itemPeer.remove(at: indexPath.row)
+
+            // Set up new history record when Collaborator added
+            let histDesc = "*Added \(collaboratorName)"
+            let newHistory = History(historyDate: Date(), historyDescription: histDesc, historyEditable: false)
+            
+            // Append item to history array
+            itemHistory.append(newHistory)
+            
+            // Reload table data
+            tableView.reloadData()
+        }
+        
         // Deselect row after row clicked
         tableView.deselectRow(at: indexPath, animated: true)
         
@@ -352,8 +375,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         items.title = itemTitle
         items.done = itemDone
         items.itemHistory = itemHistory
-        //            items.itemCollaborator = itemCollaborator
-        //            items.itemPeer = itemPeer
+        items.itemCollaborator = itemCollaborator
 
         // Add changes to array
         delegate?.didEditItem(self, editItem: items)
@@ -372,20 +394,8 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             itemTitle = detail.title
             itemDone = detail.done
             itemHistory = detail.itemHistory
-            //            itemCollaborator = detail.itemCollaborator
-            //            itemPeer = detail.itemPeer
+            itemCollaborator = detail.itemCollaborator
         }
-    }
-    
-    /**
-     Configures the Collaborator view variables
-     - returns: Sets view Variables
-     */
-    func configureCollaboratorView() {
-        
-        // Set variables passed from MasterViewController and assign to DetailViewController variables
-        let detail = detailCollaborator
-        itemCollaborator = detail
     }
     
     /**
@@ -397,6 +407,15 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         // Set variables passed from MasterViewController and assign to DetailViewController variables
         let detail = detailPeer
         itemPeer = detail
+        
+        // If the peer is already a collaborator then remove it from the peers list
+        for item in itemCollaborator {
+            for (i,peer) in itemPeer.enumerated() {
+                if (item.collaboratorName == peer.peerDevice) {
+                    itemPeer.remove(at: i)
+                }
+            }
+        }
     }
     
     /**

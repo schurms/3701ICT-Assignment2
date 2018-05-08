@@ -75,11 +75,15 @@ class GettingThingsDoneTests: XCTestCase {
         let historyEditable: Bool = true
         let itemHistory = History(historyDate: historyDate, historyDescription: historyDescription, historyEditable: historyEditable)
         
+        //Set up Collaborator Record
+        let collaboratorName: String = "New Collaborator"
+        let itemCollaborator = Collaborator(collaboratorName: collaboratorName)
+        
         // Set up Item Record
         let itemIdentifier: UUID = UUID()
         let title: String = "Todo Item 1"
         let done: Bool = false
-        let item = Item(itemIdentifier: itemIdentifier, title: title, done: done, itemHistory: [itemHistory])
+        let item = Item(itemIdentifier: itemIdentifier, title: title, done: done, itemHistory: [itemHistory], itemCollaborator: [itemCollaborator])
         
         XCTAssertEqual(item.itemIdentifier, itemIdentifier)
         XCTAssertEqual(item.title, title)
@@ -87,6 +91,7 @@ class GettingThingsDoneTests: XCTestCase {
         XCTAssertEqual(item.itemHistory[0].historyDate, historyDate)
         XCTAssertEqual(item.itemHistory[0].historyDescription, historyDescription)
         XCTAssertEqual(item.itemHistory[0].historyEditable, historyEditable)
+        XCTAssertEqual(item.itemCollaborator[0].collaboratorName, collaboratorName)
     }
     
     /**

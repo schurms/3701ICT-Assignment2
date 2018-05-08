@@ -22,6 +22,7 @@ class Item: Codable {
     var title: String
     var done: Bool
     var itemHistory: [History]
+    var itemCollaborator: [Collaborator]
     
     //MARK: Initialisation
     
@@ -31,15 +32,17 @@ class Item: Codable {
      - Parameter title: The title of the item
      - Parameter done: Indicates if item is complete
      - Parameter itemHistory: Array of history for an item
+     - Parameter itemCollaborator: Array of collaborators for an item
      - Returns: A "To Do" item.
      */
-    init(itemIdentifier: UUID, title: String, done: Bool, itemHistory: [History]) {
+    init(itemIdentifier: UUID, title: String, done: Bool, itemHistory: [History], itemCollaborator: [Collaborator]) {
         
         // Initialise stored properties
         self.itemIdentifier = itemIdentifier
         self.title = title
         self.done = done
         self.itemHistory = itemHistory
+        self.itemCollaborator = itemCollaborator
         
     }
 

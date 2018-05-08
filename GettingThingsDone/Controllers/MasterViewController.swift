@@ -29,7 +29,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
     var itemHistory = History(historyDate: Date(), historyDescription: "*Item Created", historyEditable: false)
     var itemCollaborator = Collaborator(collaboratorName: "")
     var itemPeer = Peer(peerName: "", peerDevice: "")
-    var item = Item(itemIdentifier: UUID(), title: "", done: false, itemHistory: [])
+    var item = Item(itemIdentifier: UUID(), title: "", done: false, itemHistory: [], itemCollaborator: [])
     
     // Multipeer variables
     let itemServiceType = "s5073958"
@@ -114,20 +114,12 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         todoCounter += 1
         let title = "Todo Item \(todoCounter)"
         let itemHistory = History(historyDate: Date(), historyDescription: "*Item Created", historyEditable: false)
-        let item = Item(itemIdentifier: UUID(), title: title, done: self.item.done, itemHistory: [itemHistory])
+        let item = Item(itemIdentifier: UUID(), title: title, done: self.item.done, itemHistory: [itemHistory], itemCollaborator: [])
         // Append new record to Array - null arrays for other information
         itemArray[0].append(item)
         
         // Reload tableviewlet
         tableView.reloadData()
-        
-        // Test Collaborator Array
-        let nameCollaborator = "Test Collaborator \(todoCounter)"
-        let itemCollaborator = Collaborator(collaboratorName: nameCollaborator)
-        collaboratorArray.append(itemCollaborator)
-        
-        let peer = Peer(peerName: itemServiceType, peerDevice: "Test")
-        peerArray.append(peer)
         
     }
     
@@ -361,8 +353,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
                 
                 // Get the selected item to pass
                 let selectedItem = itemArray[selectedSection][selectedRow]
-                // Get the selected item to pass
-                let selectedCollaborator = collaboratorArray
+                // Get the selected peer to pass
                 let selectedPeer = peerArray
                 
                 // Set the destination ViewController
@@ -373,7 +364,6 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
                 
                 // Set the data to be transferred
                 destinationViewController.detailItem = selectedItem
-                destinationViewController.detailCollaborator = selectedCollaborator
                 destinationViewController.detailPeer = selectedPeer
                 
                 // Set the destination view controller bar button item for return

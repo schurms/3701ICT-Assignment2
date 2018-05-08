@@ -320,6 +320,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+        // If selecting Peer row
         if indexPath.section == 3 {
             
             // Set up new collaborator record when peer pressed

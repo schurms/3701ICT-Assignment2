@@ -140,4 +140,35 @@ class GettingThingsDoneTests: XCTestCase {
         let todoView = todoVC.view
         XCTAssertNotNil(todoView, "Cannot find DetailViewController view instance");
     }
+    
+    /**
+     Test Item correctly retrieved from JSON
+     */
+    func testItemSaveToJSON() {
+        
+        // Set up History Record
+        let historyDate: Date = Date()
+        let historyDescription: String = "New History Record"
+        let historyEditable: Bool = true
+        let itemHistory = History(historyDate: historyDate, historyDescription: historyDescription, historyEditable: historyEditable)
+        
+        //Set up Collaborator Record
+        let collaboratorName: String = "New Collaborator"
+        let itemCollaborator = Collaborator(collaboratorName: collaboratorName)
+        
+        // Set up Item Record
+        let itemIdentifier: UUID = UUID()
+        let title: String = "Todo Item 1"
+        let done: Bool = false
+        let item = Item(itemIdentifier: itemIdentifier, title: title, done: done, itemHistory: [itemHistory], itemCollaborator: [itemCollaborator])
+        
+        // Save item to JSON
+        Utility.saveItemToJSON(item)
+        
+        // Get item from JSON
+        let itemOut = Utility.getItemFromJSON()
+        
+        // Test Returned saved item = item saved
+        XCTAssertEqual(itemOut.title, item.title)
+    }
 }

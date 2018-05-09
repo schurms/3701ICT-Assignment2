@@ -328,6 +328,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let item = itemArray[indexPath.section][indexPath.row]
         Utility.saveItemToJSON(item)
+        print(item)
 //        print("Writing \(item.title)")
         
 //        let itemIn = Utility.getItemFromJSON()

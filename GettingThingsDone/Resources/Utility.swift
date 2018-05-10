@@ -33,7 +33,6 @@ class Utility {
         
         let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let fileURL = url.appendingPathComponent("gettingthingsdone.json")
-        print(fileURL)
         let encoder = JSONEncoder()
         do {
             let data = try encoder.encode(object)
@@ -52,7 +51,6 @@ class Utility {
         
         let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let fileURL = url.appendingPathComponent("gettingthingsdone.json")
-//        print(fileURL)
         let decoder = JSONDecoder()
         do {
             let dataIn = try Data(contentsOf: fileURL)

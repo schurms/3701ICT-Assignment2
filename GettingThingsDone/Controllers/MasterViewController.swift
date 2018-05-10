@@ -322,21 +322,6 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         }
     }
     
-    /**
-     This method is a test method to test saving and retrieving from JSON on selection
-     */
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let item = itemArray[indexPath.section][indexPath.row]
-        Utility.saveItemToJSON(item)
-        print(item)
-//        print("Writing \(item.title)")
-        
-//        let itemIn = Utility.getItemFromJSON()
-//        print("Reading \(itemIn.title)")
-        
-        tableView.reloadData()
-    }
-    
     //MARK: Segues
     
     /**

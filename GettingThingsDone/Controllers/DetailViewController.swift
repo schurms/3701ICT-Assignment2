@@ -54,13 +54,6 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         }
     }
     
-    // Property observer for Collaborator Details sent via showItem segue
-//    var detailCollaborator = [Collaborator]() {
-//        didSet {
-//            configureCollaboratorView()
-//        }
-//    }
-    
     // Property observer for Peer Details sent via showItem segue
     var detailPeer = [Peer]() {
         didSet {
@@ -339,6 +332,15 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             
             // Append item to history array
             itemHistory.append(newHistory)
+            
+            // Write file to JSON in Prep to send to peer
+            items.itemIdentifier = itemUUID
+            items.title = itemTitle
+            items.done = itemDone
+            items.itemHistory = itemHistory
+            items.itemCollaborator = itemCollaborator
+            
+            Utility.saveItemToJSON(items)
             
             // Reload table data
             tableView.reloadData()

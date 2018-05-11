@@ -13,11 +13,18 @@ import UIKit
  Delegate protocol to send values back to ToDoListViewController for adding and updating to do items
  */
 protocol ToDoItemDelegate: class {
+    
     /**
      Edit Todo Information
-     - Parameter todoItem: data to be provided to the didEditItem function
+     - Parameter Item: data to be provided to the didEditItem function
      */
     func didEditItem(_ controller: AnyObject, editItem: Item)
+    
+    /**
+     Send Todo Information
+     - Parameter Item: data to be provided to the didSendJSON function
+     */
+    func didSendItem(_ controller: AnyObject, sendItem: Item)
 }
 
 class DetailViewController: UITableViewController, UITextFieldDelegate {
@@ -340,7 +347,9 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             items.itemHistory = itemHistory
             items.itemCollaborator = itemCollaborator
             
-            Utility.saveItemToJSON(items)
+//            Utility.saveItemToJSON(items)
+            
+            delegate?.didSendItem(self, sendItem: items)
             
             // Reload table data
             tableView.reloadData()

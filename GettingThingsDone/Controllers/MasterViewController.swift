@@ -31,14 +31,12 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
     var itemPeer = Peer(peerName: "", peerDevice: "")
     var item = Item(itemIdentifier: UUID(), title: "", done: false, itemHistory: [], itemCollaborator: [])
     
-    // Multipeer variables
+    // Declare Multipeer variables
     let itemServiceType = "s5073958"
-    
     var sessionID: MCSession!
     var peerID: MCPeerID!
     var browserID: MCNearbyServiceBrowser!
     var advertiserID: MCNearbyServiceAdvertiser!
-    
     var peersFound = [MCPeerID]()
     var invitationHandler: ((Bool, MCSession?)->Void)!
     
@@ -133,6 +131,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         let peerDevice = peerID.displayName
         let peer = Peer(peerName: itemServiceType, peerDevice: peerDevice)
         peerArray.append(peer)
+        browser.invitePeer(peerID, to: sessionID, withContext: nil, timeout: 20)
     }
     
     /**
@@ -166,6 +165,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
      */
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
         print("didReceiveInvitationFromPeer \(peerID)")
+        invitationHandler(true, sessionID)
     }
     
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
@@ -183,6 +183,9 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
      * Indicates that the data task has received some of the expected data
      */
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
+        print("did receive data: \(data)")
+        let str = String(data: data, encoding: .utf8)!
+        print(str)
     }
     
     /**
@@ -371,6 +374,26 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         
         // Replace the edited item in the array at the row that was selected
         itemArray[selectedSection][selectedRow] = editItem
+        
+        // Reload table view
+        tableView.reloadData()
+    }
+    
+    /**
+     This Delegate method is used to update an existing item in the Items array
+     - Parameter controller: Defines the sending view controller
+     - Parameter editItem: Contains the item values to be edited in the array
+     - returns: Updated items
+     */
+    func didSendItem(_ controller: AnyObject, sendItem: Item) {
+
+        let stringtosend = "test"
+            do {
+                try sessionID.send(stringtosend.data(using: .utf8)!, toPeers: sessionID.connectedPeers, with: .reliable)
+            } catch {
+                fatalError()
+        }
+    
         
         // Reload table view
         tableView.reloadData()

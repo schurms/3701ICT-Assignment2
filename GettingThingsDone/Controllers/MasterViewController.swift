@@ -165,6 +165,8 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
      */
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
         print("didReceiveInvitationFromPeer \(peerID)")
+        
+        // If Peer found automatically connect
         invitationHandler(true, sessionID)
     }
     
@@ -186,6 +188,10 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         
         do {
             let item = try JSONDecoder().decode(Item.self, from: data)
+            
+            //TODO: Test if item has same uuid - if yes then replace if no then add
+            //TODO: Need to enumerate over sections and rows
+            
             DispatchQueue.main.async {
                 self.itemArray[0].append(item)
                 self.tableView.reloadData()
@@ -404,7 +410,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
             do {
                 try sessionID.send(dataToSend, toPeers: sessionID.connectedPeers, with: .reliable)
             } catch {
-                fatalError("Print a Message")
+                fatalError("Unable to send a message")
         }
     }
     

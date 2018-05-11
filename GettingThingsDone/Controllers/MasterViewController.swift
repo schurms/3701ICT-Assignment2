@@ -387,16 +387,13 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
      */
     func didSendItem(_ controller: AnyObject, sendItem: Item) {
 
-        let stringtosend = "test"
+        let testToSend = "Test sending data to Peer"
             do {
-                try sessionID.send(stringtosend.data(using: .utf8)!, toPeers: sessionID.connectedPeers, with: .reliable)
+                try sessionID.send(testToSend.data(using: .utf8)!, toPeers: sessionID.connectedPeers, with: .reliable)
             } catch {
                 fatalError()
         }
     
-        
-        // Reload table view
-        tableView.reloadData()
     }
     
 }

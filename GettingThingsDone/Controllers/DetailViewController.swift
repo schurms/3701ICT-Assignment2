@@ -53,7 +53,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     var itemCollaborator = [Collaborator]()
     var itemPeer = [Peer]()
     var items = Item(itemIdentifier: UUID(), title: "", done: false, itemHistory: [], itemCollaborator: [])
-    
+    var itemsa = Item(itemIdentifier: UUID(), title: "", done: false, itemHistory: [], itemCollaborator: [])
     // Property observer for Item Details sent via showItem segue
     var detailItem: Item? {
         didSet {
@@ -320,6 +320,11 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+        if indexPath.section == 2 {
+            delegate?.didSendItem(self, sendItem: itemsa)
+            
+        }
+        
         // If selecting Peer row
         if indexPath.section == 3 {
             
@@ -341,15 +346,15 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             itemHistory.append(newHistory)
             
             // Write file to JSON in Prep to send to peer
-            items.itemIdentifier = itemUUID
-            items.title = itemTitle
-            items.done = itemDone
-            items.itemHistory = itemHistory
-            items.itemCollaborator = itemCollaborator
+            itemsa.itemIdentifier = itemUUID
+            itemsa.title = itemTitle
+            itemsa.done = itemDone
+            itemsa.itemHistory = itemHistory
+            itemsa.itemCollaborator = itemCollaborator
             
 //            Utility.saveItemToJSON(items)
             
-            delegate?.didSendItem(self, sendItem: items)
+            delegate?.didSendItem(self, sendItem: itemsa)
             
             // Reload table data
             tableView.reloadData()

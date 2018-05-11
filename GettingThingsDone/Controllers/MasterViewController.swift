@@ -183,9 +183,16 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
      * Indicates that the data task has received some of the expected data
      */
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
-        print("did receive data: \(data)")
-        let str = String(data: data, encoding: .utf8)!
-        print(str)
+        
+        do {
+            let item = try JSONDecoder().decode(Item.self, from: data)
+            DispatchQueue.main.async {
+                self.itemArray[0].append(item)
+                self.tableView.reloadData()
+            }
+        } catch {
+            fatalError("Unable to process received data")
+        }
     }
     
     /**
@@ -380,20 +387,25 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
     }
     
     /**
-     This Delegate method is used to update an existing item in the Items array
+     This Delegate method is used to send data to a peer
      - Parameter controller: Defines the sending view controller
-     - Parameter editItem: Contains the item values to be edited in the array
-     - returns: Updated items
+     - Parameter editItem: Contains the item values to be sent
+     - returns: data
      */
     func didSendItem(_ controller: AnyObject, sendItem: Item) {
-        // how do you convert the sendItem to type data????
-        let testToSend = "Test sending data to Peer"
+        
+        // Save item in JSON format
+        Utility.saveItemToJSON(sendItem)
+        
+        // Retrieve data from JSON
+        let dataToSend = Utility.getItemFromJSON()
+        
+            // Send Data
             do {
-                try sessionID.send(testToSend.data(using: .utf8)!, toPeers: sessionID.connectedPeers, with: .reliable)
+                try sessionID.send(dataToSend, toPeers: sessionID.connectedPeers, with: .reliable)
             } catch {
-                fatalError()
+                fatalError("Print a Message")
         }
-    
     }
     
 }

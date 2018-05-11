@@ -43,21 +43,21 @@ class Utility {
     }
     
     /**
-     This property retrieves an item in JSON format
-     - Parameter item: item data
-     - Returns: The item from the file
+     This property retrieves data for a JSON file
+     - Parameter: None
+     - Returns: The data from the file
      */
-    static func getItemFromJSON() -> Item {
+    static func getItemFromJSON() -> Data {
         
         let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let fileURL = url.appendingPathComponent("gettingthingsdone.json")
-        let decoder = JSONDecoder()
         do {
-            let dataIn = try Data(contentsOf: fileURL)
-            let dataOut = try decoder.decode(Item.self, from: dataIn)
-            return dataOut
+            let dataToSend = try Data(contentsOf: fileURL)
+            return dataToSend
         } catch {
-            fatalError("Error Reading JSON File")
+            fatalError("Error Getting Data from JSON File")
         }
     }
+    
+    
 }

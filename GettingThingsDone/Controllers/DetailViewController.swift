@@ -318,11 +318,16 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         }
     }
     
+    /**
+     This method Converts Peers to Collaborators and Sends data to collaborators
+     */
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+        // If selecting Collaborator row
         if indexPath.section == 2 {
-            delegate?.didSendItem(self, sendItem: itemsa)
             
+            // Return data to MasterView to send to peer
+            delegate?.didSendItem(self, sendItem: items)
         }
         
         // If selecting Peer row
@@ -345,16 +350,12 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             // Append item to history array
             itemHistory.append(newHistory)
             
-            // Write file to JSON in Prep to send to peer
-            itemsa.itemIdentifier = itemUUID
-            itemsa.title = itemTitle
-            itemsa.done = itemDone
-            itemsa.itemHistory = itemHistory
-            itemsa.itemCollaborator = itemCollaborator
-            
-//            Utility.saveItemToJSON(items)
-            
-            delegate?.didSendItem(self, sendItem: itemsa)
+            // Update items
+            items.itemIdentifier = itemUUID
+            items.title = itemTitle
+            items.done = itemDone
+            items.itemHistory = itemHistory
+            items.itemCollaborator = itemCollaborator
             
             // Reload table data
             tableView.reloadData()
@@ -397,6 +398,8 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         // Add changes to array
         delegate?.didEditItem(self, editItem: items)
         }
+        
+        
     }
     
     /**

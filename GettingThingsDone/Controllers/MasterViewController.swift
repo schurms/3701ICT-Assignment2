@@ -386,7 +386,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
      - returns: Updated items
      */
     func didSendItem(_ controller: AnyObject, sendItem: Item) {
-
+        // how do you convert the sendItem to type data????
         let testToSend = "Test sending data to Peer"
             do {
                 try sessionID.send(testToSend.data(using: .utf8)!, toPeers: sessionID.connectedPeers, with: .reliable)

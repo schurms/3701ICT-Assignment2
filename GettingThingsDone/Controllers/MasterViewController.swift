@@ -32,7 +32,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
     var item = Item(itemIdentifier: UUID(), title: "", done: false, itemHistory: [], itemCollaborator: [])
     
     // Declare Multipeer variables
-    let itemServiceType = "s5073958"
+    let itemServiceType = "todo-list"
     var sessionID: MCSession!
     var peerID: MCPeerID!
     var browserID: MCNearbyServiceBrowser!

@@ -187,15 +187,30 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
         
         do {
-            let item = try JSONDecoder().decode(Item.self, from: data)
-            
+            let receivedItem = try JSONDecoder().decode(Item.self, from: data)
+            print(receivedItem.itemIdentifier)
             //TODO: Test if item has same uuid - if yes then replace if no then add
             //TODO: Need to enumerate over sections and rows
-            
+            // If the peer is already a collaborator then remove it from the peers list before displaying view
+
             DispatchQueue.main.async {
-                self.itemArray[0].append(item)
+                self.itemArray[0].append(receivedItem)
                 self.tableView.reloadData()
             }
+            
+//            for (index) in itemArray.enumerated() {
+//                    if (receivedItem.itemIdentifier == itemArray[0][index].itemIdentifier) {
+//                        DispatchQueue.main.async {
+//                            self.itemArray[0][index] = receivedItem
+//                            self.tableView.reloadData()
+//                        }
+//                    } else {
+//                        DispatchQueue.main.async {
+//                            self.itemArray[0].append(receivedItem)
+//                            self.tableView.reloadData()
+//                        }
+//                }
+//            }
         } catch {
             fatalError("Unable to process received data")
         }
@@ -404,7 +419,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         Utility.saveItemToJSON(sendItem)
         
         // Retrieve data from JSON
-        let dataToSend = Utility.getItemFromJSON()
+        let dataToSend = Utility.getDataFromJSON()
         
             // Send Data
             do {

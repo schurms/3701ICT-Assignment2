@@ -28,6 +28,7 @@ class Utility {
     /**
      This property saves an item in JSON format
      - Parameter item: item data
+     - Returns: None
      */
     static func saveItemToJSON(_ object: Item) {
         
@@ -47,7 +48,7 @@ class Utility {
      - Parameter: None
      - Returns: The data from the file
      */
-    static func getItemFromJSON() -> Data {
+    static func getDataFromJSON() -> Data {
         
         let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let fileURL = url.appendingPathComponent("gettingthingsdone.json")

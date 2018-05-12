@@ -53,7 +53,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     var itemCollaborator = [Collaborator]()
     var itemPeer = [Peer]()
     var items = Item(itemIdentifier: UUID(), title: "", done: false, itemHistory: [], itemCollaborator: [])
-    var itemsa = Item(itemIdentifier: UUID(), title: "", done: false, itemHistory: [], itemCollaborator: [])
+    var itemsPeer = Item(itemIdentifier: UUID(), title: "", done: false, itemHistory: [], itemCollaborator: [])
     // Property observer for Item Details sent via showItem segue
     var detailItem: Item? {
         didSet {
@@ -153,7 +153,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             tableView.reloadData()
 
             // Return edited data back via the protocol
-            updateMasterView()
+            updateTableData()
             
             // Text field editing for History
         } else if (textField.tag == 2) {
@@ -187,7 +187,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         tableView.reloadData()
         
         // Update variables and update master view on finishing editing
-        updateMasterView()
+        updateTableData()
     }
     
     //MARK: Table View Datasource methods
@@ -327,7 +327,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         if indexPath.section == 2 {
             
             // Return data to MasterView to send to peer
-            delegate?.didSendItem(self, sendItem: items)
+            delegate?.didSendItem(self, sendItem: itemsPeer)
         }
         
         // If selecting Peer row
@@ -351,11 +351,11 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             itemHistory.append(newHistory)
             
             // Update items
-            items.itemIdentifier = itemUUID
-            items.title = itemTitle
-            items.done = itemDone
-            items.itemHistory = itemHistory
-            items.itemCollaborator = itemCollaborator
+            itemsPeer.itemIdentifier = itemUUID
+            itemsPeer.title = itemTitle
+            itemsPeer.done = itemDone
+            itemsPeer.itemHistory = itemHistory
+            itemsPeer.itemCollaborator = itemCollaborator
             
             // Reload table data
             tableView.reloadData()
@@ -375,7 +375,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     override func viewWillDisappear(_ animated: Bool) {
         
         // Update variables and update master view on pressing return to master
-        updateMasterView()
+        updateTableData()
     }
     
     //MARK: Helper Methods
@@ -384,21 +384,27 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
      Configures data to return to MasterView
      - Return data for editing
      */
-    func updateMasterView() {
+    func updateTableData() {
         // Return edited data back via the protocol
         if delegate != nil {
 
-        // Set up variables to return
-        items.itemIdentifier = itemUUID
-        items.title = itemTitle
-        items.done = itemDone
-        items.itemHistory = itemHistory
-        items.itemCollaborator = itemCollaborator
+            // Set up variables to return
+            items.itemIdentifier = itemUUID
+            items.title = itemTitle
+            items.done = itemDone
+            items.itemHistory = itemHistory
+            items.itemCollaborator = itemCollaborator
+            
+            // Refresh Peer Data
+            itemsPeer.itemIdentifier = itemUUID
+            itemsPeer.title = itemTitle
+            itemsPeer.done = itemDone
+            itemsPeer.itemHistory = itemHistory
+            itemsPeer.itemCollaborator = itemCollaborator
 
-        // Add changes to array
-        delegate?.didEditItem(self, editItem: items)
+            // Add changes to array
+            delegate?.didEditItem(self, editItem: items)
         }
-        
         
     }
     
@@ -415,6 +421,12 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             itemDone = detail.done
             itemHistory = detail.itemHistory
             itemCollaborator = detail.itemCollaborator
+            
+            itemsPeer.itemIdentifier = itemUUID
+            itemsPeer.title = itemTitle
+            itemsPeer.done = itemDone
+            itemsPeer.itemHistory = itemHistory
+            itemsPeer.itemCollaborator = itemCollaborator
         }
     }
     
@@ -454,7 +466,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         tableView.reloadData()
         
         // Update variables and update master view on finishing editing
-        updateMasterView()
+        updateTableData()
     }
     
 }

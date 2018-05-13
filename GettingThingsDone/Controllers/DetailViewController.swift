@@ -54,6 +54,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     var itemPeer = [Peer]()
     var items = Item(itemIdentifier: UUID(), title: "", done: false, itemHistory: [], itemCollaborator: [])
     var itemsPeer = Item(itemIdentifier: UUID(), title: "", done: false, itemHistory: [], itemCollaborator: [])
+    
     // Property observer for Item Details sent via showItem segue
     var detailItem: Item? {
         didSet {
@@ -310,7 +311,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             let cell = self.tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
             
             // Get cell data
-            cell.textLabel?.text = itemPeer[indexPath.row].peerName
+            cell.textLabel?.text = itemPeer[indexPath.row].peerUser
             cell.detailTextLabel?.text = itemPeer[indexPath.row].peerDevice
             
             // Return populated cell to TableView

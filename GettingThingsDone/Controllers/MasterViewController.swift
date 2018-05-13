@@ -28,7 +28,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
     var itemDone: Bool = false
     var itemHistory = History(historyDate: Date(), historyDescription: "*Item Created", historyEditable: false)
     var itemCollaborator = Collaborator(collaboratorName: "")
-    var itemPeer = Peer(peerName: "", peerDevice: "")
+    var itemPeer = Peer(peerName: "", peerUser: "", peerDevice: "")
     var item = Item(itemIdentifier: UUID(), title: "", done: false, itemHistory: [], itemCollaborator: [])
     
     // Declare Multipeer variables
@@ -39,6 +39,8 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
     var advertiserID: MCNearbyServiceAdvertiser!
     var peersFound = [MCPeerID]()
     var invitationHandler: ((Bool, MCSession?)->Void)!
+    var userName = ""
+    var showDialog = false
     
     // Declare headers arrays
     let sectionHeaders = ["YET TO DO", "COMPLETED"]
@@ -84,6 +86,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         
         browserID.startBrowsingForPeers()
         advertiserID.startAdvertisingPeer()
+        
     }
     
     /**
@@ -92,6 +95,11 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
     override func viewWillAppear(_ animated: Bool) {
         clearsSelectionOnViewWillAppear = splitViewController!.isCollapsed
         super.viewWillAppear(animated)
+        if !showDialog {
+            showInputDialog()
+            showDialog = true
+            print(self.userName)
+        }
     }
     
     /**
@@ -101,6 +109,10 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+    }
+    
     
     /**
      This methods triggers from the add button. It inserts a new object into the array
@@ -129,7 +141,9 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
     func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
         peersFound.append(peerID)
         let peerDevice = peerID.displayName
-        let peer = Peer(peerName: itemServiceType, peerDevice: peerDevice)
+//        print("in browser \(userName)")
+//        let peer = Peer(peerName: itemServiceType, peerUser: userName, peerDevice: peerDevice)
+        let peer = Peer(peerName: itemServiceType, peerUser: itemServiceType, peerDevice: peerDevice)
         peerArray.append(peer)
         browser.invitePeer(peerID, to: sessionID, withContext: nil, timeout: 20)
     }
@@ -188,22 +202,80 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         
         do {
             let receivedItem = try JSONDecoder().decode(Item.self, from: data)
-
-            //TODO: Test if item has same uuid - if yes then replace if no then add
-            //TODO: Need to enumerate over sections and rows
-            
             
             //** after sending multiple the masterview does not seem to update
             DispatchQueue.main.async {
-                var foundItem = false
+                
+                // Test if item exists in "Yet To Do" Section
+                var foundItemNotCompleted = false
                 for i in 0..<self.itemArray[0].count {
-                    if self.itemArray[0][i].itemIdentifier == receivedItem.itemIdentifier {
-                        self.itemArray[0][i] = receivedItem
-                        foundItem = true
+                    
+                    // If found in "Yet To Do" Section
+                    if (self.itemArray[0][i].itemIdentifier == receivedItem.itemIdentifier)  {
+                        
+                        // Test status of received item
+                        if (!receivedItem.done) {
+                            
+                            // If new received item is "Not Completed" - replace
+                            self.itemArray[0][i] = receivedItem
+                        } else {
+                            
+                            // If new received item is "Completed" - remove
+                            self.itemArray[0].remove(at: i)
+                        }
+                        
+                        // Set Found in Yet To Do Flag
+                        foundItemNotCompleted = true
                     }
                 }
-                if (!foundItem)  {
+                
+                // Test if item exists in "Completed Section"
+                var foundItemCompleted = false
+                for i in 0..<self.itemArray[1].count {
+                    
+                    // If found in "Completed" Section
+                    if (self.itemArray[1][i].itemIdentifier == receivedItem.itemIdentifier)  {
+                        
+                        // Test status of received item
+                        if (receivedItem.done) {
+                            
+                            // If new received item is "Completed" - replace
+                            self.itemArray[1][i] = receivedItem
+                        } else {
+                            
+                            // If new received item is "Not Completed" - remove
+                            self.itemArray[1].remove(at: i)
+                        }
+                        
+                        // Set Found in Yet To Do Flag
+                        foundItemCompleted = true
+                    }
+                }
+                
+                // If new item
+                if (!foundItemNotCompleted && !foundItemCompleted)  {
+                    
+                    if (receivedItem.done == false) {
+                        
+                        // If item not completed - append to "Yet To Do" Section
+                        self.itemArray[0].append(receivedItem)
+                    } else {
+                        
+                        // If item completed - append to "Completed" Section
+                        self.itemArray[1].append(receivedItem)
+                    }
+                
+                // If was existing Completed item and now not completed
+                } else if (!foundItemNotCompleted && foundItemCompleted && (!receivedItem.done )) {
+                    
+                    // Append to "Yet To Do" Section
                     self.itemArray[0].append(receivedItem)
+                    
+                // If was existing Not Completed item and now completed
+                } else if (foundItemNotCompleted && !foundItemCompleted && (receivedItem.done)) {
+                    
+                    // Append to "Completed" Section
+                    self.itemArray[1].append(receivedItem)
                 }
                 self.tableView.reloadData()
             }
@@ -426,4 +498,31 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         }
     }
     
+    func showInputDialog() {
+        
+        //Creating UIAlertController and
+        //Setting title and message for the alert dialog
+        let alertController = UIAlertController(title: "Enter Peer Name", message: "Name to be used on session", preferredStyle: .alert)
+        
+        //the confirm action taking the inputs
+        let confirmAction = UIAlertAction(title: "Enter", style: .default) { (_) in
+            
+            //getting the input values from user
+            let name = alertController.textFields?[0].text
+            
+            self.userName = name!
+            print(self.userName)
+        }
+        
+        //adding textfields to our dialog box
+        alertController.addTextField { (textField) in
+            textField.placeholder = "Enter Name"
+        }
+
+        //adding the action to dialogbox
+        alertController.addAction(confirmAction)
+        
+        //finally presenting the dialog box
+        self.present(alertController, animated: true, completion: nil)
+    }
 }

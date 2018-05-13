@@ -19,6 +19,7 @@ class Peer: Codable {
      Peer variables.
      */
     var peerName: String
+    var peerUser: String
     var peerDevice: String
     
     //MARK: Initialisation
@@ -28,10 +29,11 @@ class Peer: Codable {
      - Parameter peerName: The name of the peer
      - Parameter peerDevice: The peer device
      */
-    init(peerName: String, peerDevice: String) {
+    init(peerName: String, peerUser: String, peerDevice: String) {
         
         // Initialise stored properties
         self.peerName = peerName
+        self.peerUser = peerUser
         self.peerDevice = peerDevice
         
     }

@@ -39,7 +39,8 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
     var advertiserID: MCNearbyServiceAdvertiser!
     var peersFound = [MCPeerID]()
     var invitationHandler: ((Bool, MCSession?)->Void)!
-    var userName = ""
+    var userName: String = ""
+    
     var showDialog = false
     
     // Declare headers arrays
@@ -95,11 +96,11 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
     override func viewWillAppear(_ animated: Bool) {
         clearsSelectionOnViewWillAppear = splitViewController!.isCollapsed
         super.viewWillAppear(animated)
-        if !showDialog {
-            showInputDialog()
-            showDialog = true
-            print(self.userName)
-        }
+//        if (!showDialog) {
+//            showInputDialog()
+//            showDialog = true
+//            print(userName)
+//        }
     }
     
     /**
@@ -130,7 +131,6 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         
         // Reload tableviewlet
         tableView.reloadData()
-        
     }
     
     //MARK: Multi-peer Delegate Methods
@@ -141,8 +141,6 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
     func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
         peersFound.append(peerID)
         let peerDevice = peerID.displayName
-//        print("in browser \(userName)")
-//        let peer = Peer(peerName: itemServiceType, peerUser: userName, peerDevice: peerDevice)
         let peer = Peer(peerName: itemServiceType, peerUser: itemServiceType, peerDevice: peerDevice)
         peerArray.append(peer)
         browser.invitePeer(peerID, to: sessionID, withContext: nil, timeout: 20)
@@ -490,39 +488,35 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         // Retrieve data from JSON
         let dataToSend = Utility.getDataFromJSON()
         
-            // Send Data
-            do {
-                try sessionID.send(dataToSend, toPeers: sessionID.connectedPeers, with: .reliable)
-            } catch {
-                print("Unable to send a message - no connected peers")
+        // Send Data
+        do {
+            try sessionID.send(dataToSend, toPeers: sessionID.connectedPeers, with: .reliable)
+        } catch {
+            print("Unable to send a message - no connected peers")
         }
     }
     
+    /**
+     Get Name of Peer
+     */
     func showInputDialog() {
         
-        //Creating UIAlertController and
-        //Setting title and message for the alert dialog
-        let alertController = UIAlertController(title: "Enter Peer Name", message: "Name to be used on session", preferredStyle: .alert)
+        // Create alert controller
+        let alertController = UIAlertController(title: "Peer Title", message: "Enter a peer title", preferredStyle: .alert)
         
-        //the confirm action taking the inputs
-        let confirmAction = UIAlertAction(title: "Enter", style: .default) { (_) in
-            
-            //getting the input values from user
-            let name = alertController.textFields?[0].text
-            
-            self.userName = name!
-            print(self.userName)
-        }
-        
-        //adding textfields to our dialog box
+        // Add the text field
         alertController.addTextField { (textField) in
-            textField.placeholder = "Enter Name"
+            textField.placeholder = "Enter name"
         }
-
-        //adding the action to dialogbox
-        alertController.addAction(confirmAction)
         
-        //finally presenting the dialog box
+        // Grab the value from the text field
+        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak alertController] (_) in
+            if let name = alertController?.textFields![0].text { // Force unwrapping because we know it exists.
+                self.userName = name
+            }
+        }))
+        
+        // Present the alert
         self.present(alertController, animated: true, completion: nil)
     }
 }

@@ -96,11 +96,6 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
     override func viewWillAppear(_ animated: Bool) {
         clearsSelectionOnViewWillAppear = splitViewController!.isCollapsed
         super.viewWillAppear(animated)
-//        if (!showDialog) {
-//            showInputDialog()
-//            showDialog = true
-//            print(userName)
-//        }
     }
     
     /**
@@ -113,7 +108,6 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
     
     override func viewDidAppear(_ animated: Bool) {
     }
-    
     
     /**
      This methods triggers from the add button. It inserts a new object into the array
@@ -139,11 +133,35 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
      * Called when a nearby Peer is found
      */
     func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
+        
+        // Add peers to list of found peers
         peersFound.append(peerID)
-        let peerDevice = peerID.displayName
-        let peer = Peer(peerName: itemServiceType, peerUser: itemServiceType, peerDevice: peerDevice)
-        peerArray.append(peer)
+        
+        // Invite all peers automatically
         browser.invitePeer(peerID, to: sessionID, withContext: nil, timeout: 20)
+    
+        let peerDevice = peerID.displayName
+        
+        // Create alert controller
+        let alertController = UIAlertController(title: "Peer Title", message: "Enter a peer title", preferredStyle: .alert)
+        
+        // Add the text field
+        alertController.addTextField { (textField) in
+            textField.placeholder = "Enter name"
+        }
+        
+        // Grab the value from the text field
+        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak alertController] (_) in
+            if let name = alertController?.textFields![0].text { // Force unwrapping because we know it exists.
+                
+                // Create array of peers to display
+                let peer = Peer(peerName: self.itemServiceType, peerUser: name, peerDevice: peerDevice)
+                self.peerArray.append(peer)
+            }
+        }))
+        
+        // Present the alert
+        self.present(alertController, animated: true, completion: nil)
     }
     
     /**
@@ -494,29 +512,5 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         } catch {
             print("Unable to send a message - no connected peers")
         }
-    }
-    
-    /**
-     Get Name of Peer
-     */
-    func showInputDialog() {
-        
-        // Create alert controller
-        let alertController = UIAlertController(title: "Peer Title", message: "Enter a peer title", preferredStyle: .alert)
-        
-        // Add the text field
-        alertController.addTextField { (textField) in
-            textField.placeholder = "Enter name"
-        }
-        
-        // Grab the value from the text field
-        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak alertController] (_) in
-            if let name = alertController?.textFields![0].text { // Force unwrapping because we know it exists.
-                self.userName = name
-            }
-        }))
-        
-        // Present the alert
-        self.present(alertController, animated: true, completion: nil)
     }
 }

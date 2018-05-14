@@ -32,14 +32,15 @@ class Utility {
      */
     static func saveItemToJSON(_ object: Item) {
         
-        let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let fileURL = url.appendingPathComponent("gettingthingsdone.json")
-        let encoder = JSONEncoder()
-        do {
-            let data = try encoder.encode(object)
-            try data.write(to: fileURL)
-        } catch {
-            fatalError("Error Writing JSON File")
+        if let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+            let fileURL = url.appendingPathComponent("gettingthingsdone.json")
+            let encoder = JSONEncoder()
+            do {
+                let data = try encoder.encode(object)
+                try data.write(to: fileURL)
+            } catch {
+                fatalError("Error Writing JSON File")
+            }
         }
     }
     
@@ -59,6 +60,4 @@ class Utility {
             fatalError("Error Getting Data from JSON File")
         }
     }
-    
-    
 }

@@ -24,11 +24,8 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
     // Declare arrays
     var itemArray = [[Item](), [Item]()]
     var peerArray = [Peer]()
-    var collaboratorArray = [Collaborator]()
-    var itemDone: Bool = false
     var itemHistory = History(historyDate: Date(), historyDescription: "*Item Created", historyEditable: false)
-    var itemCollaborator = Collaborator(collaboratorName: "")
-    var itemPeer = Peer(peerName: "", peerUser: "", peerDevice: "")
+    var itemCollaborator = Collaborator(collaboratorName: "", collaboratorDevice: "")
     var item = Item(itemIdentifier: UUID(), title: "", done: false, itemHistory: [], itemCollaborator: [])
     
     // Declare Multipeer variables
@@ -40,8 +37,6 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
     var peersFound = [MCPeerID]()
     var invitationHandler: ((Bool, MCSession?)->Void)!
     var userName: String = ""
-    
-    var showDialog = false
     
     // Declare headers arrays
     let sectionHeaders = ["YET TO DO", "COMPLETED"]
@@ -106,9 +101,6 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         // Dispose of any resources that can be recreated.
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-    }
-    
     /**
      This methods triggers from the add button. It inserts a new object into the array
      - Parameter sender: triggers from self
@@ -118,8 +110,9 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         // Set up item Title record - increment counter
         todoCounter += 1
         let title = "Todo Item \(todoCounter)"
+        let done = false
         let itemHistory = History(historyDate: Date(), historyDescription: "*Item Created", historyEditable: false)
-        let item = Item(itemIdentifier: UUID(), title: title, done: self.item.done, itemHistory: [itemHistory], itemCollaborator: [])
+        let item = Item(itemIdentifier: UUID(), title: title, done: done, itemHistory: [itemHistory], itemCollaborator: [])
         // Append new record to Array - null arrays for other information
         itemArray[0].append(item)
         
@@ -139,7 +132,8 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         
         // Invite all peers automatically
         browser.invitePeer(peerID, to: sessionID, withContext: nil, timeout: 20)
-    
+        
+        // Initialise variable for display
         let peerDevice = peerID.displayName
         
         // Create alert controller
@@ -150,12 +144,12 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
             textField.placeholder = "Enter name"
         }
         
-        // Grab the value from the text field
+        // Set name the device is called for display
         alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak alertController] (_) in
-            if let name = alertController?.textFields![0].text { // Force unwrapping because we know it exists.
+            if let peerUser = alertController?.textFields![0].text { // Force unwrapping because we know it exists.
                 
                 // Create array of peers to display
-                let peer = Peer(peerName: self.itemServiceType, peerUser: name, peerDevice: peerDevice)
+                let peer = Peer(peerName: self.itemServiceType, peerUser: peerUser, peerDevice: peerDevice)
                 self.peerArray.append(peer)
             }
         }))
@@ -181,13 +175,14 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
      * Called when a browser failed to start browsing for peers
      */
     func browser(_ browser: MCNearbyServiceBrowser, didNotStartBrowsingForPeers error: Error) {
-        print(error.localizedDescription)
+        print("Did not start browsing for peers \(error)")
     }
     
     /**
      * Called when an advertisement fails
      */
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didNotStartAdvertisingPeer error: Error) {
+        print("Did not start advertising peer \(error)")
     }
     
     /**
@@ -224,47 +219,55 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
                 
                 // Test if item exists in "Yet To Do" Section
                 var foundItemNotCompleted = false
-                for i in 0..<self.itemArray[0].count {
-                    
-                    // If found in "Yet To Do" Section
-                    if (self.itemArray[0][i].itemIdentifier == receivedItem.itemIdentifier)  {
+                if self.itemArray[0].count > 0 {
+                
+                    for i in 0..<self.itemArray[0].count {
                         
-                        // Test status of received item
-                        if (!receivedItem.done) {
+                        // If found in "Yet To Do" Section
+                        if (self.itemArray[0][i].itemIdentifier == receivedItem.itemIdentifier)  {
                             
-                            // If new received item is "Not Completed" - replace
-                            self.itemArray[0][i] = receivedItem
-                        } else {
+                            // Test status of received item
+                            if (!receivedItem.done) {
+                                
+                                // If new received item is "Not Completed" - replace
+                                self.itemArray[0][i] = receivedItem
+                            } else {
+                                
+                                // If new received item is "Completed" - remove
+                                self.itemArray[0].remove(at: i)
+                            }
                             
-                            // If new received item is "Completed" - remove
-                            self.itemArray[0].remove(at: i)
+                            // Set Found in Yet To Do Flag
+                            foundItemNotCompleted = true
+                            break
                         }
-                        
-                        // Set Found in Yet To Do Flag
-                        foundItemNotCompleted = true
                     }
                 }
                 
                 // Test if item exists in "Completed Section"
                 var foundItemCompleted = false
-                for i in 0..<self.itemArray[1].count {
+                if self.itemArray[1].count > 0 {
                     
-                    // If found in "Completed" Section
-                    if (self.itemArray[1][i].itemIdentifier == receivedItem.itemIdentifier)  {
+                    for j in 0..<self.itemArray[1].count {
                         
-                        // Test status of received item
-                        if (receivedItem.done) {
+                        // If found in "Completed" Section
+                        if (self.itemArray[1][j].itemIdentifier == receivedItem.itemIdentifier)  {
                             
-                            // If new received item is "Completed" - replace
-                            self.itemArray[1][i] = receivedItem
-                        } else {
+                            // Test status of received item
+                            if (receivedItem.done) {
+                                
+                                // If new received item is "Completed" - replace
+                                self.itemArray[1][j] = receivedItem
+                            } else {
+                                
+                                // If new received item is "Not Completed" - remove
+                                self.itemArray[1].remove(at: j)
+                            }
                             
-                            // If new received item is "Not Completed" - remove
-                            self.itemArray[1].remove(at: i)
+                            // Set Found in Yet To Do Flag
+                            foundItemCompleted = true
+                            break
                         }
-                        
-                        // Set Found in Yet To Do Flag
-                        foundItemCompleted = true
                     }
                 }
                 
@@ -506,11 +509,13 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         // Retrieve data from JSON
         let dataToSend = Utility.getDataFromJSON()
         
-        // Send Data
-        do {
-            try sessionID.send(dataToSend, toPeers: sessionID.connectedPeers, with: .reliable)
-        } catch {
-            print("Unable to send a message - no connected peers")
+        // Send Data to Peers
+        if sessionID.connectedPeers.count > 0 {
+            do {
+                try sessionID.send(dataToSend, toPeers: sessionID.connectedPeers, with: .reliable)
+            } catch {
+                print("Unable to send a message - no connected peers")
+            }
         }
     }
 }

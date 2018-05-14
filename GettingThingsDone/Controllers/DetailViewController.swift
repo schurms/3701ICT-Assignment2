@@ -335,8 +335,9 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         if indexPath.section == 3 {
             
             // Set up new collaborator record when peer pressed
-            let collaboratorName = itemPeer[indexPath.row].peerDevice
-            let newCollaborator = Collaborator(collaboratorName: collaboratorName)
+            let collaboratorName = itemPeer[indexPath.row].peerUser
+            let collaboratorDevice = itemPeer[indexPath.row].peerDevice
+            let newCollaborator = Collaborator(collaboratorName: collaboratorName, collaboratorDevice: collaboratorDevice)
 
             // Append collaborator to collaborator array
             itemCollaborator.append(newCollaborator)
@@ -444,7 +445,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         // If the peer is already a collaborator then remove it from the peers list before displaying view
         for item in itemCollaborator {
             for (index,peer) in itemPeer.enumerated() {
-                if (item.collaboratorName == peer.peerDevice) {
+                if (item.collaboratorDevice == peer.peerDevice) && (item.collaboratorName == peer.peerUser) {
                     itemPeer.remove(at: index)
                 }
             }

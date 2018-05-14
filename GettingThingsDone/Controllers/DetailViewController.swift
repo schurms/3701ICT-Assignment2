@@ -130,10 +130,10 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
                 // If text is empty do not enable the back button
                 if trimmedText.isEmpty == false {
                     navigationItem.hidesBackButton = false
-                    
-                    // Update the item Title
-                    itemTitle = trimmedText
                 }
+                
+                // Update the item Title
+                itemTitle = trimmedText
             }
             
             // Test if Title changed

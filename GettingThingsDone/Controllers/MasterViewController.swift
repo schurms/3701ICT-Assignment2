@@ -488,9 +488,30 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
      */
     func didEditItem(_ controller: AnyObject, editItem: Item) {
         
-        // Replace the edited item in the array at the row that was selected
-        itemArray[selectedSection][selectedRow] = editItem
+        // Need to test if the item section has been changed by the peer whilst still editing
         
+        // Search for item in "Yet To Do"
+        for i in 0..<itemArray[0].count {
+            
+            // If found in "Yet To Do" Section
+            if (itemArray[0][i].itemIdentifier == editItem.itemIdentifier)  {
+                
+                // Update itemArray
+                itemArray[0][i] = editItem
+            }
+        }
+        
+        // Search for item in "Completed"
+        for j in 0..<itemArray[1].count {
+            
+            // If found in "Completed" Section
+            if (itemArray[1][j].itemIdentifier == editItem.itemIdentifier)  {
+                
+                // Update itemArray
+                itemArray[1][j] = editItem
+            }
+        }
+
         // Reload table view
         tableView.reloadData()
     }

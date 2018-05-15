@@ -120,208 +120,6 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         tableView.reloadData()
     }
     
-    //MARK: Multi-peer Delegate Methods
-    
-    /**
-     * Called when a nearby Peer is found
-     */
-    func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
-        
-        // Add peers to list of found peers
-        peersFound.append(peerID)
-        
-        // Invite all peers automatically
-        browser.invitePeer(peerID, to: sessionID, withContext: nil, timeout: 20)
-        
-        // Initialise variable for display
-        let peerDevice = peerID.displayName
-        
-        // Create alert controller
-        let alertController = UIAlertController(title: "Peer Title", message: "Enter a peer title", preferredStyle: .alert)
-        
-        // Add the text field
-        alertController.addTextField { (textField) in
-            textField.placeholder = "Enter name"
-        }
-        
-        // Set name the device is called for display
-        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak alertController] (_) in
-            if let peerUser = alertController?.textFields![0].text { // Force unwrapping because we know it exists.
-                
-                // Create array of peers to display
-                let peer = Peer(peerName: self.itemServiceType, peerUser: peerUser, peerDevice: peerDevice)
-                self.peerArray.append(peer)
-            }
-        }))
-        
-        // Present the alert
-        self.present(alertController, animated: true, completion: nil)
-    }
-    
-    /**
-     * Called when a nearby Peer is lost
-     */
-    func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
-        for (index, aPeer) in peersFound.enumerated() {
-            if aPeer == peerID {
-                peersFound.remove(at: index)
-                peerArray.remove(at: index)
-                break
-            }
-        }
-    }
-    
-    /**
-     * Called when a browser failed to start browsing for peers
-     */
-    func browser(_ browser: MCNearbyServiceBrowser, didNotStartBrowsingForPeers error: Error) {
-        print("Did not start browsing for peers \(error)")
-    }
-    
-    /**
-     * Called when an advertisement fails
-     */
-    func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didNotStartAdvertisingPeer error: Error) {
-        print("Did not start advertising peer \(error)")
-    }
-    
-    /**
-     * Called when an invitation to join a session is received from a nearby Peer
-     */
-    func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
-        print("didReceiveInvitationFromPeer \(peerID)")
-        
-        // If Peer found automatically connect
-        invitationHandler(true, sessionID)
-    }
-    
-    func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
-        switch state {
-        case MCSessionState.connected:
-            print("Connected to session: \(session)")
-        case MCSessionState.connecting:
-            print("Connecting to session: \(session)")
-        case MCSessionState.notConnected:
-            print("Did not connect to session: \(session)")
-        }
-    }
-    
-    /**
-     * Indicates that the data task has received some of the expected data
-     */
-    func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
-        
-        do {
-            let receivedItem = try JSONDecoder().decode(Item.self, from: data)
-            
-            //** after sending multiple the masterview does not seem to update
-            DispatchQueue.main.async {
-                
-                // Test if item exists in "Yet To Do" Section
-                var foundItemNotCompleted = false
-                if self.itemArray[0].count > 0 {
-                
-                    for i in 0..<self.itemArray[0].count {
-                        
-                        // If found in "Yet To Do" Section
-                        if (self.itemArray[0][i].itemIdentifier == receivedItem.itemIdentifier)  {
-                            
-                            // Test status of received item
-                            if (!receivedItem.done) {
-                                
-                                // If new received item is "Not Completed" - replace
-                                self.itemArray[0][i] = receivedItem
-                            } else {
-                                
-                                // If new received item is "Completed" - remove
-                                self.itemArray[0].remove(at: i)
-                            }
-                            
-                            // Set Found in Yet To Do Flag
-                            foundItemNotCompleted = true
-                            break
-                        }
-                    }
-                }
-                
-                // Test if item exists in "Completed Section"
-                var foundItemCompleted = false
-                if self.itemArray[1].count > 0 {
-                    
-                    for j in 0..<self.itemArray[1].count {
-                        
-                        // If found in "Completed" Section
-                        if (self.itemArray[1][j].itemIdentifier == receivedItem.itemIdentifier)  {
-                            
-                            // Test status of received item
-                            if (receivedItem.done) {
-                                
-                                // If new received item is "Completed" - replace
-                                self.itemArray[1][j] = receivedItem
-                            } else {
-                                
-                                // If new received item is "Not Completed" - remove
-                                self.itemArray[1].remove(at: j)
-                            }
-                            
-                            // Set Found in Yet To Do Flag
-                            foundItemCompleted = true
-                            break
-                        }
-                    }
-                }
-                
-                // If new item
-                if (!foundItemNotCompleted && !foundItemCompleted)  {
-                    
-                    if (receivedItem.done == false) {
-                        
-                        // If item not completed - append to "Yet To Do" Section
-                        self.itemArray[0].append(receivedItem)
-                    } else {
-                        
-                        // If item completed - append to "Completed" Section
-                        self.itemArray[1].append(receivedItem)
-                    }
-                
-                // If was existing Completed item and now not completed
-                } else if (!foundItemNotCompleted && foundItemCompleted && (!receivedItem.done )) {
-                    
-                    // Append to "Yet To Do" Section
-                    self.itemArray[0].append(receivedItem)
-                    
-                // If was existing Not Completed item and now completed
-                } else if (foundItemNotCompleted && !foundItemCompleted && (receivedItem.done)) {
-                    
-                    // Append to "Completed" Section
-                    self.itemArray[1].append(receivedItem)
-                }
-                self.tableView.reloadData()
-            }
-            
-        } catch {
-            print("Unable to process received data")
-        }
-    }
-    
-    /**
-     * Indicates that the input streams are available
-     */
-    func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {
-    }
-    
-    /**
-     * Indicates that the local Peer finished receiving a resource from a nearby Peer
-     */
-    func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress) {
-    }
-    
-    /**
-     * Indicates that the local Peer finished receiving a resource from a nearby Peer
-     */
-    func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL?, withError error: Error?) {
-    }
-    
     //MARK: Table View Datasource Method
     
     /**
@@ -429,6 +227,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
             // Add history record for move to "Completed"
             itemHistory = History(historyDate: Date(), historyDescription: "*Item Completed", historyEditable: false)
             itemArray[destinationIndexPath.section][destinationIndexPath.row].itemHistory.append(itemHistory)
+             didEditItem(self, editItem: itemArray[destinationIndexPath.section][destinationIndexPath.row])
             
         } else if ( sourceIndexPath.section == 1 && destinationIndexPath.section == 0) {
             
@@ -438,6 +237,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
             // Add history record for move to "Yet To Do"
             itemHistory = History(historyDate: Date(), historyDescription: "*Item Not Completed", historyEditable: false)
             itemArray[destinationIndexPath.section][destinationIndexPath.row].itemHistory.append(itemHistory)
+            didEditItem(self, editItem: itemArray[destinationIndexPath.section][destinationIndexPath.row])
         }
     }
     
@@ -478,6 +278,208 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         }
     }
     
+    //MARK: Multi-peer Delegate Methods
+    
+    /**
+     * Called when a nearby Peer is found
+     */
+    func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
+        
+        // Add peers to list of found peers
+        peersFound.append(peerID)
+        
+        // Invite all peers automatically
+        browser.invitePeer(peerID, to: sessionID, withContext: nil, timeout: 20)
+        
+        // Initialise variable for display
+        let peerDevice = peerID.displayName
+        
+        // Create alert controller
+        let alertController = UIAlertController(title: "Peer Title", message: "Enter a peer title", preferredStyle: .alert)
+        
+        // Add the text field
+        alertController.addTextField { (textField) in
+            textField.placeholder = "Enter name"
+        }
+        
+        // Set name the device is called for display
+        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak alertController] (_) in
+            if let peerUser = alertController?.textFields![0].text { // Force unwrapping because we know it exists.
+                
+                // Create array of peers to display
+                let peer = Peer(peerName: self.itemServiceType, peerUser: peerUser, peerDevice: peerDevice)
+                self.peerArray.append(peer)
+            }
+        }))
+        
+        // Present the alert
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
+    /**
+     * Called when a nearby Peer is lost
+     */
+    func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
+        for (index, aPeer) in peersFound.enumerated() {
+            if aPeer == peerID {
+                peersFound.remove(at: index)
+                peerArray.remove(at: index)
+                break
+            }
+        }
+    }
+    
+    /**
+     * Called when a browser failed to start browsing for peers
+     */
+    func browser(_ browser: MCNearbyServiceBrowser, didNotStartBrowsingForPeers error: Error) {
+        print("Did not start browsing for peers \(error)")
+    }
+    
+    /**
+     * Called when an advertisement fails
+     */
+    func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didNotStartAdvertisingPeer error: Error) {
+        print("Did not start advertising peer \(error)")
+    }
+    
+    /**
+     * Called when an invitation to join a session is received from a nearby Peer
+     */
+    func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
+        print("didReceiveInvitationFromPeer \(peerID)")
+        
+        // If Peer found automatically connect
+        invitationHandler(true, sessionID)
+    }
+    
+    func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
+        switch state {
+        case MCSessionState.connected:
+            print("Connected to session: \(session)")
+        case MCSessionState.connecting:
+            print("Connecting to session: \(session)")
+        case MCSessionState.notConnected:
+            print("Did not connect to session: \(session)")
+        }
+    }
+    
+    /**
+     * Indicates that the data task has received some of the expected data
+     */
+    func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
+        
+        do {
+            let receivedItem = try JSONDecoder().decode(Item.self, from: data)
+            
+            //** after sending multiple the masterview does not seem to update
+            DispatchQueue.main.async {
+                
+                // Test if item exists in "Yet To Do" Section
+                var foundItemNotCompleted = false
+                if self.itemArray[0].count > 0 {
+                    
+                    for i in 0..<self.itemArray[0].count {
+                        
+                        // If found in "Yet To Do" Section
+                        if (self.itemArray[0][i].itemIdentifier == receivedItem.itemIdentifier)  {
+                            
+                            // Test status of received item
+                            if (!receivedItem.done) {
+                                
+                                // If new received item is "Not Completed" - replace
+                                self.itemArray[0][i] = receivedItem
+                            } else {
+                                
+                                // If new received item is "Completed" - remove
+                                self.itemArray[0].remove(at: i)
+                            }
+                            
+                            // Set Found in Yet To Do Flag
+                            foundItemNotCompleted = true
+                            break
+                        }
+                    }
+                }
+                
+                // Test if item exists in "Completed Section"
+                var foundItemCompleted = false
+                if self.itemArray[1].count > 0 {
+                    
+                    for j in 0..<self.itemArray[1].count {
+                        
+                        // If found in "Completed" Section
+                        if (self.itemArray[1][j].itemIdentifier == receivedItem.itemIdentifier)  {
+                            
+                            // Test status of received item
+                            if (receivedItem.done) {
+                                
+                                // If new received item is "Completed" - replace
+                                self.itemArray[1][j] = receivedItem
+                            } else {
+                                
+                                // If new received item is "Not Completed" - remove
+                                self.itemArray[1].remove(at: j)
+                            }
+                            
+                            // Set Found in Yet To Do Flag
+                            foundItemCompleted = true
+                            break
+                        }
+                    }
+                }
+                
+                // If new item
+                if (!foundItemNotCompleted && !foundItemCompleted)  {
+                    
+                    if (receivedItem.done == false) {
+                        
+                        // If item not completed - append to "Yet To Do" Section
+                        self.itemArray[0].append(receivedItem)
+                    } else {
+                        
+                        // If item completed - append to "Completed" Section
+                        self.itemArray[1].append(receivedItem)
+                    }
+                    
+                    // If was existing Completed item and now not completed
+                } else if (!foundItemNotCompleted && foundItemCompleted && (!receivedItem.done )) {
+                    
+                    // Append to "Yet To Do" Section
+                    self.itemArray[0].append(receivedItem)
+                    
+                    // If was existing Not Completed item and now completed
+                } else if (foundItemNotCompleted && !foundItemCompleted && (receivedItem.done)) {
+                    
+                    // Append to "Completed" Section
+                    self.itemArray[1].append(receivedItem)
+                }
+                self.tableView.reloadData()
+            }
+            
+        } catch {
+            print("Unable to process received data")
+        }
+    }
+    
+    /**
+     * Indicates that the input streams are available
+     */
+    func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {
+    }
+    
+    /**
+     * Indicates that the local Peer finished receiving a resource from a nearby Peer
+     */
+    func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress) {
+    }
+    
+    /**
+     * Indicates that the local Peer finished receiving a resource from a nearby Peer
+     */
+    func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL?, withError error: Error?) {
+    }
+    
     //MARK: Protocol Delegate Methods
     
     /**
@@ -488,44 +490,34 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
      */
     func didEditItem(_ controller: AnyObject, editItem: Item) {
         
-        // Need to test if the item section has been changed by the peer whilst still editing
+        // Search all sections and rows to find where the item currently exists.
+        // The item may be located in another position if updated by a peer.
+        // If in edit mode when updated by peer, overwrite the peer record.
         
         // Search for item in "Yet To Do"
         for i in 0..<itemArray[0].count {
-            
+
             // If found in "Yet To Do" Section
             if (itemArray[0][i].itemIdentifier == editItem.itemIdentifier)  {
-                
+
                 // Update itemArray
                 itemArray[0][i] = editItem
             }
         }
-        
+
         // Search for item in "Completed"
         for j in 0..<itemArray[1].count {
-            
+
             // If found in "Completed" Section
             if (itemArray[1][j].itemIdentifier == editItem.itemIdentifier)  {
-                
+
                 // Update itemArray
                 itemArray[1][j] = editItem
             }
         }
 
-        // Reload table view
-        tableView.reloadData()
-    }
-    
-    /**
-     This Delegate method is used to send data to a peer
-     - Parameter controller: Defines the sending view controller
-     - Parameter editItem: Contains the item values to be sent
-     - returns: data
-     */
-    func didSendItem(_ controller: AnyObject, sendItem: Item) {
-        
         // Save item in JSON format
-        Utility.saveItemToJSON(sendItem)
+        Utility.saveItemToJSON(editItem)
         
         // Retrieve data from JSON
         let dataToSend = Utility.getDataFromJSON()
@@ -538,5 +530,8 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
                 print("Unable to send a message - no connected peers")
             }
         }
+        
+        // Reload table view
+        tableView.reloadData()
     }
 }

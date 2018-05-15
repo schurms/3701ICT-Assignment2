@@ -16,15 +16,9 @@ protocol ToDoItemDelegate: class {
     
     /**
      Edit Todo Information
-     - Parameter Item: data to be provided to the didEditItem function
+     - Parameter Item: Data to be provided to the didEditItem function and sent to peers
      */
     func didEditItem(_ controller: AnyObject, editItem: Item)
-    
-    /**
-     Send Todo Information
-     - Parameter Item: data to be provided to the didSendJSON function
-     */
-    func didSendItem(_ controller: AnyObject, sendItem: Item)
 }
 
 class DetailViewController: UITableViewController, UITextFieldDelegate {
@@ -49,11 +43,9 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     var itemTitleChanged: String = ""
     var itemDone: Bool = false
     var itemHistory = [History]()
-    var itemHistoryDescription: String = ""
     var itemCollaborator = [Collaborator]()
     var itemPeer = [Peer]()
     var items = Item(itemIdentifier: UUID(), title: "", done: false, itemHistory: [], itemCollaborator: [])
-    var itemsPeer = Item(itemIdentifier: UUID(), title: "", done: false, itemHistory: [], itemCollaborator: [])
     
     // Property observer for Item Details sent via showItem segue
     var detailItem: Item? {
@@ -80,7 +72,6 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         // Add right bar add button
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addObject(_:)))
         navigationItem.rightBarButtonItem = addButton
-        
     }
     
     /**
@@ -218,20 +209,23 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         
         // Number of Rows for Task Section
         if section == 0 {
+            
             return 1
             
             // Number of Rows for History Section
         } else if section == 1 {
+            
             return itemHistory.count
             
             // Number of Rows for Collaborator Section
         } else if section == 2 {
+            
             return itemCollaborator.count
             
             // Number of Rows for Peer Section
         } else {
-            return itemPeer.count
             
+            return itemPeer.count
         }
     }
     
@@ -324,13 +318,6 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
      */
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        // If selecting Collaborator row
-        if indexPath.section == 2 {
-            
-            // Return data to MasterView to send to peer
-            delegate?.didSendItem(self, sendItem: itemsPeer)
-        }
-        
         // If selecting Peer row
         if indexPath.section == 3 {
             
@@ -351,17 +338,10 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             
             // Append item to history array
             itemHistory.append(newHistory)
-            
-            // Update items
-            itemsPeer.itemIdentifier = itemUUID
-            itemsPeer.title = itemTitle
-            itemsPeer.done = itemDone
-            itemsPeer.itemHistory = itemHistory
-            itemsPeer.itemCollaborator = itemCollaborator
-            
-            // Reload table data
-            tableView.reloadData()
         }
+        
+        // Update and Send data
+        updateTableData()
         
         // Deselect row after row clicked
         tableView.deselectRow(at: indexPath, animated: true)
@@ -376,7 +356,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
      */
     override func viewWillDisappear(_ animated: Bool) {
         
-        // Update variables and update master view on pressing return to master
+        // Update and send data
         updateTableData()
     }
     
@@ -397,13 +377,6 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             items.itemHistory = itemHistory
             items.itemCollaborator = itemCollaborator
             
-            // Refresh Peer Data
-            itemsPeer.itemIdentifier = itemUUID
-            itemsPeer.title = itemTitle
-            itemsPeer.done = itemDone
-            itemsPeer.itemHistory = itemHistory
-            itemsPeer.itemCollaborator = itemCollaborator
-
             // Add changes to array
             delegate?.didEditItem(self, editItem: items)
         }
@@ -423,12 +396,6 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
             itemDone = detail.done
             itemHistory = detail.itemHistory
             itemCollaborator = detail.itemCollaborator
-            
-            itemsPeer.itemIdentifier = itemUUID
-            itemsPeer.title = itemTitle
-            itemsPeer.done = itemDone
-            itemsPeer.itemHistory = itemHistory
-            itemsPeer.itemCollaborator = itemCollaborator
         }
     }
     

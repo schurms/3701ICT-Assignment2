@@ -322,9 +322,10 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         if indexPath.section == 3 {
             
             // Set up new collaborator record when peer pressed
+            let collaboratorID = itemPeer[indexPath.row].peerName
             let collaboratorName = itemPeer[indexPath.row].peerUser
             let collaboratorDevice = itemPeer[indexPath.row].peerDevice
-            let newCollaborator = Collaborator(collaboratorName: collaboratorName, collaboratorDevice: collaboratorDevice)
+            let newCollaborator = Collaborator(collaboratorID: collaboratorID, collaboratorName: collaboratorName, collaboratorDevice: collaboratorDevice)
 
             // Append collaborator to collaborator array
             itemCollaborator.append(newCollaborator)

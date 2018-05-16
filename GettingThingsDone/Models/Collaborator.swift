@@ -18,6 +18,7 @@ class Collaborator: Codable {
     /**
      Collaborator variables.
      */
+    var collaboratorID: String
     var collaboratorName: String
     var collaboratorDevice: String
     
@@ -29,9 +30,10 @@ class Collaborator: Codable {
      - Parameter collaboratorDevice: The type of device used by the collaborator
      - Returns: A collaborator Record
      */
-    init(collaboratorName: String, collaboratorDevice: String) {
+    init(collaboratorID: String, collaboratorName: String, collaboratorDevice: String) {
         
         // Initialise stored properties
+        self.collaboratorID = collaboratorID
         self.collaboratorName = collaboratorName
         self.collaboratorDevice = collaboratorDevice
         

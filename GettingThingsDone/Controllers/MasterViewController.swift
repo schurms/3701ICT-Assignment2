@@ -25,7 +25,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
     var itemArray = [[Item](), [Item]()]
     var peerArray = [Peer]()
     var itemHistory = History(historyDate: Date(), historyDescription: "*Item Created", historyEditable: false)
-    var itemCollaborator = Collaborator(collaboratorName: "", collaboratorDevice: "")
+    var itemCollaborator = Collaborator(collaboratorID: "", collaboratorName: "", collaboratorDevice: "")
     var item = Item(itemIdentifier: UUID(), title: "", done: false, itemHistory: [], itemCollaborator: [])
     
     // Declare Multipeer variables
@@ -294,6 +294,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         
         // Initialise variable for display
         let peerDevice = peerID.displayName
+        let peerName = peerID.description
         
         // Create alert controller
         let alertController = UIAlertController(title: "Peer Title", message: "Enter a peer title", preferredStyle: .alert)
@@ -308,7 +309,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
             if let peerUser = alertController?.textFields![0].text { // Force unwrapping because we know it exists.
                 
                 // Create array of peers to display
-                let peer = Peer(peerName: self.itemServiceType, peerUser: peerUser, peerDevice: peerDevice)
+                let peer = Peer(peerName: peerName, peerUser: peerUser, peerDevice: peerDevice)
                 self.peerArray.append(peer)
             }
         }))
@@ -523,16 +524,16 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         // Retrieve data from JSON
         let dataToSend = Utility.getDataFromJSON()
         
-        // Send Data to Peers
+        // Identify Peers who are collaborators for this item
         for i in 0..<editItem.itemCollaborator.count {
             for j in 0..<peersFound.count {
-                if peersFound[j].displayName == editItem.itemCollaborator[i].collaboratorDevice {
+                if peersFound[j].description == editItem.itemCollaborator[i].collaboratorID {
                     targetPeers.append(peersFound[j])
-                    print(targetPeers)
                 }
             }
         }
         
+        // Send data to Peers who are collaborators for this item
         if targetPeers.count > 0 {
 //        if sessionID.connectedPeers.count > 0 {
             do {
@@ -545,7 +546,8 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         
         // Reload table view
         tableView.reloadData()
+        
+        // Reset target peers for next send
         targetPeers.removeAll()
-        print(targetPeers)
     }
 }

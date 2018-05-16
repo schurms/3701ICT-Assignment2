@@ -35,6 +35,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
     var browserID: MCNearbyServiceBrowser!
     var advertiserID: MCNearbyServiceAdvertiser!
     var peersFound = [MCPeerID]()
+    var targetPeers = [MCPeerID]()
     var invitationHandler: ((Bool, MCSession?)->Void)!
     var userName: String = ""
     
@@ -523,9 +524,20 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         let dataToSend = Utility.getDataFromJSON()
         
         // Send Data to Peers
-        if sessionID.connectedPeers.count > 0 {
+        for i in 0..<editItem.itemCollaborator.count {
+            for j in 0..<peersFound.count {
+                if peersFound[j].displayName == editItem.itemCollaborator[i].collaboratorDevice {
+                    targetPeers.append(peersFound[j])
+                    print(targetPeers)
+                }
+            }
+        }
+        
+        if targetPeers.count > 0 {
+//        if sessionID.connectedPeers.count > 0 {
             do {
-                try sessionID.send(dataToSend, toPeers: sessionID.connectedPeers, with: .reliable)
+//                try sessionID.send(dataToSend, toPeers: sessionID.connectedPeers, with: .reliable)
+                try sessionID.send(dataToSend, toPeers: targetPeers, with: .reliable)
             } catch {
                 print("Unable to send a message - no connected peers")
             }
@@ -533,5 +545,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         
         // Reload table view
         tableView.reloadData()
+        targetPeers.removeAll()
+        print(targetPeers)
     }
 }

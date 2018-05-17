@@ -152,7 +152,7 @@ class GettingThingsDoneTests: XCTestCase {
     }
     
     /**
-     Test Item correctly retrieved from JSON
+     Test Item correctly Saved and retrieved from JSON
      */
     func testItemSaveToJSON() {
         
@@ -178,9 +178,14 @@ class GettingThingsDoneTests: XCTestCase {
         Utility.saveItemToJSON(item)
         
         // Get item from JSON
-//        let itemData = Utility.getDataFromJSON()
-//
-//        // Test Returned saved item = item saved
-//        XCTAssertEqual(itemData.title, item.title)
+        let itemData = Utility.getDataFromJSON()
+        
+        do {
+            let receivedItem = try JSONDecoder().decode(Item.self, from: itemData)
+            // Test Returned saved item = item saved
+            XCTAssertEqual(receivedItem.title, item.title)
+        } catch {
+            print("Unable to process received data")
+        }
     }
 }

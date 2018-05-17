@@ -9,7 +9,7 @@
 import Foundation
 
 /**
- * This Class defines the Collabortors data model
+ * This Class defines the Peers data model
  */
 class Peer: Codable {
     

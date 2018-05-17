@@ -12,6 +12,7 @@ import MultipeerConnectivity
 /**
  * This class defines the Master View Controller for the GettingThingsDone application.
  * Class conforms to the ToDoItemDelegate protocol used in the DetailViewController.
+ * Class conforms to Multipeer connectivity
  */
 
 class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDelegate, MCNearbyServiceBrowserDelegate, MCNearbyServiceAdvertiserDelegate {
@@ -228,7 +229,9 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
             // Add history record for move to "Completed"
             itemHistory = History(historyDate: Date(), historyDescription: "*Item Completed", historyEditable: false)
             itemArray[destinationIndexPath.section][destinationIndexPath.row].itemHistory.append(itemHistory)
-             didEditItem(self, editItem: itemArray[destinationIndexPath.section][destinationIndexPath.row])
+            
+            // Send move details to collaborator
+            didEditItem(self, editItem: itemArray[destinationIndexPath.section][destinationIndexPath.row])
             
         } else if ( sourceIndexPath.section == 1 && destinationIndexPath.section == 0) {
             
@@ -238,6 +241,8 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
             // Add history record for move to "Yet To Do"
             itemHistory = History(historyDate: Date(), historyDescription: "*Item Not Completed", historyEditable: false)
             itemArray[destinationIndexPath.section][destinationIndexPath.row].itemHistory.append(itemHistory)
+            
+            // Send move details to collaborator
             didEditItem(self, editItem: itemArray[destinationIndexPath.section][destinationIndexPath.row])
         }
     }
@@ -372,9 +377,11 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
         
         do {
+            
+            // Decode received data ino JSON
             let receivedItem = try JSONDecoder().decode(Item.self, from: data)
             
-            //** after sending multiple the masterview does not seem to update
+            //Get data nd determine where to record exists in the array and update
             DispatchQueue.main.async {
                 
                 // Test if item exists in "Yet To Do" Section
@@ -471,7 +478,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
     }
     
     /**
-     * Indicates that the local Peer finished receiving a resource from a nearby Peer
+     * Indicates that the local Peer started receiving a resource from a nearby Peer
      */
     func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress) {
     }
@@ -524,10 +531,14 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         // Retrieve data from JSON
         let dataToSend = Utility.getDataFromJSON()
         
-        // Identify Peers who are collaborators for this item
+        // Search all connected Peers to find a collaborators linked to this item
         for i in 0..<editItem.itemCollaborator.count {
             for j in 0..<peersFound.count {
+                
+                // If Peer MCPeerID matches that stored against the item
                 if peersFound[j].description == editItem.itemCollaborator[i].collaboratorID {
+                    
+                    // Add Peer to target audience to send change to
                     targetPeers.append(peersFound[j])
                 }
             }
@@ -535,9 +546,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         
         // Send data to Peers who are collaborators for this item
         if targetPeers.count > 0 {
-//        if sessionID.connectedPeers.count > 0 {
             do {
-//                try sessionID.send(dataToSend, toPeers: sessionID.connectedPeers, with: .reliable)
                 try sessionID.send(dataToSend, toPeers: targetPeers, with: .reliable)
             } catch {
                 print("Unable to send a message - no connected peers")

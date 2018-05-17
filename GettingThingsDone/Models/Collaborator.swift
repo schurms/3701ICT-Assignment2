@@ -9,7 +9,7 @@
 import Foundation
 
 /**
- * This Class defines the Collabortors data model
+ * This Class defines the Collaborators data model
  */
 class Collaborator: Codable {
     
@@ -26,6 +26,7 @@ class Collaborator: Codable {
     
     /**
      Initialises a new Collaborator Object
+     - Parameter collaboratorID: A string representation of the peer MCPeerID
      - Parameter collaboratorName: The name of the collaborator
      - Parameter collaboratorDevice: The type of device used by the collaborator
      - Returns: A collaborator Record

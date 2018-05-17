@@ -110,44 +110,45 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         
         // Text field editing for Tasks
         if (textField.tag == 1) {
-            
+
             // Set cell being edited
             let indexPath = IndexPath(row: 0, section: 0)
             let cell = tableView.cellForRow(at: indexPath) as! ItemTableViewCell
-            
+
             // Test for empty field by trimming whitespace and new lines from input text
             if let trimmedText = (cell.titleField.text?.trimmingCharacters(in: .whitespacesAndNewlines)) {
+
+                // Update the item Title
+                itemTitle = trimmedText
                 
                 // If text is empty do not enable the back button
                 if trimmedText.isEmpty == false {
                     navigationItem.hidesBackButton = false
+                    
+                    // Test if Title changed
+                    if itemTitleChanged != itemTitle {
+                        
+                        // Set up new history record when title changed - Not editable
+                        let histDesc = "*Changed to \(itemTitle)"
+                        let newHistory = History(historyDate: Date(), historyDescription: histDesc, historyEditable: false)
+                        
+                        // Append item to history array
+                        itemHistory.append(newHistory)
+                        
+                        // Set new title variable to be changed title
+                        itemTitleChanged = itemTitle
+                    }
+                    
+                    // Reload table data
+                    tableView.reloadData()
+                    
+                    // Return edited data back via the protocol
+                    updateTableData()
                 }
-                
-                // Update the item Title
-                itemTitle = trimmedText
             }
-            
-            // Test if Title changed
-            if itemTitleChanged != itemTitle {
-                
-                // Set up new history record when title changed - Not editable
-                let histDesc = "*Changed to \(itemTitle)"
-                let newHistory = History(historyDate: Date(), historyDescription: histDesc, historyEditable: false)
-                
-                // Append item to history array
-                itemHistory.append(newHistory)
-                
-                // Set new title variable to be changed title
-                itemTitleChanged = itemTitle
-            }
-            
-            // Reload table data
-            tableView.reloadData()
 
-            // Return edited data back via the protocol
-            updateTableData()
             
-            // Text field editing for History
+        // Text field editing for History
         } else if (textField.tag == 2) {
             
             // Get the Row and Section for the textfield cell
@@ -368,20 +369,22 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
      - Return data for editing
      */
     func updateTableData() {
-        // Return edited data back via the protocol
-        if delegate != nil {
-
-            // Set up variables to return
-            items.itemIdentifier = itemUUID
-            items.title = itemTitle
-            items.done = itemDone
-            items.itemHistory = itemHistory
-            items.itemCollaborator = itemCollaborator
-            
-            // Add changes to array
-            delegate?.didEditItem(self, editItem: items)
-        }
         
+        if itemTitle != "" {
+            // Return edited data back via the protocol
+            if delegate != nil {
+
+                // Set up variables to return
+                items.itemIdentifier = itemUUID
+                items.title = itemTitle
+                items.done = itemDone
+                items.itemHistory = itemHistory
+                items.itemCollaborator = itemCollaborator
+                
+                // Add changes to array
+                delegate?.didEditItem(self, editItem: items)
+            }
+        }
     }
     
     /**

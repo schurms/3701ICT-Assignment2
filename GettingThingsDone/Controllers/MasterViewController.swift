@@ -327,8 +327,8 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
      * Called when a nearby Peer is lost
      */
     func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
-        for (index, aPeer) in peersFound.enumerated() {
-            if aPeer == peerID {
+        for (index, eachPeer) in peersFound.enumerated() {
+            if eachPeer == peerID {
                 peersFound.remove(at: index)
                 peerArray.remove(at: index)
                 break

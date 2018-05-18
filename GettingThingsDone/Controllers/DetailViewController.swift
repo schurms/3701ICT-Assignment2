@@ -371,6 +371,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
     func updateTableData() {
         
         if itemTitle != "" {
+            
             // Return edited data back via the protocol
             if delegate != nil {
 
@@ -416,7 +417,7 @@ class DetailViewController: UITableViewController, UITextFieldDelegate {
         // If the peer is already a collaborator then remove it from the peers list before displaying view
         for item in itemCollaborator {
             for (index,peer) in itemPeer.enumerated() {
-                if (item.collaboratorDevice == peer.peerDevice) && (item.collaboratorName == peer.peerUser) {
+                if (item.collaboratorID == peer.peerName) {
                     itemPeer.remove(at: index)
                 }
             }

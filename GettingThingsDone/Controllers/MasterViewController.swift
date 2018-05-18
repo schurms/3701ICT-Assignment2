@@ -22,7 +22,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
     // Declare delegate
     weak var detailViewController: DetailViewController?
     
-    // Declare arrays
+    // Declare arrays and model variables
     var itemArray = [[Item](), [Item]()]
     var peerArray = [Peer]()
     var itemHistory = History(historyDate: Date(), historyDescription: "*Item Created", historyEditable: false)
@@ -36,7 +36,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
     var browserID: MCNearbyServiceBrowser!
     var advertiserID: MCNearbyServiceAdvertiser!
     var peersFound = [MCPeerID]()
-    var targetPeers = [MCPeerID]()
+    var peersCollaborator = [MCPeerID]()
     var invitationHandler: ((Bool, MCSession?)->Void)!
     var userName: String = ""
     
@@ -82,9 +82,11 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         advertiserID = MCNearbyServiceAdvertiser(peer: peerID, discoveryInfo: nil, serviceType: itemServiceType)
         advertiserID.delegate = self
         
+        // Start Browsing for peers
         browserID.startBrowsingForPeers()
-        advertiserID.startAdvertisingPeer()
         
+        // Start Advertising this peer
+        advertiserID.startAdvertisingPeer()
     }
     
     /**
@@ -109,12 +111,15 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
      */
     @objc func insertNewObject(_ sender: Any) {
         
-        // Set up item Title record - increment counter
+        // Set up variables for the new item
         todoCounter += 1
         let title = "Todo Item \(todoCounter)"
         let done = false
         let itemHistory = History(historyDate: Date(), historyDescription: "*Item Created", historyEditable: false)
+        
+        // Populate the new item record
         let item = Item(itemIdentifier: UUID(), title: title, done: done, itemHistory: [itemHistory], itemCollaborator: [])
+        
         // Append new record to Array - null arrays for other information
         itemArray[0].append(item)
         
@@ -230,7 +235,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
             itemHistory = History(historyDate: Date(), historyDescription: "*Item Completed", historyEditable: false)
             itemArray[destinationIndexPath.section][destinationIndexPath.row].itemHistory.append(itemHistory)
             
-            // Send move details to collaborator
+            // Send row move update details to collaborators for item
             didEditItem(self, editItem: itemArray[destinationIndexPath.section][destinationIndexPath.row])
             
         } else if ( sourceIndexPath.section == 1 && destinationIndexPath.section == 0) {
@@ -242,7 +247,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
             itemHistory = History(historyDate: Date(), historyDescription: "*Item Not Completed", historyEditable: false)
             itemArray[destinationIndexPath.section][destinationIndexPath.row].itemHistory.append(itemHistory)
             
-            // Send move details to collaborator
+            // Send row move update details to collaborators for item
             didEditItem(self, editItem: itemArray[destinationIndexPath.section][destinationIndexPath.row])
         }
     }
@@ -264,7 +269,8 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
                 
                 // Get the selected item to pass
                 let selectedItem = itemArray[selectedSection][selectedRow]
-                // Get the selected peer to pass
+                
+                // Get the selected list of currently connected peers to pass
                 let selectedPeer = peerArray
                 
                 // Set the destination ViewController
@@ -299,10 +305,12 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         
         // Initialise variable for display
         let peerDevice = peerID.displayName
+        
+        // Save string representation of MCPeerID for identification of collaborators
         let peerName = peerID.description
         
         // Create alert controller
-        let alertController = UIAlertController(title: "Peer Title", message: "Enter a peer title", preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Enter Peer Name", message: "", preferredStyle: .alert)
         
         // Add the text field
         alertController.addTextField { (textField) in
@@ -311,7 +319,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         
         // Set name the device is called for display
         alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak alertController] (_) in
-            if let peerUser = alertController?.textFields![0].text { // Force unwrapping because we know it exists.
+            if let peerUser = alertController?.textFields![0].text {
                 
                 // Create array of peers to display
                 let peer = Peer(peerName: peerName, peerUser: peerUser, peerDevice: peerDevice)
@@ -330,7 +338,13 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         for (index, eachPeer) in peersFound.enumerated() {
             if eachPeer == peerID {
                 peersFound.remove(at: index)
-                peerArray.remove(at: index)
+                
+                // If no more peers connected clear the peerArray list
+                if peersFound.count == 0 {
+                    peerArray.removeAll()
+                } else {
+                    peerArray.remove(at: index)
+                }
                 break
             }
         }
@@ -360,6 +374,9 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         invitationHandler(true, sessionID)
     }
     
+    /**
+     * Writes a message depending on the state of the connection
+     */
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
         switch state {
         case MCSessionState.connected:
@@ -492,16 +509,16 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
     //MARK: Protocol Delegate Methods
     
     /**
-     This Delegate method is used to update an existing item in the Items array
+     This Delegate method is used to process updates to an item and send the update to any connected collaborators
      - Parameter controller: Defines the sending view controller
      - Parameter editItem: Contains the item values to be edited in the array
-     - returns: Updated items
+     - returns: Updated items and send item if connected collaborators
      */
     func didEditItem(_ controller: AnyObject, editItem: Item) {
         
-        // Search all sections and rows to find where the item currently exists.
-        // The item may be located in another position if updated by a peer.
-        // If in edit mode when updated by peer, overwrite the peer record.
+        //
+        // NOTE: This is my approach for handling concurrent updates to the same record
+        //
         
         // Search for item in "Yet To Do"
         for i in 0..<itemArray[0].count {
@@ -535,19 +552,23 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         for i in 0..<editItem.itemCollaborator.count {
             for j in 0..<peersFound.count {
                 
-                // If Peer MCPeerID matches that stored against the item
+                // If currently connected Peer MCPeerID matches that stored against the Collaborator
                 if peersFound[j].description == editItem.itemCollaborator[i].collaboratorID {
                     
-                    // Add Peer to target audience to send change to
-                    targetPeers.append(peersFound[j])
+                    // Add Peer MCPeerID to arrary of all collaborators for this item
+                    peersCollaborator.append(peersFound[j])
                 }
             }
         }
         
-        // Send data to Peers who are collaborators for this item
-        if targetPeers.count > 0 {
+        // Send data to collaborators for this item
+        if peersCollaborator.count > 0 {
             do {
-                try sessionID.send(dataToSend, toPeers: targetPeers, with: .reliable)
+                
+                // Attempt to send to Collaborators
+                try sessionID.send(dataToSend, toPeers: peersCollaborator, with: .reliable)
+                
+                // if peer has disconnected or some other error
             } catch {
                 print("Unable to send a message - no connected peers")
             }
@@ -556,7 +577,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         // Reload table view
         tableView.reloadData()
         
-        // Reset target peers for next send
-        targetPeers.removeAll()
+        // Reset collaborator peers for next send - as may be sending different item
+        peersCollaborator.removeAll()
     }
 }

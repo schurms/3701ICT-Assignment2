@@ -26,8 +26,8 @@ class Peer: Codable {
     
     /**
      Initialises a new Peer Object
-     - Parameter peerName: The name of the peer
-     -
+     - Parameter peerName: The name of the peer (MCPeerID) String representatio
+     - Parameter peerUser: The name a user types for the peer
      - Parameter peerDevice: The peer device
      */
     init(peerName: String, peerUser: String, peerDevice: String) {

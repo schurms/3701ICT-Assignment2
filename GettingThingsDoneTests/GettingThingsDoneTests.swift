@@ -188,4 +188,102 @@ class GettingThingsDoneTests: XCTestCase {
             print("Unable to process received data")
         }
     }
+    
+    /**
+     Test creation of an empty array
+     */
+    func testItemCountEmptyArray() {
+        
+        // Test count of empty array
+        let items = [Item]()
+        XCTAssertEqual(items.count, 0)
+    }
+    
+    /**
+     Test append of item to an array
+     */
+    func testItemCountAfterAppend() {
+        
+        // Test count of single item in array
+        // Set up History Record
+        let historyDate: Date = Date()
+        let historyDescription: String = "New History Record"
+        let historyEditable: Bool = true
+        let itemHistory = History(historyDate: historyDate, historyDescription: historyDescription, historyEditable: historyEditable)
+        
+        //Set up Collaborator Record
+        let collaboratorID: String = "ABC"
+        let collaboratorName: String = "New Collaborator"
+        let collaboratorDevice: String = "iPhone"
+        let itemCollaborator = Collaborator(collaboratorID: collaboratorID, collaboratorName: collaboratorName, collaboratorDevice: collaboratorDevice)
+        
+        // Set up Item Record
+        let itemIdentifier: UUID = UUID()
+        let title: String = "Todo Item 1"
+        let done: Bool = false
+        let item = Item(itemIdentifier: itemIdentifier, title: title, done: done, itemHistory: [itemHistory], itemCollaborator: [itemCollaborator])
+        var items = [Item]()
+        items.append(item)
+        XCTAssertEqual(items.count, 1)
+    }
+    
+    /**
+     Test editing item does not increment count
+     */
+    func testItemCountAfterEdit() {
+        
+        // Set up History Record
+        let historyDate: Date = Date()
+        let historyDescription: String = "New History Record"
+        let historyEditable: Bool = true
+        let itemHistory = History(historyDate: historyDate, historyDescription: historyDescription, historyEditable: historyEditable)
+        
+        //Set up Collaborator Record
+        let collaboratorID: String = "ABC"
+        let collaboratorName: String = "New Collaborator"
+        let collaboratorDevice: String = "iPhone"
+        let itemCollaborator = Collaborator(collaboratorID: collaboratorID, collaboratorName: collaboratorName, collaboratorDevice: collaboratorDevice)
+        
+        // Set up Item Record
+        let itemIdentifier: UUID = UUID()
+        var title: String = "Todo Item 1"
+        var done: Bool = false
+        let item = Item(itemIdentifier: itemIdentifier, title: title, done: done, itemHistory: [itemHistory], itemCollaborator: [itemCollaborator])
+        var items = [Item]()
+        items.append(item)
+        title = "Todo Item new"
+        done = false
+
+        items[0] = item
+        XCTAssertEqual(items.count, 1)
+    }
+    
+    /**
+     Test removal of item from array and reduction of count
+     */
+    func testItemCountAfterRemove() {
+        
+        // Test removal of item from array
+        // Set up History Record
+        let historyDate: Date = Date()
+        let historyDescription: String = "New History Record"
+        let historyEditable: Bool = true
+        let itemHistory = History(historyDate: historyDate, historyDescription: historyDescription, historyEditable: historyEditable)
+        
+        //Set up Collaborator Record
+        let collaboratorID: String = "ABC"
+        let collaboratorName: String = "New Collaborator"
+        let collaboratorDevice: String = "iPhone"
+        let itemCollaborator = Collaborator(collaboratorID: collaboratorID, collaboratorName: collaboratorName, collaboratorDevice: collaboratorDevice)
+        
+        // Set up Item Record
+        let itemIdentifier: UUID = UUID()
+        let title: String = "Todo Item 1"
+        let done: Bool = false
+        let item = Item(itemIdentifier: itemIdentifier, title: title, done: done, itemHistory: [itemHistory], itemCollaborator: [itemCollaborator])
+        var items = [Item]()
+        items.append(item)
+        items.remove(at: 0)
+        XCTAssertEqual(items.count, 0)
+    }
 }

@@ -395,29 +395,40 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         
         do {
             
-            // Decode received data ino JSON
+            // Decode received data into JSON - If invalid file format then catch 
             let receivedItem = try JSONDecoder().decode(Item.self, from: data)
             
-            //Get data nd determine where to record exists in the array and update
+            /**
+             * Section Logic: Get the data and determine the section to place record in
+             * If record does not exist in the Collaborators list
+             ** Add to Yet To Do if record is not completed
+             ** Add to Completed if record is completed
+             * If record does exist in the Collaborators list
+             ** If in Collaborators Yet To Do and if still not completed - Update record
+             ** If in Collaborators Yet To Do and if now completed - remove from Collaborators Yet To Do and add to Collaborators completed
+             ** If in Collaborators Completed and if still completed - Update record
+             ** If in Collaborators Completed and if now not completed - remove from Collaborators Completed and add to Collaborators Yet To Do
+             */
+            
             DispatchQueue.main.async {
                 
-                // Test if item exists in "Yet To Do" Section
+                // Test if item exists in Collaborators "Yet To Do" Section
                 var foundItemNotCompleted = false
                 if self.itemArray[0].count > 0 {
                     
                     for i in 0..<self.itemArray[0].count {
                         
-                        // If found in "Yet To Do" Section
+                        // If Item found in Collaborators "Yet To Do" Section
                         if (self.itemArray[0][i].itemIdentifier == receivedItem.itemIdentifier)  {
                             
-                            // Test status of received item
+                            // Test status of received Item is not complete
                             if (!receivedItem.done) {
                                 
-                                // If new received item is "Not Completed" - replace
+                                // If new received item is "Not Completed" - replace as we are in "Yet To Do"
                                 self.itemArray[0][i] = receivedItem
                             } else {
                                 
-                                // If new received item is "Completed" - remove
+                                // If new received item is "Completed" - remove as record must be placed in "Completed"
                                 self.itemArray[0].remove(at: i)
                             }
                             
@@ -434,17 +445,17 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
                     
                     for j in 0..<self.itemArray[1].count {
                         
-                        // If found in "Completed" Section
+                        // If Item found in Collaborators "Completed" Section
                         if (self.itemArray[1][j].itemIdentifier == receivedItem.itemIdentifier)  {
                             
-                            // Test status of received item
+                            // Test status of received item is complete
                             if (receivedItem.done) {
                                 
-                                // If new received item is "Completed" - replace
+                                // If new received item is "Completed" - replace as we are in "Completed"
                                 self.itemArray[1][j] = receivedItem
                             } else {
                                 
-                                // If new received item is "Not Completed" - remove
+                                // If new received item is "Not Completed" - remove as record must be placed in "Yet To Do"
                                 self.itemArray[1].remove(at: j)
                             }
                             
@@ -455,7 +466,7 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
                     }
                 }
                 
-                // If new item
+                // If item not found in current Collaborators Todo items
                 if (!foundItemNotCompleted && !foundItemCompleted)  {
                     
                     if (receivedItem.done == false) {
@@ -468,13 +479,13 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
                         self.itemArray[1].append(receivedItem)
                     }
                     
-                    // If was existing Completed item and now not completed
+                // If was existing Completed item and now Yet To Do
                 } else if (!foundItemNotCompleted && foundItemCompleted && (!receivedItem.done )) {
                     
                     // Append to "Yet To Do" Section
                     self.itemArray[0].append(receivedItem)
                     
-                    // If was existing Not Completed item and now completed
+                // If was existing Yet To Do item and now Completed
                 } else if (foundItemNotCompleted && !foundItemCompleted && (receivedItem.done)) {
                     
                     // Append to "Completed" Section
@@ -518,6 +529,8 @@ class MasterViewController: UITableViewController, ToDoItemDelegate, MCSessionDe
         
         //
         // NOTE: This is my approach for handling concurrent updates to the same record
+        // If did receive an update from collaborator whilst editing then overwrite the collaborators data
+        // The issue is whose updates take precedent - can not have exclusive locking on a record in this application
         //
         
         // Search for item in "Yet To Do"
